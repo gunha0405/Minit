@@ -4,6 +4,7 @@
 
 html,
 body {
+    overflow-x: hidden;
     padding: 0;
     margin: 0;
     height: 100%;
@@ -22,7 +23,7 @@ body {
     align-items: center;
     flex-direction: column;
     flex-grow: 1;
-    background-color: #75daa4;
+    
     border-radius: 20px;
     /* 부모 요소가 전체 높이를 가지도록 설정 */
     flex: 1; /* 스크롤바가 생기도록 설정 */
@@ -36,6 +37,7 @@ body {
     padding-top: 60px; /* header 높이 만큼 추가 */
     display: flex;
     align-items: center;
+    margin: 20px 0;
 }
 
 header {
@@ -375,6 +377,7 @@ footer div {
     position: absolute;
     right: 10px;
     bottom: 30px;
+    height: 120px;
     background: white;
     border: 1px solid #ccc;
     border-radius: 10px;
@@ -387,13 +390,22 @@ footer div {
 .post-options button {
     display: block;
     width: 100%;
-    padding: 10px;
+    height: 25%;
+    
     background: none;
     border: none;
-    text-align: left;
+    text-align: center;
     cursor: pointer;
     transition: background-color 0.3s;
 }
+.post-options button>span{
+    font-size: 24px;
+    height: 25%;
+}
+.post-options button>i{
+    font-size: 18px;
+}
+
 
 .post-options button:hover {
     background-color: #f0f0f0;
@@ -415,7 +427,7 @@ footer div {
 }
 
 .comment-section {
-    display: none; /* 초기에는 숨김 상태 */
+    display: none;
     margin-top: 15px;
 }
 
@@ -448,7 +460,7 @@ footer div {
     position: fixed;
     bottom: 0;
     width: 100%;
-    background-color: #fff;
+    
     box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
     padding: 10px 0;
 }
@@ -472,7 +484,50 @@ footer {
 }
 
 .navbar-brand>img{
-    width: 125px;
-    height: 100px;
-    background-color: rgba(255, 255, 255, 0.8);
+    width: 200px;
+    height: 50px;
+    color: rgba(255, 255, 255, 0.1);
 }
+
+
+.ocean {
+    background: #34bd72;
+    height: 10%;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+  }
+  .wave {
+    background: url("/wave.svg") repeat-x;
+    position: absolute;
+    top: -198px;
+    width: 6400px;
+    height: 198px;
+    animation: wave 7s cubic-bezier(0.39, 0.48, 0.66, 0.56) infinite;
+    transform: translate3d(0, 0, 0);
+  }
+  .wave:nth-of-type(2) {
+    top: -175px;
+    animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) -0.125s infinite,
+      swell 7s ease -1.25s infinite;
+    opacity: 1;
+  }
+  @keyframes wave {
+    0% {
+      margin-left: 0;
+    }
+    100% {
+      margin-left: -1600px;
+    }
+  }
+  @keyframes swell {
+    0%,
+    100% {
+      transform: translate3d(0, -25px, 0);
+    }
+    50% {
+      transform: translate3d(0, 5px, 0);
+    }
+  }
