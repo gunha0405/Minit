@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,7 +15,7 @@
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">
-                    <img src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top" />
+                    <img src="logo3.jpg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top" />
                 </a>
                 <form class="d-flex mx-auto" role="search" style="max-width: 400px; flex-grow: 1">
                     <input class="form-control me-2" type="search" placeholder="검색" aria-label="Search" />
@@ -93,11 +93,22 @@
                             <i class="fa fa-comment"></i>
                             <span>댓글수</span>
                             <i class="fa fa-ellipsis-h"></i>
+                            <div class="post-options">
+                                <button>수정하기</button>
+                                <button>신고하기</button>
+                                <button>저장하기</button>
+                                <button>삭제하기</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <textarea placeholder="댓글 작성..."></textarea>
+                        <button class="submit-comment">댓글 달기</button>
+                        <div class="comments-container">
+                            <!-- 댓글들이 여기에 추가됩니다 -->
                         </div>
                     </div>
                 </div>
-
-                <div class="line"></div>
                 <!-- 추가적인 포스트를 여기에 추가할 수 있습니다 -->
                 <div class="post">
                     <div class="post-profile-pic">
@@ -113,12 +124,22 @@
                             <i class="fa fa-comment"></i>
                             <span>댓글수</span>
                             <i class="fa fa-ellipsis-h"></i>
+                            <div class="post-options">
+                                <button>수정하기</button>
+                                <button>신고하기</button>
+                                <button>저장하기</button>
+                                <button>삭제하기</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <textarea placeholder="댓글 작성..."></textarea>
+                        <button class="submit-comment">댓글 달기</button>
+                        <div class="comments-container">
+                            <!-- 댓글들이 여기에 추가됩니다 -->
                         </div>
                     </div>
                 </div>
-
-                <div class="line"></div>
-
                 <div class="post">
                     <div class="post-profile-pic">
                         <img src="tired.png" alt="Profile Picture" />
@@ -133,6 +154,49 @@
                             <i class="fa fa-comment"></i>
                             <span>댓글수</span>
                             <i class="fa fa-ellipsis-h"></i>
+                            <div class="post-options">
+                                <button>수정하기</button>
+                                <button>신고하기</button>
+                                <button>저장하기</button>
+                                <button>삭제하기</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <textarea placeholder="댓글 작성..."></textarea>
+                        <button class="submit-comment">댓글 달기</button>
+                        <div class="comments-container">
+                            <!-- 댓글들이 여기에 추가됩니다 -->
+                        </div>
+                    </div>
+                </div>
+                <div class="post">
+                    <div class="post-profile-pic">
+                        <img src="sad.png" alt="Profile Picture" />
+                    </div>
+                    <div class="post-content">
+                        <p class="post-author">작성자</p>
+                        <p class="post-text">게시글 내용</p>
+                        <div class="post-actions">
+                            <i class="fa fa-heart"></i>
+                            <i class="fa fa-plus-square"></i>
+                            <i class="fa fa-paper-plane"></i>
+                            <i class="fa fa-comment"></i>
+                            <span>댓글수</span>
+                            <i class="fa fa-ellipsis-h"></i>
+                            <div class="post-options">
+                                <button>수정하기</button>
+                                <button>신고하기</button>
+                                <button>저장하기</button>
+                                <button>삭제하기</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <textarea placeholder="댓글 작성..."></textarea>
+                        <button class="submit-comment">댓글 달기</button>
+                        <div class="comments-container">
+                            <!-- 댓글들이 여기에 추가됩니다 -->
                         </div>
                     </div>
                 </div>
@@ -167,5 +231,36 @@
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+         $(document).ready(function() {
+        $(".fa-comment").click(function() {
+            $(this).closest(".post").find(".comment-section").toggle();
+        });
+
+        $(".fa-ellipsis-h").click(function() {
+            $(this).siblings(".post-options").toggle();
+        });
+
+        $(".submit-comment").click(function() {
+            var commentText = $(this).siblings("textarea").val();
+            if (commentText) {
+                var commentHtml = `
+                    <div class="comment">
+                        <div class="comment-profile-pic">
+                            <img src="sad.png" alt="Profile Picture">
+                        </div>
+                        <div class="comment-content">
+                            <p class="comment-author">댓글 작성자</p>
+                            <p class="comment-text">${commentText}</p>
+                        </div>
+                    </div>
+                `;
+                $(this).siblings(".comments-container").append(commentHtml);
+                $(this).siblings("textarea").val(""); // 댓글 입력창 비우기
+            }
+        });
+    });
+
+    </script>
 </body>
 </html>
