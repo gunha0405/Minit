@@ -1,0 +1,392 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  html,
+  body {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+  }
+  
+  .wrapper section {
+    flex: 1;
+    position: relative; /* section 요소를 상대적으로 배치 */
+    width: 1000px; /* 고정된 너비 설정 */
+    max-width: 1000px;
+    overflow: auto;
+    margin-top: 5px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-grow: 1;
+    background-color: antiquewhite;
+    /* 부모 요소가 전체 높이를 가지도록 설정 */
+    flex: 1; /* 스크롤바가 생기도록 설정 */
+  }
+  
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    padding-top: 60px; /* header 높이 만큼 추가 */
+    display: flex;
+    align-items: center;
+  }
+  
+  header {
+    background-color: white;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000; /* header가 다른 요소들 위에 표시되도록 함 */
+  }
+  
+  .navbar-expand-lg {
+    height: 65px;
+    border-bottom: 1px solid lightgrey;
+  }
+  
+  .navbar-nav {
+    font-weight: bold;
+  }
+  
+  /* 메인 콘텐츠 부분 */
+  
+  .carText {
+    font-size: 30px;
+    font-weight: 700;
+  }
+  
+  .article-container {
+    max-width: 900px;
+    width: 1200px; /* 고정된 너비 설정 */
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    height: 100%;
+    overflow: auto; /* 스크롤바가 생기도록 설정 */
+  }
+  
+  .card {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+    width: 222px;
+    height: 222px;
+    transition: transform 0.3s ease; /* 애니메이션 추가 */
+  }
+  
+  .card img {
+    width: 80%;
+    height: 80%;
+    transition: transform 0.3s ease; /* 애니메이션 추가 */
+  }
+  
+  .card:hover img {
+    transform: scale(1.1); /* 이미지 확대 효과 */
+  }
+  
+  section {
+  }
+  
+  .photoUpload {
+    margin-left: 60%;
+    margin-bottom: 130px;
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    bottom: 0;
+    width: 60px;
+    z-index: 1000;
+  }
+  
+  .photoUpload .nav {
+    padding: 10px;
+    border-radius: 30px;
+    border: 0 solid darkgreen;
+    display: flex;
+    justify-content: space-around;
+    width: 80%;
+    height: 50px;
+    align-items: center;
+    background-color: #d9eddf;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 섀도우 추가로 입체감 부여 */
+  }
+  
+  .uploadItem {
+    font-size: 19px;
+    color: black;
+    text-decoration: none;
+  }
+  
+  .randomPage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    margin: 30px 0;
+    padding: 20px;
+    background-color: #75daa4;
+    cursor: pointer;
+    border-radius: 30px;
+    border: 0 solid gray;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 섀도우 추가로 입체감 부여 */
+  }
+  
+  /* 메인 콘텐츠 끝 */
+  .bottom-navBar {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 1000; /* 하단 내비게이션 바가 다른 요소들 위에 표시되도록 함 */
+  }
+  
+  .bottom-navBar .nav {
+    padding: 10px;
+    border-radius: 30px;
+    border: 0px solid darkgreen;
+    display: flex;
+    justify-content: space-around;
+    width: 80%;
+    height: 50px;
+    align-items: center;
+    background-color: #75daa4;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 섀도우 추가로 입체감 부여 */
+  }
+  
+  .item {
+    color: #f0f0f0; /* 밝은 회색으로 가독성 향상 */
+    font-size: 19px; /* 텍스트 크기 조절 */
+    text-decoration: none;
+    font-weight: 700;
+  }
+  
+  .item:hover {
+    color: lightseagreen; /* 밝은 회색으로 가독성 향상 */
+    font-size: 19px; /* 텍스트 크기 조절 */
+    border-radius: 30px;
+  }
+  
+  footer {
+    background-color: white;
+    width: 100%;
+    font-size: 13px;
+    border-top: 1px solid lightgrey;
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+  }
+  
+  footer div {
+    margin-left: 30px;
+    margin-block-end: 30px;
+  }
+  
+  .navbar .mx-auto {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 40px;
+  }
+  
+  .btn-outline-success {
+    width: 80px;
+    height: 40px;
+  }
+  
+  @media (max-width: 992px) {
+    .navbar .mx-auto {
+      position: static;
+      transform: none;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+  
+  .container-fluid {
+    margin-top: 8px;
+  }
+  
+  .nav-link {
+    border-bottom: 1px solid lightgrey;
+  }
+
+  .text-feed {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    padding-top: 0;
+}
+
+.text-feed-write-box {
+    display: flex;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin-bottom: 20px;
+    width: 100%; /* 추가 */
+}
+
+.profile-pic {
+    flex-shrink: 0;
+    margin-right: 15px;
+}
+
+.profile-pic img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.text-feed-write-area {
+    flex-grow: 1;
+}
+
+#text-feed-content {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    resize: none;
+    font-size: 16px;
+    outline: none;
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+#text-feed-content::placeholder {
+    color: #657786;
+}
+
+.text-feed-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.text-feed-button {
+    background-color: #6dd19c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.text-feed-button:hover {
+    background-color: #5cb488;
+}
+
+.text-feed-button:disabled {
+    background-color: #a1c9f1;
+    cursor: not-allowed;
+}
+
+.text-feed-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%; /* 추가 */
+}
+
+.post {
+    display: flex;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    width: 100%; /* 추가 */
+}
+
+.post-profile-pic {
+    flex-shrink: 0;
+    margin-right: 15px;
+}
+
+.post-profile-pic img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.post-content {
+    flex-grow: 1;
+}
+
+.line{
+    display: flex;
+    width: 100%;
+    
+    border-bottom: 2px solid gray;
+}
+
+.post-author {
+    font-weight: bold;
+}
+
+.post-text {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.post-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.post-actions i {
+    cursor: pointer;
+}
+
+.post-actions span {
+    font-size: 14px;
+    color: #657786;
+}
+
+.bottom-navBar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+}
+
+.bottom-navBar .nav {
+    display: flex;
+    justify-content: space-around;
+}
+
+.bottom-navBar .nav-item .item {
+    color: #6dd19c;
+    font-size: 24px;
+}
+
+footer {
+    padding: 20px;
+    background-color: #fff;
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+    box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+}
