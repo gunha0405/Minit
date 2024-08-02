@@ -90,7 +90,6 @@
                         <p class="post-text">게시글 내용</p>
                         <div class="post-actions">
                             <i class="fa fa-heart"></i>
-                            <i class="fa fa-plus-square"></i>
                             <i class="fa fa-paper-plane"></i>
                             <i class="fa fa-comment"></i>
                             <span>댓글수</span>
@@ -129,7 +128,6 @@
                         <p class="post-text">게시글 내용</p>
                         <div class="post-actions">
                             <i class="fa fa-heart"></i>
-                            <i class="fa fa-plus-square"></i>
                             <i class="fa fa-paper-plane"></i>
                             <i class="fa fa-comment"></i>
                             <span>댓글수</span>
@@ -168,7 +166,6 @@
                         <p class="post-text">게시글 내용</p>
                         <div class="post-actions">
                             <i class="fa fa-heart"></i>
-                            <i class="fa fa-plus-square"></i>
                             <i class="fa fa-paper-plane"></i>
                             <i class="fa fa-comment"></i>
                             <span>댓글수</span>
@@ -207,7 +204,6 @@
                         <p class="post-text">게시글 내용</p>
                         <div class="post-actions">
                             <i class="fa fa-heart"></i>
-                            <i class="fa fa-plus-square"></i>
                             <i class="fa fa-paper-plane"></i>
                             <i class="fa fa-comment"></i>
                             <span>댓글수</span>
@@ -291,10 +287,16 @@
                         </div>
                         <div class="comment-content">
                             <p class="comment-author">댓글 작성자</p>
-                            
                             <p class="comment-text">${commentText}</p>
+                            <div class="comment-actions">
+                                <i class="fa fa-heart"></i>
+                            </div>
                         </div>
-                    </div>
+                        <div class="comment-options">
+                            <button><span class="material-icons report-btn">report_problem</span></button>
+                            <button><span class="material-icons delete-btn">delete_forever</span></button>
+                        </div>
+                            </div>
                 `;
                 $(this).siblings(".comments-container").append(commentHtml);
                 $(this).siblings("textarea").val(""); // 댓글 입력창 비우기

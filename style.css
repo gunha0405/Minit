@@ -450,10 +450,30 @@ footer div {
 }
 
 .comment {
-    background-color: #f9f9f9;
+    display: flex;
+    align-items: flex-start;
+    background-color: rgba(255, 255, 255, 0.8); /* 배경을 투명하게 설정 */
     border-radius: 5px;
     padding: 10px;
     margin-top: 10px;
+    position: relative; /* 신고 및 삭제 버튼 배치를 위해 추가 */
+}
+.comment-options {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    display: flex;
+    gap: 5px;
+    border: none;
+}
+
+.comment-options .material-icons {
+    cursor: pointer;
+}
+
+.comment-options>button{
+    border: none;
+    background-color: white;
 }
 
 .bottom-navBar {
