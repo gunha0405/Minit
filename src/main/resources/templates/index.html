@@ -367,7 +367,56 @@ footer div {
 </style>
 </head>
 <body>
+
+
+
+	
+	
+
 	<th:block th:include="common/header"></th:block>
+	<div class="wrapper">
+    <section>
+      <div class="sub1-contents">
+        <a href="#">전체게시판</a>
+        <a href="#">인기게시판</a> 
+        <a href="#">친구게시판</a>
+        
+      </div>
+      <div class="contents">
+        <div class="main-contents">
+          <p class="board-write">전체게시판</p>
+          <div class="main-contents-box">
+            <article class="post">
+              <div class="post-header">
+                <h2 class="post-title">제목</h2>
+                <p class="post-meta">작성자</p>
+                <img src="image/smile.jpg" alt="게시글 이미지" class="post-image">
+                <p class="post-content">내용입니다.</p>
+                <div class="post-footer">
+                  <span class="post-comment">댓글</span>
+                  <button class="report-button" onclick="reportPost()">신고</button>
+                  <span class="post-stat">조회수</span>
+                </div>
+              </div>
+            </article>
+                 <article class="post">
+                  <div class="post-header">
+                    <h2 class="post-title">제목</h2>
+                    <p class="post-meta">작성자</p>
+                  </div>
+                  <img src="image/smile.jpg" alt="게시글 이미지" class="post-image">
+                  <p class="post-content">내용입니다.</p>
+                  <div class="post-footer">
+                    <span class="post-comment">댓글</span>
+                    <span class="post-stat">조회수</span>
+                  </div>
+                </article>
+          </div>
+        </div>
+      </div>
+    </section>
+	</div>
 	<th:block th:include="common/footer"></th:block>
+
 </body>
 </html>
