@@ -13,7 +13,7 @@
     <th:block th:include="/common/header"></th:block>
     <div class="wrapper">
         <section class="text-feed">
-            <div class="text-feed-write-box">
+            <div th:if="${session.user != null}" class="text-feed-write-box">
                 <div class="profile-pic">
                     <img src="logo1.jpg" alt="Profile Picture" />
                 </div>
@@ -21,7 +21,7 @@
                     <form action="/textFeedWrite" method="get">
                         <textarea name="text-feed-content" id="text-feed-content" placeholder="오늘 무슨일이 있었나요?(100자)"></textarea>
                         <div class="text-feed-actions">
-                            <button type="submit" class="text-feed-button">작성하기</button>
+                            <button  type="submit" class="text-feed-button">작성하기</button>
                         </div>
                     </form>
                 </div>
@@ -58,29 +58,49 @@
                     </div>
                 </div>
             </div>
-            <button id="load-more" class="text-feed-button">더보기</button>
+            <button th:if="${session.user != null}" id="load-more" class="text-feed-button">더보기</button>
+            <button th:if="${session.user == null}" id="login-load-more" class="text-feed-button">
+            <a
+           		class="nav-link"
+                aria-current="page"
+                href="/text/textList"
+                data-bs-toggle="modal"
+                data-bs-target="#loginModal"
+                >로그인 후 더보기</a></button>
+                
         </section>
     </div>
     <th:block th:include="/common/footer"></th:block>
 
     <script>
-        $(document).ready(function() {
-            let posts = $('#text-feed-posts .post');
-            let numPerPage = 3;
-            let currentPage = 1;
+    
+    $(document).ready(function() {
+        let posts = $('#text-feed-posts .post');
+        let numPerPage = 3;
+        let currentPage = 1;
 
-            function showPage(page) {
-                posts.hide();
-                posts.slice((page - 1) * numPerPage, page * numPerPage).show();
-            }
+        function showPage(page) {
+            let start = (page - 1) * numPerPage;
+            let end = page * numPerPage;
+            posts.slice(start, end).show();
+        }
 
+        // 초기 로드 시 첫 번째 페이지를 표시
+        showPage(currentPage);
+
+        $('#load-more').click(function() {
+            currentPage++;
             showPage(currentPage);
-
-            $('#load-more').click(function() {
-                currentPage++;
-                showPage(currentPage);
-            });
         });
-    </script>
+
+        // 모든 포스트를 숨기고 처음 numPerPage개의 포스트만 표시
+        posts.hide();
+        showPage(currentPage);
+    });
+    
+    $(".fa-ellipsis-h").click(function() {
+        $(this).siblings(".post-options").toggle();
+    });
+</script>
 </body>
 </html>
