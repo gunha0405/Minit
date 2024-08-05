@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+
+<link rel="stylesheet" href="/css/feed/feedStyle.css">
+<link rel="stylesheet" href="/css/feed/list.css">
+<link rel="stylesheet" href="/css/feed/followModal.css">
+<style>
+.feed-list {
+	margin-top: 100px;
+}
+</style>
+
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block th:include="common/header"></th:block>
+
+
+	<main class="content">
+		<section class="section feed-list">
+
+			<div class="user-profile">
+				<ul>
+
+					<li class="user-profile-photo">
+						<div>
+							<img src="/image/feed/profilePhoto.jfif" class="profile-image">
+						</div>
+					</li>
+					<li>
+						<div class="user-introduce">
+							<ul>
+								<li><span class="user-introduce-id">user_id</span></li>
+								<li><span class="user-introduce-nick">user_nick</span></li>
+								<li><span class="user-introduce-content">안녕하세요.
+										user입니다</span></li>
+							</ul>
+						</div>
+					</li>
+
+					<li class="user-content">
+						<div>
+							<ul>
+								<li>
+
+									<div class="user-content-no">
+										<ul>
+											<li>
+												<ul class="content-no">
+													<li><span class="content-total-no">0</span></li>
+													<li>게시물</li>
+												</ul>
+											</li>
+											<li>
+												<ul class="content-no">
+													<a href="#" id="openFollowModal"><li><span
+															class="follow-total-no">0</span></li>
+														<li>팔로워</li></a>
+												</ul>
+											</li>
+											<li>
+												<ul class="content-no">
+													<a href="#" id="openFollowingModal"><li><span
+															class="following-total-no">0</span></li>
+														<li>팔로잉</li></a>
+													<!--내가 친구-->
+												</ul>
+											</li>
+										</ul>
+									</div> <!-- 팔로워 모달 -->
+									<div id="followModal" class="modal">
+										<div class="modal-content">
+											<span class="close" id="closeFollowModal">&times;</span>
+											<div class="modal-header">팔로워 목록</div>
+											<div class="modal-body" id="followList">
+												<!-- 팔로워 리스트 항목들 -->
+												<p>
+													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
+														class="user-id">유저아이디</span>
+												</p>
+												<p>
+													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
+														class="user-id">유저아이디</span>
+												</p>
+												<p>
+													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
+														class="user-id">유저아이디</span>
+												</p>
+												<p>
+													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
+														class="user-id">유저아이디</span>
+												</p>
+												<p>
+													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
+														class="user-id">유저아이디</span>
+												</p>
+												<p>
+													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
+														class="user-id">유저아이디</span>
+												</p>
+												<p>
+													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
+														class="user-id">유저아이디</span>
+												</p>
+												<p>
+													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
+														class="user-id">유저아이디</span>
+												</p>
+												<p>
+													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
+														class="user-id">유저아이디</span>
+												</p>
+												<p>
+													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
+														class="user-id">유저아이디</span>
+												</p>
+											</div>
+										</div>
+									</div> <!-- 팔로잉 모달 -->
+									<div id="followingModal" class="modal">
+										<div class="modal-content">
+											<span class="close" id="closeFollowingModal">&times;</span>
+											<div class="modal-header">팔로잉 목록</div>
+											<div class="modal-body" id="followingList">
+												<!-- 팔로잉 리스트 항목들 -->
+												<p>
+													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
+														class="user-id">유저아이디</span>
+													<button class="modal-del">삭제</button>
+												</p>
+												<p>
+													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
+														class="user-id">유저아이디</span>
+													<button class="modal-del">삭제</button>
+												</p>
+												<p>
+													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
+														class="user-id">유저아이디</span>
+													<button class="modal-del">삭제</button>
+												</p>
+												<p>
+													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
+														class="user-id">유저아이디</span>
+													<button class="modal-del">삭제</button>
+												</p>
+												<p>
+													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
+														class="user-id">유저아이디</span>
+													<button class="modal-del">삭제</button>
+												</p>
+												<p>
+													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
+														class="user-id">유저아이디</span>
+													<button class="modal-del">삭제</button>
+												</p>
+												<p>
+													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
+														class="user-id">유저아이디</span>
+													<button class="modal-del">삭제</button>
+												</p>
+												<p>
+													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
+														class="user-id">유저아이디</span>
+													<button class="modal-del">삭제</button>
+												</p>
+												<p>
+													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
+														class="user-id">유저아이디</span>
+													<button class="modal-del">삭제</button>
+												</p>
+												<p>
+													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
+														class="user-id">유저아이디</span>
+													<button class="modal-del">삭제</button>
+												</p>
+											</div>
+										</div>
+									</div>
+								</li>
+
+								<li class="user-content-repository">
+									<div>									
+										<button class="button-style" id="write-feed">피드작성</button>
+										<button class="button-style" id="storage">보관함</button>
+									</div>
+								</li>
+							</ul>
+						</div>
+
+					</li>
+
+				</ul>
+			</div>
+
+			<div class="feed-list-wrap">
+
+
+				<div class="feed-list">
+					<ul>
+						<li class="peed-list-photo"><img
+							src="/image/feed/profilePhoto.jfif"></li>
+						<li class="peed-list-photo"><img
+							src="/image/feed/profilePhoto.jfif"></li>
+						<li class="peed-list-photo"><img
+							src="/image/feed/profilePhoto.jfif"></li>
+						<li class="peed-list-photo"><img
+							src="/image/feed/profilePhoto.jfif"></li>
+					</ul>
+				</div>
+				<div class="feed-list">
+					<ul>
+						<li class="peed-list-photo"><img
+							src="/image/feed/profilePhoto.jfif"></li>
+						<li class="peed-list-photo"><img
+							src="/image/feed/profilePhoto.jfif"></li>
+						<li class="peed-list-photo"><img
+							src="/image/feed/profilePhoto.jfif"></li>
+						<li class="peed-list-photo"><img
+							src="/image/feed/profilePhoto.jfif"></li>
+					</ul>
+				</div>
+			</div>
+
+
+			<div class="list-navi">
+				<ul>
+					<a href=""><li>1</li></a>
+					<a href=""><li>2</li></a>
+					<a href=""><li>3</li></a>
+					<a href=""><li>4</li></a>
+					<a href=""><li>5</li></a>
+				</ul>
+			</div>
+
+
+		</section>
+	</main>
+	<script src="/js/feed/followModal.js"></script>
+	<script>
+	
+	</script>
+	<th:block th:include="common/footer"></th:block>
+	
+</body>
+</html>
