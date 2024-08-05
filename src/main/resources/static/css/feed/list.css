@@ -1,0 +1,285 @@
+/* 기본 스타일 초기화 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.content{
+	width: 1200px;
+	margin: 0 auto;
+}
+* ul{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+* li {
+    padding: 0;
+    margin: 0;
+}
+}
+.content {
+    width: 1200px;
+    margin: 0 auto;
+}
+
+.content a {
+    text-decoration: none; 
+    color: black;
+}
+
+.feed-list-wrap {
+    margin: 0 auto;
+}
+
+/* 전체 레이아웃 */
+.user-profile {
+    display: flex;
+    flex-wrap: wrap; /* 반응형을 위한 줄바꿈 허용 */
+    justify-content: center; /* 가로 가운데 정렬 */
+    align-items: flex-start;
+    margin-top: 20px;
+    width: 100%;
+    padding: 0 20px; /* 여백 추가 */
+}
+
+.user-profile > ul {
+    display: flex;
+    flex-wrap: wrap; /* 반응형을 위한 줄바꿈 허용 */
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    width: 100%; /* 부모 요소에 맞게 너비 설정 */
+}
+
+/* 사용자 프로필 아이템 */
+.user-profile > ul > li {
+	/*
+    display: flex;
+    align-items: flex-start;
+    */
+    margin: 10px; /* 항목 간 간격 */
+}
+
+/* 프로필 사진 스타일 */
+.user-profile-photo {
+	
+    /*flex: 1 1 250px; /* 최소 너비 설정 */
+    /*display: flex;
+    */
+    justify-content: center;
+}
+
+.user-profile-photo > div > img {
+    width: 100%;
+    max-width: 250px; /* 최대 너비 설정 */
+    height: auto;
+    display: block;
+    margin-left: 20px;
+}
+
+/* 사용자 소개 스타일 */
+.user-introduce {
+       margin-right: 280px;
+    text-align: left;
+}
+
+.user-introduce-id {
+    font-size: 2.5rem; /* 반응형 폰트 크기 */
+}
+
+.user-introduce-nick {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.user-introduce-content {
+    font-size: 1.2rem;
+}
+
+/* 사용자 콘텐츠 스타일 */
+.user-content {
+    margin: 0 10px;
+}
+
+.user-content-no {
+    text-align: center;
+}
+
+.user-content-no > ul {
+    display: flex;
+    flex-wrap: wrap; /* 줄바꿈 허용 */
+    justify-content: right;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.user-content-no > ul > li {
+    margin: 10px;
+    font-size: 1.3rem;
+}
+
+.user-content-repository > div {
+    display: flex;
+    justify-content: right;
+    margin-top:10px;
+}
+
+.user-content-repository > div > button {
+    width: 100px;
+    height: 50px;
+    border-radius: 15px;
+    border: none;
+    background-color: #6DD19C;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.feed-list {
+    text-align: center;
+    margin: 0 auto;
+    margin-bottom: 30px;
+}
+
+.feed-list > ul {
+    display: flex;
+    flex-wrap: wrap; /* 줄바꿈 허용 */
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.feed-list > ul > li {
+    flex: 1 1 220px; /* 최소 크기와 비율 설정 */
+    margin: 15px;
+    text-align: center;
+}
+
+.feed-list > ul > li > img {
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.5s;
+}
+
+.feed-list > ul > li > img:hover {
+    transform: scale(1.2);
+}
+
+.list-navi {
+    display: flex;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.list-navi > ul {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    gap: 15px;
+}
+
+.list-navi > ul > li {
+    margin: 0 30px;
+}
+
+.list-navi > ul > li a {
+    text-decoration: none;
+    color: black;
+	font-size: 18px;
+}
+
+/* 미디어 쿼리 */
+@media (max-width: 1200px) {
+    .user-introduce-id {
+        font-size: 2rem;
+    }
+
+    .user-introduce-nick {
+        font-size: 1.5rem;
+    }
+
+    .user-introduce-content {
+        font-size: 1rem;
+    }
+
+    .user-content-no > ul > li {
+        font-size: 0.9rem;
+    }
+
+    .feed-list > ul > li {
+        flex: 1 1 150px; /* 줄어든 화면 크기에 맞추어 크기 조정 */
+    }
+}
+
+@media (max-width: 768px) {
+    .user-introduce-id {
+        font-size: 1.8rem;
+    }
+
+    .user-introduce-nick {
+        font-size: 1.4rem;
+    }
+
+    .user-introduce-content {
+        font-size: 0.9rem;
+    }
+
+    .user-content-no > ul > li {
+        font-size: 0.8rem;
+    }
+
+    .feed-list > ul > li {
+        flex: 1 1 120px; /* 더 작은 화면을 위한 조정 */
+    }
+
+    .list-navi {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .user-introduce-id {
+        font-size: 1.5rem;
+    }
+
+    .user-introduce-nick {
+        font-size: 1.2rem;
+    }
+
+    .user-introduce-content {
+        font-size: 0.8rem;
+    }
+
+    .user-content-no > ul > li {
+        font-size: 0.7rem;
+    }
+
+    .feed-list > ul > li {
+        flex: 1 1 100px; /* 최소 너비 설정 */
+    }
+
+    .list-navi {
+        font-size: 0.8rem;
+        flex-direction: column;
+    }
+
+    .list-navi > ul > li {
+        margin: 5px 0;
+    }
+}
+
+.user-content-no>ul{
+	text-align: center;
+}
+
+.user-content>div>ul{
+	margin-right:20px;
+}
+
+#write-feed {
+	margin: 0 10px;
+}

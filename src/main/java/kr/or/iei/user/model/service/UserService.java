@@ -18,6 +18,25 @@ public class UserService {
 	@Autowired
 	private UserImgDao userImgDao;
 	
+	public User selectOneUser(User u) {
+		User user = userDao.selectOneUser(u);
+		return user;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*
 	public User selectUser(User user, UserImg userImg) {
 		User getUser = userDao.selectUser(user);
 		if(getUser != null && userImg != null) {
@@ -69,5 +88,8 @@ public class UserService {
 		userImgParam.setUserId(user.getUserId());
 		userImgDao.deleteUserImg(userImgParam);
 		return result;
+	}
+*/
+	
 	}
 }
