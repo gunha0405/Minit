@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="/css/user/style.css" />
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>MINIT 마이페이지</title>
 </head>
 <body>
 	<th:block th:include="common/header"></th:block>
+	
 		<div class="wrapper">
             <!--메인 컨텐츠 시작 -->
             <section>
@@ -18,7 +20,7 @@
                             <tr>
                                 <th>프로필 사진</th>
                                 <td width="530px">
-                                  <img src="/image/minit_logo_2.png">
+                                  <img src="/image/logo/minit_logo_2.png">
                                 </td>
                                 <td>
                                   <button type="button" class="img-change-btn">변경</button>
@@ -27,7 +29,7 @@
                             </tr>
                             <tr>
                                 <th>아이디</th>
-                                <td th:text="${session.user.usrId}">아이디</td>
+                                <td th:text="${session.user.userId}">아이디</td>
                                 <td></td>
                             </tr>
                             <tr>
@@ -80,11 +82,12 @@
                               <td></td>
                             </tr>
                         </table>
-                        <input type="hidden" name="memberNo" th:value="${session.member.memberNo}">
+                        <input type="hidden" name="userNo" th:value="${session.user.userNo}">
                         <div class="mypage-btn">
                           <button type="submit" class="btn-point1">정보수정</button>
                           <button type="button" class="btn-point2">회원탈퇴</button>
-                          <a th:if="${session.member.memberLevel == 1}" href="/admin/allMember" class="btn-point3">관리자 페이지로</a>
+                          <a th:if="${session.user.userLevel == 1}" href="#" class="btn-point3">관리자 페이지로</a>
+                          <!-- <a th:if="${session.user.userLevel == 1}" href="/admin/allMember" class="btn-point3">관리자 페이지로</a> -->
                         </div>
                     </form>
                 </div>

@@ -16,9 +16,9 @@ public class UserDao {
 	@Autowired
 	private UserRowMapper userRowMapper;
 	
-	public User selectOneUser(User user) {
+	public User selectOneUser(User u) {
 		String query = "select * from user_tbl where user_id=? and user_pw=?";
-		Object[] params = {user.getUserId(), user.getUserPw()};
+		Object[] params = {u.getUserId(), u.getUserPw()};
 		List list = jdbc.query(query, userRowMapper, params);
 		if(list.isEmpty()) {
 			return null;
