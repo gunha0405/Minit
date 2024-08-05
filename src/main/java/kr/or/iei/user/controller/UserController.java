@@ -1,0 +1,55 @@
+package kr.or.iei.user.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
+
+import jakarta.servlet.http.HttpSession;
+import kr.or.iei.user.model.dto.User;
+import kr.or.iei.user.model.service.UserService;
+
+@Controller
+@RequestMapping(value="/user")
+public class UserController {
+	@Autowired
+	private UserService userService;
+	
+	@GetMapping(value="/login")
+	public String login(User user, Model model, HttpSession session) {
+		User getUser = userService.selectUser(user, null);
+		return "redirect:/";
+	}
+	
+	@GetMapping(value="/join")
+	public String join(User user, Model model) {
+		int result = userService.insertUser(user);
+		return "redirect:/";
+	}
+	
+	@GetMapping(value="/update")
+	public String update(User user, @SessionAttribute User getUSer) {
+		int result = userService.updateUser(user);
+		return "redirect:/";
+	}
+	
+	@GetMapping(value="/delete")
+	public String deleteUser(@SessionAttribute User user, Model model) {
+		int result = userService.deleteUser(user);
+		if(result > 0) {
+			model.addAttribute("title", "탈퇴완료");
+			model.addAttribute("msg", "만나서 반가웠고 다시는 보지말자");
+			model.addAttribute("icon", "success");			
+			model.addAttribute("loc", "/user/logout");			
+		}else {
+			model.addAttribute("title", "탈퇴실패");
+			model.addAttribute("msg", "처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+			model.addAttribute("icon", "error");			
+			model.addAttribute("loc", "/user/mypage");			
+		}
+		return "common/msg";
+	}
+
+}
