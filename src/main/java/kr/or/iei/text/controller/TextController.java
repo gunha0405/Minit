@@ -1,5 +1,7 @@
 package kr.or.iei.text.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,5 +20,11 @@ public class TextController {
 	public String textList() {
 		
 		return "text/textFeed";
+	}
+	
+	@GetMapping(value="/textFeedWrite")
+	public String textFeedWrite() {
+		
+		return "";
 	}
 }
