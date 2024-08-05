@@ -2,6 +2,7 @@ package kr.or.iei.text.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import kr.or.iei.text.model.service.TextService;
@@ -12,4 +13,9 @@ public class TextController {
 
 	@Autowired
 	private TextService textService;
+	
+	@GetMapping(value="/textList")
+	public String textList() {
+		return "";
+	}
 }
