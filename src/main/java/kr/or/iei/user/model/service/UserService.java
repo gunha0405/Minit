@@ -18,9 +18,9 @@ public class UserService {
 	@Autowired
 	private UserImgDao userImgDao;
 	
-	public User selectOneUser(User user) {
-		User getUser = userDao.selectOneUser(user);
-		return getUser;
+	public User selectOneUser(User u) {
+		User user = userDao.selectOneUser(u);
+		return user;
 	
 	
 	
