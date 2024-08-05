@@ -21,7 +21,7 @@ public class UserController {
 	@PostMapping(value="/login")
 	public String login(User u, Model model, HttpSession session) {
 		User user = userService.selectOneUser(u);
-		System.out.println(user.getUserLevel());
+		System.out.println(user);
 		if(user == null) {
 			model.addAttribute("title", "로그인 실패");
 			model.addAttribute("msg", "아이디 또는 비밀번호를 확인하세요");
@@ -53,7 +53,10 @@ public class UserController {
 		return "user/mypage";
 	}
 	
-	
+	@PostMapping(value = "/join")
+	public String join(User u, Model model) {
+		return null;
+	}
 	
 	
 	
