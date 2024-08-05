@@ -16,6 +16,7 @@ public class TextController {
 	
 	@GetMapping(value="/textList")
 	public String textList() {
-		return "";
+		
+		return "text/textFeed";
 	}
 }
