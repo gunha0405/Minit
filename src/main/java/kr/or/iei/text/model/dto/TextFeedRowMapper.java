@@ -7,11 +7,11 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TextRowMapper implements RowMapper<Text> {
+public class TextFeedRowMapper implements RowMapper<TextFeed> {
 
 	@Override
-	public Text mapRow(ResultSet rs, int rowNum) throws SQLException {
-		Text t = new Text();
+	public TextFeed mapRow(ResultSet rs, int rowNum) throws SQLException {
+		TextFeed t = new TextFeed();
 		t.setTextFeedNo(rs.getInt("text_feed_no"));
 		t.setTextFeedReadCount(rs.getInt("text_feed_read_count"));
 		t.setTextFeedRegDate(rs.getString("text_feed_reg_date"));

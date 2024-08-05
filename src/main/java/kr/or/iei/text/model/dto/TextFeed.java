@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Text {
+public class TextFeed {
 	private int textFeedNo;
 	private String textFeedContent;
 	private int textFeedReadCount;

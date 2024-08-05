@@ -344,11 +344,11 @@ footer div {
     border-bottom: 2px solid gray;
 }
 
-.post-author {
+.text-feed-writer {
     font-weight: bold;
 }
 
-.post-text {
+.text-feed-content {
     margin: 0;
     font-size: 16px;
     line-height: 1.5;
@@ -550,4 +550,10 @@ footer {
     50% {
       transform: translate3d(0, 5px, 0);
     }
+  }
+  
+  
+  
+  .text-feed-button{
+  	margin-top: 25px;
   }
