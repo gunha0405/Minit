@@ -1,0 +1,64 @@
+@charset "UTF-8";
+
+.findaccount-main>*{
+  margin: 0;
+  padding: 0;
+  outline: none;
+}
+
+
+.logo>.logo-img{
+  height: 200px;
+  width: 200px;
+  margin: 50px auto;
+  align-items: center;
+  background-color: aliceblue;
+  text-align: center;
+  line-height: 200px;
+}
+
+.logo>.logo-img>img{
+  width: 100%;
+}
+
+.main>.main-text{
+  text-align: center;
+  margin: 50px auto;
+  font-size: 17px;
+  line-height: 60px;
+}
+
+.link-button{
+  height: 200px;
+  text-align: center;
+}
+
+.find{
+  display: inline-block;
+  height: 50px;
+  line-height: 50px;
+  width: 150px;
+  margin: 30px 30px;
+  background-color: #75daa4;
+  border: none;
+  border-radius: 30px;
+}
+
+
+
+.modal-title{
+  text-align: center;
+}
+.modal-title>img{
+  width: 40%;
+}
+
+.modal-footer>.btn{
+  margin: 0 auto;
+  width: 30%;
+}
+
+.modal-body form {
+  text-align: left;
+}
+

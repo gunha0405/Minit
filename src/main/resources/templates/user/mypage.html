@@ -5,6 +5,92 @@
 <title>Insert title here</title>
 </head>
 <body>
-
+	<th:block th:include="common/header"></th:block>
+		<div class="wrapper">
+            <!--메인 컨텐츠 시작 -->
+            <section>
+                <div class="page-title">
+                    마이 페이지
+                </div>
+                <div class="my-info-wrap">
+                    <form action="#" method="post" autocomplete="off">
+                        <table class="info-tbl">
+                            <tr>
+                                <th>프로필 사진</th>
+                                <td width="530px">
+                                  <img src="/image/minit_logo_2.png">
+                                </td>
+                                <td>
+                                  <button type="button" class="img-change-btn">변경</button>
+                                  <button type="button" class="img-delete-btn">삭제</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>아이디</th>
+                                <td th:text="${session.user.usrId}">아이디</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                  <label for="userNick">사용자이름</label>
+                                </th>
+                                <td>
+                                  <div class="input-item">
+                                    <input type="text" name="userNick" id="userNick" th:value="${session.user.userNick}">
+                                  </div>
+                                  <p class="input-msg id-check-msg"></p>
+                                </td>
+                                <td>
+                                  <button type="button" class="my-check-btn">중복체크</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                  <label for="userInfo">소개글</label>
+                                </th>
+                                <td>
+                                  <div class="input-item">
+                                    <input type="text" name="userInfo" id="userInfo" th:value="${session.user.userInfo}">
+                                  </div>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>이름</th>
+                                <td th:text="${session.user.userName}">이름</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>이메일</th>
+                                <td th:text="${session.user.userEmail}">이메일</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>비밀번호</th>
+                                <td>
+                                  <div class="input-item">
+                                    <input type="password" name="userPw" id="userPw" th:value="${session.user.userPw}">
+                                  </div>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>                                
+                              <th>가입일</th>
+                              <td th:text="${session.user.createDate}">가입일</td>
+                              <td></td>
+                            </tr>
+                        </table>
+                        <input type="hidden" name="memberNo" th:value="${session.member.memberNo}">
+                        <div class="mypage-btn">
+                          <button type="submit" class="btn-point1">정보수정</button>
+                          <button type="button" class="btn-point2">회원탈퇴</button>
+                          <a th:if="${session.member.memberLevel == 1}" href="/admin/allMember" class="btn-point3">관리자 페이지로</a>
+                        </div>
+                    </form>
+                </div>
+                
+            </section>
+          </div>
+	<th:block th:include="common/footer"></th:block>
 </body>
 </html>
