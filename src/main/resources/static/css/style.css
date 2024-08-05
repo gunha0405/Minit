@@ -1,39 +1,41 @@
 @charset "UTF-8";
 
 
-* {
+*{
   box-sizing: border-box;
 }
 
-html,
-body {
+html,body{
   padding: 0;
   margin: 0;
-  height: 100%;
-}
-
-/*정렬값*/
-.wrapper section {
-  position: relative; /* section 요소를 상대적으로 배치 */
-  width: 1000px; /* 고정된 너비 설정 */
-  max-width: 1000px;
-  overflow: auto;
-  margin-top: 5px;
-  height: 100%;
-  flex-grow: 1;  /*background-color: antiquewhite;*/
-  /* 부모 요소가 전체 높이를 가지도록 설정 */
-  flex: 1; /* 스크롤바가 생기도록 설정 */
+  overflow-x: hidden;
 }
 
 .wrapper {
   display: flex;
-  flex-direction: column;
+  flex-direction: row; /* 수평 방향으로 배치 */
   height: auto;
   min-height: 100vh;
   padding-top: 60px; /* header 높이 만큼 추가 */
+  justify-content: center; /* 왼쪽 정렬 */
+  align-items: flex-start; /* 상단 정렬 */
+}
+
+.wrapper section {
+  flex: 1;
+  position: relative;
+  width: 1000px;/* sub1-contents의 너비를 제외한 나머지 공간을 차지 */
+  max-width: 1000px;
+  overflow: auto;
+  margin-top: 5px;
+  height: 100%;
+  flex-grow: 1;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
 }
+
 
 header {
   background-color: white;
@@ -53,47 +55,147 @@ header {
 }
 
 /* 메인 콘텐츠 부분 */
-
-.carText {
-  font-size: 30px;
-  font-weight: 700;
-}
-
-.article-container {
-  max-width: 900px;
-  width: 1200px; /* 고정된 너비 설정 */
+.main-content {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: center;
-  height: 100%;
-  overflow: auto; /* 스크롤바가 생기도록 설정 */
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 20px;
 }
 
-.card {
-  padding: 10px;
+.post {
+  background-color: #fff;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.post-header {
+  margin-bottom: 10px;
+}
+
+.post-title {
+  font-size: 1.5em;
+  margin-bottom: 5px;
+}
+
+.post-meta {
+  color: #888;
+  font-size: 0.9em;
+}
+
+.post-content {
+  margin-bottom: 10px;
+}
+
+.post-footer {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 20px;
-  width: 222px;
-  height: 222px;
-  transition: transform 0.3s ease; /* 애니메이션 추가 */
+  justify-content: space-between;
+  font-size: 0.9em;
+  color: #888;
 }
 
-.card img {
-  width: 80%;
-  height: 80%;
-  transition: transform 0.3s ease; /* 애니메이션 추가 */
+.post-stat {
+  margin-left: 10px;
+}
+.post-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
-.card:hover img {
-  transform: scale(1.1); /* 이미지 확대 효과 */
+.main-contents-box,
+.main-contents-box2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
 }
 
-section {
+.post {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
+.post-image {
+  max-width: 80%; 
+  height: auto; 
+  border-radius: 0.5rem;
+}
+
+
+
+.board-write {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+  padding-bottom: 30px;
+}
+
+
+.contents {
+  width: 900px;
+  height: calc(100vh - 60px - 100px); 
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto; 
+}
+
+.sub1-contents {
+  margin-top: 3px;
+  width: 190px;
+  height: 200px;
+  display: flex;
+  flex-direction: column; 
+  justify-content: start;
+  align-items: center; 
+  padding: 20px;
+  margin-right: 20px;
+  background-color: #75DAA4;
+  border-radius: 20px;
+}
+
+.sub1-contents a {
+  color: whitesmoke;
+  text-decoration: none; 
+  font-size: 20px; 
+  padding: 15px; 
+  border-radius: 5px; 
+  text-align: center; 
+  width: 100%; 
+}
+.sub1-contents a:hover {
+  color:#6dd19c;
+}
+
+.sub2-contents {
+  margin-top: 5px;
+  width: 190px;
+  height: 700px;
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center; 
+  padding: 20px; 
+  margin-left: 20px;
+}
+
+.sub2-contents a {
+  color: white; 
+  text-decoration: none; 
+  font-size: 16px; 
+  margin: 20px 0; 
+  padding: 20px; 
+  border-radius: 5px; 
+  color: black;
+}
+
+
+
 
 .photoUpload {
   margin-left: 60%;
@@ -140,11 +242,11 @@ section {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 섀도우 추가로 입체감 부여 */
 }
 
+
+/* 메인 콘텐츠 끝 */
 .modal-header{
   flex-direction: column;
 }
-
-/* 메인 콘텐츠 끝 */
 .bottom-navBar {
   margin-bottom: 20px;
   display: flex;
@@ -299,7 +401,7 @@ footer div {
   display: flex;
   justify-content: space-between;
 }
-.check-btn{ //커스텀
+.check-btn{
   margin-right: 5px;
   width: 90px;
   display: flex;
