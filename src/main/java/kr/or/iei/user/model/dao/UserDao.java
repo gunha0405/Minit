@@ -16,6 +16,36 @@ public class UserDao {
 	@Autowired
 	private UserRowMapper userRowMapper;
 	
+	public User selectOneUser(User user) {
+		String query = "select * from user_tbl where user_id=? and user_pw=?";
+		Object[] params = {user.getUserId(), user.getUserPw()};
+		List list = jdbc.query(query, userRowMapper, params);
+		if(list.isEmpty()) {
+			return null;
+		}else {
+			return (User)list.get(0);			
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*
 	public User selectUser(User user) {
 		String query = "select * from user_tbl "
 				+ "where user_id=? "
@@ -57,5 +87,7 @@ public class UserDao {
 		int result = jdbc.update(query, params);
 		return result;
 	}
+
+	*/
 	
 }
