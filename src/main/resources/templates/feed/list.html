@@ -18,6 +18,12 @@
 	<th:block th:include="common/header"></th:block>
 
 
+<!-- 
+페이지에서 받아야 하는 정보 
+페이지 주인의 넘버, 유저의 아이디, 유저의 닉네임, 유저의 자기소개, 팔로워, 팔로잉, 게시물 갯수
+페이지 넘겨줄때 페이지 주인의 아이디 / 1페이지 
+ -->
+
 	<main class="content">
 		<section class="section feed-list">
 
@@ -32,10 +38,15 @@
 					<li>
 						<div class="user-introduce">
 							<ul>
-								<li><span class="user-introduce-id">user_id</span></li>
-								<li><span class="user-introduce-nick">user_nick</span></li>
-								<li><span class="user-introduce-content">안녕하세요.
-										user입니다</span></li>
+								<li><span class="user-introduce-id"></span>유저id</li>  <!-- 페이지를 누를때 유저의 넘버(아이디)를 보낸다, 유저의 번호와 로그인한 유저의 번호가 같으면 보이는 버튼  -->
+						
+								<li><span class="user-introduce-nick"></span>유저nick</li>
+								<li><span class="user-introduce-content"></span>유저content</li>
+							<!-- 
+								<li><span th:text="${user.userId}" class="user-introduce-id"></span></li>
+								<li><span th:text="${user.userNick}" class="user-introduce-nick"></span></li>
+								<li><span th:text="${user.userInfo}" class="user-introduce-content"></span></li>
+							 -->
 							</ul>
 						</div>
 					</li>
@@ -44,7 +55,6 @@
 						<div>
 							<ul>
 								<li>
-
 									<div class="user-content-no">
 										<ul>
 											<li>
@@ -181,9 +191,12 @@
 								</li>
 
 								<li class="user-content-repository">
-									<div>									
-										<button class="button-style" id="write-feed">피드작성</button>
-										<button class="button-style" id="storage">보관함</button>
+									<div>							 	<!-- th:if="${session.user != null && session.user.userNo == u.userNo}" -->
+										
+										<button th:if="${session.user != null}" class="button-style" id="write-feed">피드작성</button>
+										<button th:if="${session.user != null}" class="button-style" id="storage">보관함</button>
+										<button th:if="${session.user == null}" class="button-style" id="follow-btn" >팔로우</button>
+										<!-- 팔로우를 누르면 팔로우 취소 버튼으로 ,  -->
 									</div>
 								</li>
 							</ul>
@@ -193,6 +206,7 @@
 
 				</ul>
 			</div>
+			
 
 			<div class="feed-list-wrap">
 
@@ -235,12 +249,34 @@
 			</div>
 
 
+
 		</section>
+	
 	</main>
 	<script src="/js/feed/followModal.js"></script>
+
 	<script>
+	$('write-feed').on('click', function() {
+		window.location.href = '/feed/writeForm'
+	})
 	
-	</script>
+	$(document).ready(function() {
+    $('#follow-btn').on('click', function() {
+        var $this = $(this);
+
+        // 현재 버튼의 텍스트를 확인하고 상태를 변경합니다.
+        if ($this.text().trim() === '팔로우') {
+            // '팔로우' 상태일 때
+            $this.text('팔로우 취소');
+            window.location.href = '/feed/userFollowCancle'+session.user;
+        } else {
+     	       // '팔로우 취소' 상태일 때
+            $this.text('팔로우');
+            window.location.href = '/feed/userFollow'+session.user;
+      	  }
+  	 	 });
+	});
+</script>
 	<th:block th:include="common/footer"></th:block>
 	
 </body>
