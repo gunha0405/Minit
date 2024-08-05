@@ -19,24 +19,24 @@ public class UserController {
 	private UserService userService;
 	
 	@PostMapping(value="/login")
-	public String login(User user, Model model, HttpSession session) {
-		User getUser = userService.selectOneUser(user);
-		System.out.println(getUser.getUserLevel());
-		if(getUser == null) {
+	public String login(User u, Model model, HttpSession session) {
+		User user = userService.selectOneUser(u);
+		System.out.println(user.getUserLevel());
+		if(user == null) {
 			model.addAttribute("title", "로그인 실패");
 			model.addAttribute("msg", "아이디 또는 비밀번호를 확인하세요");
 			model.addAttribute("icon","error");
 			model.addAttribute("loc", "/");
 			return "common/msg";
 		}else {
-			if(getUser.getUserLevel() == 3) {
+			if(user.getUserLevel() == 3) {
 				model.addAttribute("title", "로그인 권한 없음");
 				model.addAttribute("msg", "관리자에게 문의하세요");
 				model.addAttribute("icon","warning");
 				model.addAttribute("loc", "/");
 				return "common/msg";
 			}else {
-				session.setAttribute("user", getUser);
+				session.setAttribute("user", user);
 				return "redirect:/";
 			}
 		}
@@ -48,6 +48,10 @@ public class UserController {
 		return "redirect:/";
 	}
 
+	@GetMapping(value="/mypage")
+	public String mypage() {
+		return "user/mypage";
+	}
 	
 	
 	
