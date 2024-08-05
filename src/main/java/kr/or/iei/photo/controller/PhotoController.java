@@ -1,6 +1,5 @@
 package kr.or.iei.photo.controller;
 
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 import kr.or.iei.photo.model.service.PhotoService;
+import kr.or.iei.util.FileUtils;
 
 @Controller
 @RequestMapping(value="/photo")
