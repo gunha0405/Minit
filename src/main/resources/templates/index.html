@@ -1,427 +1,83 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script defer src="index.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="/css/style.css" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-      crossorigin="anonymous"
-    />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
-    <title>Document</title>
-  </head>
-  <body>
-  <header>
-    <th:block th:include="common/header"></th:block>
-  </header>
-  <footer>
-    <th:block th:include="common/footer"></th:block>
-  </footer>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"
-    ></script>
-  </body>
-=======
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
+ <link rel="stylesheet" href="/css/style.css" />
 <title>Minit 프로젝트</title>
-<style>
-
-*{
-  box-sizing: border-box;
-}
-
-html,body{
-  padding: 0;
-  margin: 0;
-  overflow-x: hidden;
-}
-
-.wrapper {
-  display: flex;
-  flex-direction: row; /* 수평 방향으로 배치 */
-  height: auto;
-  min-height: 100vh;
-  padding-top: 60px; /* header 높이 만큼 추가 */
-  justify-content: center; /* 왼쪽 정렬 */
-  align-items: flex-start; /* 상단 정렬 */
-}
-
-.wrapper section {
-  flex: 1;
-  position: relative;
-  width: 1000px;/* sub1-contents의 너비를 제외한 나머지 공간을 차지 */
-  max-width: 1000px;
-  overflow: auto;
-  margin-top: 5px;
-  height: 100%;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-
-.main-content {
-  display: flex;
-  max-width: 1200px;
-  margin: 20px auto;
-  padding: 0 20px;
-}
-
-.post {
-  background-color: #fff;
-  padding: 15px;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.post-header {
-  margin-bottom: 10px;
-}
-
-.post-title {
-  font-size: 1.5em;
-  margin-bottom: 5px;
-}
-
-.post-meta {
-  color: #888;
-  font-size: 0.9em;
-}
-
-.post-content {
-  margin-bottom: 10px;
-}
-
-.post-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.report-button {
-  background-color: #f44336; 
-  color: white; 
-  border: none; 
-  padding: 10px 20px; 
-  font-size: 14px; 
-  cursor: pointer; 
-  border-radius: 5px; 
-}
-
-.report-button:hover {
-  background-color: #d32f2f; 
-}
-
-.post-stat {
-  margin-left: 10px;
-}
-.post-content img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-}
-
-.main-contents-box,
-.main-contents-box2 {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-}
-
-.post {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.post-image {
-  max-width: 80%; 
-  height: auto; 
-  border-radius: 0.5rem;
-}
-
-
-
-.board-write {
-  text-align: center;
-  font-size: 2rem;
-  font-weight: bold;
-  margin: 0;
-  padding-bottom: 30px;
-}
-
-
-.contents {
-  width: 900px;
-  height: calc(100vh - 60px - 100px); 
-  padding: 20px;
-  box-sizing: border-box;
-  overflow-y: auto; 
-}
-
-.sub1-contents {
-  margin-top: 3px;
-  width: 190px;
-  height: 200px;
-  display: flex;
-  flex-direction: column; 
-  justify-content: start;
-  align-items: center; 
-  padding: 20px;
-  margin-right: 20px;
-  background-color: #75DAA4;
-  border-radius: 20px;
-}
-
-.sub1-contents a {
-  color: whitesmoke;
-  text-decoration: none; 
-  font-size: 20px; 
-  padding: 15px; 
-  border-radius: 5px; 
-  text-align: center; 
-  width: 100%; 
-}
-.sub1-contents a:hover {
-  color:#6dd19c;
-}
-
-.sub2-contents {
-  margin-top: 5px;
-  width: 190px;
-  height: 700px;
-  display: flex; 
-  flex-direction: column; 
-  justify-content: center; 
-  align-items: center; 
-  padding: 20px; 
-  margin-left: 20px;
-}
-
-.sub2-contents a {
-  color: white; 
-  text-decoration: none; 
-  font-size: 16px; 
-  margin: 20px 0; 
-  padding: 20px; 
-  border-radius: 5px; 
-  color: black;
-}
-
-
-
-
-.photoUpload {
-  margin-left: 60%;
-  margin-bottom: 130px;
-  display: flex;
-  justify-content: center;
-  position: fixed;
-  bottom: 0;
-  width: 60px;
-  z-index: 1000;
-}
-
-.photoUpload .nav {
-  padding: 10px;
-  border-radius: 30px;
-  border: 0 solid darkgreen;
-  display: flex;
-  justify-content: space-around;
-  width: 80%;
-  height: 50px;
-  align-items: center;
-  background-color: #d9eddf;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.uploadItem {
-  font-size: 19px;
-  color: black;
-  text-decoration: none;
-}
-
-.randomPage {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 20px;
-  height: 20px;
-  margin: 30px 0;
-  padding: 20px;
-  background-color: #75daa4;
-  cursor: pointer;
-  border-radius: 30px;
-  border: 0 solid gray;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.bottom-navBar {
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: center;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  z-index: 1000;
-}
-
-.bottom-navBar .nav {
-  padding: 10px;
-  border-radius: 30px;
-  border: 0px solid darkgreen;
-  display: flex;
-  justify-content: space-around;
-  width: 80%;
-  height: 50px;
-  align-items: center;
-  background-color: #75daa4;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.item {
-  color: #f0f0f0;
-  font-size: 19px;
-  text-decoration: none;
-  font-weight: 700;
-}
-
-.item:hover {
-  color: lightseagreen;
-  font-size: 19px;
-  border-radius: 30px;
-}
-
-footer {
-  background-color: white;
-  width: 100%;
-  font-size: 13px;
-  border-top: 1px solid lightgrey;
-  display: flex;
-  align-items: center;
-  padding: 20px;
-  position: relative;
-}
-.ocean {
-  background: #34bd72;
-  height: 10%;
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  z-index: -1;
-}
-.wave {
-  background: url("/wave.svg") repeat-x;
-  position: absolute;
-  top: -198px;
-  width: 6400px;
-  height: 198px;
-  animation: wave 7s cubic-bezier(0.39, 0.48, 0.66, 0.56) infinite;
-  transform: translate3d(0, 0, 0);
-}
-.wave:nth-of-type(2) {
-  top: -175px;
-  animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) -0.125s infinite,
-    swell 7s ease -1.25s infinite;
-  opacity: 1;
-}
-@keyframes wave {
-  0% {
-    margin-left: 0;
-  }
-  100% {
-    margin-left: -1600px;
-  }
-}
-@keyframes swell {
-  0%,
-  100% {
-    transform: translate3d(0, -25px, 0);
-  }
-  50% {
-    transform: translate3d(0, 5px, 0);
-  }
-}
-
-footer div {
-  margin-left: 30px;
-  margin-block-end: 30px;
-}
-
-.navbar .mx-auto {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40%;
-  height: 40px;
-}
-
-.btn-outline-success {
-  width: 80px;
-  height: 40px;
-}
-
-@media (max-width: 992px) {
-  .navbar .mx-auto {
-    position: static;
-    transform: none;
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-
-.container-fluid {
-  margin-top: 8px;
-}
-
-.nav-link {
-  border-bottom: 1px solid lightgrey;
-}
-
-</style>
 </head>
 <body>
-
-
-
-	
-	
-
 	<th:block th:include="common/header"></th:block>
-	<div class="wrapper">
-    <section>
+<div class="wrapper">
+      <!--회원가입 모달창-->
+      <div
+        class="modal fade"
+        id="loginModal"
+        tabindex="-1"
+        aria-labelledby="loginModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="loginModalLabel">로그인</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="mb-3">
+                  <label for="email" class="form-label">아이디</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="email"
+                    placeholder="name@example.com"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="password" class="form-label">비밀번호</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    placeholder="비밀번호"
+                  />
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                닫기
+              </button>
+              <button type="button" class="btn btn-primary">로그인</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--메인 컨텐츠 시작 -->
       <div class="sub1-contents">
         <a href="#">전체게시판</a>
-        <a href="#">인기게시판</a> 
+        <a href="#">인기게시판</a>
         <a href="#">친구게시판</a>
-        
       </div>
-      <div class="contents">
-        <div class="main-contents">
-          <p class="board-write">전체게시판</p>
-          <div class="main-contents-box">
-            <article class="post">
-              <div class="post-header">
-                <h2 class="post-title">제목</h2>
-                <p class="post-meta">작성자</p>
+    <section>
+        <div class="contents">
+          <div class="main-contents">
+            <p class="board-write">전체게시판</p>           
+            <div class="main-contents-box">
+              <article class="post">
+                <div class="post-header">
+                  <h2 class="post-title">제목</h2>
+                  <p class="post-meta">작성자</p>
+                </div>
                 <img src="image/smile.jpg" alt="게시글 이미지" class="post-image">
                 <p class="post-content">내용입니다.</p>
                 <div class="post-footer">
@@ -429,27 +85,130 @@ footer div {
                   <button class="report-button" onclick="reportPost()">신고</button>
                   <span class="post-stat">조회수</span>
                 </div>
-              </div>
-            </article>
-                 <article class="post">
-                  <div class="post-header">
-                    <h2 class="post-title">제목</h2>
-                    <p class="post-meta">작성자</p>
-                  </div>
-                  <img src="image/smile.jpg" alt="게시글 이미지" class="post-image">
-                  <p class="post-content">내용입니다.</p>
-                  <div class="post-footer">
-                    <span class="post-comment">댓글</span>
-                    <span class="post-stat">조회수</span>
-                  </div>
-                </article>
+              </article>
+              <article class="post">
+                <div class="post-header">
+                  <h2 class="post-title">제목</h2>
+                  <p class="post-meta">작성자</p>
+                </div>
+                <img src="image/smile.jpg" alt="게시글 이미지" class="post-image">
+                <p class="post-content">내용입니다.</p>
+                <div class="post-footer">
+                  <span class="post-comment">댓글</span>
+                  <span class="post-stat">조회수</span>
+                </div>
+              </article>
+              <article class="post">
+                <div class="post-header">
+                  <h2 class="post-title">제목</h2>
+                  <p class="post-meta">작성자</p>
+                </div>
+                <img src="image/smile.jpg" alt="게시글 이미지" class="post-image">
+                <p class="post-content">내용입니다.</p>
+                <div class="post-footer">
+                  <span class="post-comment">댓글</span>
+                  <span class="post-stat">조회수</span>
+                </div>
+              </article>
+              <article class="post">
+                <div class="post-header">
+                  <h2 class="post-title">제목</h2>
+                  <p class="post-meta">작성자</p>
+                </div>
+                <img src="image/smile.jpg" alt="게시글 이미지" class="post-image">
+                <p class="post-content">내용입니다.</p>
+                <div class="post-footer">
+                  <span class="post-comment">댓글</span>
+                  <span class="post-stat">조회수</span>
+                </div>
+              </article>
+            </div>
+          </div> 
+          <div class="main-contents2">
+            <div class="main-contents-box2">
+              <article class="post">
+                <div class="post-header">
+                  <h2 class="post-title">제목</h2>
+                  <p class="post-meta">작성자</p>
+                </div>
+                <img src="image/smile.jpg" alt="게시글 이미지" class="post-image">
+                <p class="post-content">게시글내용</p>
+                <div class="post-footer">
+                  <span class="post-comment">댓글</span>
+                  <span class="post-stat">조회수</span>
+                </div>
+              </article>
+              <article class="post">
+                <div class="post-header">
+                  <h2 class="post-title">제목</h2>
+                  <p class="post-meta">작성자</p>
+                </div>
+                <img src="image/smile.jpg" alt="게시글 이미지" class="post-image">
+                <p class="post-content">내용</p>
+                <div class="post-footer">
+                  <span class="post-comment">댓글</span>
+                  <span class="post-stat">조회수</span>
+                </div>
+              </article>
+              <article class="post">
+                <div class="post-header">
+                  <h2 class="post-title">제목</h2>
+                  <p class="post-meta">작성자</p>
+                </div>
+                <img src="image/smile.jpg" alt="게시글 이미지" class="post-image">
+                <p class="post-content">내용입니다</p>
+                <div class="post-footer">
+                  <span class="post-comment">댓글</span>
+                  <span class="post-stat">조회수</span>
+                </div>
+              </article>
+              <article class="post">
+                <div class="post-header">
+                  <h2 class="post-title">제목</h2>
+                  <p class="post-meta">작성자</p>
+                </div>
+                <img src="image/smile.jpg" alt="게시글 이미지" class="post-image">
+                <p class="post-content">내용입니다</p>
+                <div class="post-footer">
+                  <span class="post-comment">댓글</span>
+                  <span class="post-stat">조회수</span>
+                </div>
+              </article>
+            </div>
           </div>
         </div>
+      </section>
+      <div class="sub2-contents">
+        <a href="#">이자리는 광고가 들어올예정입니다.</a>
       </div>
-    </section>
-	</div>
+      <div class="photoUpload">
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="uploadItem" aria-current="page" href="#">+</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+	   <div class="bottom-navBar">
+      <ul class="nav">
+        <li class="nav-item">
+          <a class="item" aria-current="page" href="#"
+            ><i class="fa-solid fa-house"></i
+          ></a>
+        </li>
+        <li class="nav-item">
+          <a class="item" href="#"><i class="fa-solid fa-user"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="item" href="#"><i class="fa-solid fa-newspaper"></i></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="item" href="#"><i class="fa-solid fa-camera"></i></a>
+        </li>
+      </ul>
+    </div>
+	
+	
 	<th:block th:include="common/footer"></th:block>
-
 </body>
->>>>>>> main
 </html>
