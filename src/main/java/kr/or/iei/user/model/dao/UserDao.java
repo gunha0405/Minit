@@ -26,6 +26,34 @@ public class UserDao {
 			return (User)list.get(0);			
 		}
 	}
+
+	public User selectOneUser(String userNick) {
+		String query = "select * from user_tbl where user_nick=?";
+		Object[] params = {userNick};
+		List list =  jdbc.query(query, userRowMapper, params);
+		if(list.isEmpty()) {
+			return null;
+		}else {
+			return (User)list.get(0);
+		}
+	}
+
+	public int insertUser(User u) {
+		String query = "insert into user_tbl "
+				+ "(user_no, user_id, user_pw, user_name, user_nick, user_email, create_date) "
+				+ "values "
+				+ "(user_tbl_seq.nextval,?,?,?,?,?,to_char(sysdate,'yyyy-mm-dd'))";
+		Object[] params = {u.getUserId(), u.getUserPw(), u.getUserName(), u.getUserNick(), u.getUserEmail()};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+	public int updateUser(User u) {
+		String query = "update user_tbl set user_nick=?, user_info=?, user_pw=?, update_date=to_char(sysdate,'yyyy-mm-dd') where user_no=?";
+		Object[] params = {u.getUserNick(),u.getUserInfo(),u.getUserPw(),u.getUserNo()};
+		int result = jdbc.update(query, params);
+		return result;
+	}
 	
 	
 	
