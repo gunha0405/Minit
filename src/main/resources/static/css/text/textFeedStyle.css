@@ -554,3 +554,7 @@ footer {
   .text-feed-button{
   	margin-top: 25px;
   }
+  
+  .comment-author{
+  	font-size: 18px;
+  }

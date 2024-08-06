@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import kr.or.iei.text.model.dto.TextFeed;
+import kr.or.iei.text.model.dto.TextFeedComment;
+import kr.or.iei.text.model.dto.TextFeedCommentJsonList;
 import kr.or.iei.text.model.dto.TextFeedJsonList;
 import kr.or.iei.text.model.service.TextService;
 import kr.or.iei.user.model.dto.User;
@@ -29,16 +31,19 @@ public class TextController {
     
     @GetMapping(value="/textFeedList")
     public String textList(Model model) {
-        List textFeedList = textService.selectTextFeed();
+        List<TextFeed> textFeedList = textService.selectTextFeed();
+        for (TextFeed textFeed : textFeedList) {
+            List<TextFeedComment> comments = textService.selectTextFeedComment(textFeed.getTextFeedNo());
+            textFeed.setTextFeedCommentList(comments);
+        }
         model.addAttribute("textFeedList", textFeedList);
-        
         return "text/textFeed";
     }
     
     @ResponseBody
     @GetMapping(value="/textFeedWrite")
     public TextFeedJsonList textFeedWrite(String textFeedContent, @SessionAttribute(required =false) User user) {
-    	int result = textService.insertTextFeed(textFeedContent, user);
+    	int result = textService.textFeedWrite(textFeedContent, user);
     	if(result > 0) {
     		//json 리턴
     		//글정보 + user 정보 + userImg 정보 리턴
@@ -59,5 +64,22 @@ public class TextController {
     	int result = textService.deleteTextFeed(textFeedNo);
     	
     	return result;
+    }
+    
+    @ResponseBody
+    @GetMapping(value="/textFeedCommentWrite")
+    public TextFeedCommentJsonList textFeedCommentWrite(@SessionAttribute(required =false) User user,String textFeedCommentContent,int textFeedNo) {
+    	int result = textService.textFeedCommentWrite(textFeedCommentContent, textFeedNo,user);
+    	if(result > 0) {
+    		//json 리턴
+    		//댓글정보 + user 정보 + userImg 리턴
+    		int textFeedCommentNo = textService.getTextFeedCommentNo();
+    		TextFeedComment textFeedComment = textService.selectOnetTextFeedComment(textFeedCommentNo);
+    		User commentWriterUser = userService.selectOneUser(user);
+    		TextFeedCommentJsonList textFeedCommentJsonList = new TextFeedCommentJsonList(commentWriterUser, textFeedComment);
+    		return textFeedCommentJsonList;
+    	}else {    		
+    		return null;
+    	}
     }
 }
