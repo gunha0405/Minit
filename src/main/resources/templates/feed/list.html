@@ -53,10 +53,10 @@
 					<li>
 						<div class="user-introduce">
 							<ul>
-								<li><span class="user-introduce-id"></span>유저id</li>  <!-- 페이지를 누를때 유저의 넘버(아이디)를 보낸다, 유저의 번호와 로그인한 유저의 번호가 같으면 보이는 버튼  -->
+								<li><span class="user-introduce-id" th:text="${user.userId}"></span></li> 
 						
-								<li><span class="user-introduce-nick"></span>유저nick</li>
-								<li><span class="user-introduce-content"></span>유저content</li>
+								<li><span class="user-introduce-nick" th:text="${user.userNick}"></span></li>
+								<li><span class="user-introduce-content" th:text=${user.userInfo}></span></li>
 							<!-- 
 								<li><span th:text="${user.userId}" class="user-introduce-id"></span></li>
 								<li><span th:text="${user.userNick}" class="user-introduce-nick"></span></li>
@@ -268,7 +268,8 @@
           <a class="item" aria-current="page" href="#">Home</a>
         </li>
         <li class="nav-item">
-          <a class="item" href="#">MY</a>
+        <!-- session에 있는 유저 아이디 가져오기 ? 만약에 아이디가 null 이면 로그인해주세요. 로그인 시 서비스 이용가능합니다. msg 사용 -->
+          <a class="item" href="/feed/list">MY</a>  
         </li>
         <li class="nav-item">
           <a class="item" href="#">자유</a>
