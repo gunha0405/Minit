@@ -187,7 +187,7 @@
                     const newPost = data.textFeed;
                     const user = data.user;
                     const postHtml = `
-                        <div class="post">
+                        <div class="post" style="display:none;">
                             <span class="textFeedNo" style="display:none;">${newPost.textFeedNo}</span>
                             <div class="post-profile-pic">
                                 <img src="Profile Picture" alt="Profile Picture">
@@ -221,17 +221,17 @@
 
                     const newPostElement = $(postHtml);
                     $("#text-feed-posts").prepend(newPostElement);
-                    $("#text-feed-content").val("");
+                    newPostElement.slideDown("slow");
                     
-                    // 새로 추가된 요소들에 이벤트 바인딩
                     bindPostEvents(newPostElement);
+                    $("#text-feed-content").val("");
                 },
                 error: function() {
                     console.log("서버연결 실패");
                     alert("글 작성 실패");
                 }
             });
-        });//글 작성
+        });//글 작성하기
         
         const isLoggedIn = $('#currentUser').val() === 'true';
 
@@ -282,7 +282,7 @@
                         </div>
                     `;
                     textFeedElement.find(".comments-container").append(commentHtml);
-                    textFeedElement.find("textarea").val(""); // 댓글 입력창 비우기
+                    textFeedElement.find("textarea").val(""); 
             	},
             	error : function(){
             		console.log("데이터 전송 실패");
