@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<link rel="stylesheet" href="/css/user/style.css" />
+<link rel="stylesheet" href="/css/user/userStyle.css" />
 <head>
 <meta charset="UTF-8">
 <title>MINIT 마이페이지</title>
@@ -15,7 +15,7 @@
                     	마이 페이지
                 </div>
                 <div class="my-info-wrap">
-                    <form action="#" method="post" autocomplete="off">
+                    <form action="/user/update" method="post" autocomplete="off">
                         <table class="info-tbl">
                             <tr>
                                 <th>프로필 사진</th>
@@ -38,13 +38,13 @@
                                 </th>
                                 <td>
                                   <div class="input-item">
-                                    <input type="text" name="userNick" id="userNick" th:value="${session.user.userNick}">
+                                    <input type="text" name="userNick" id="userNick" th:value="${{session.user.userNick}}">
+	                                <p class="input-msg nick-check-msg none"></p>
                                   </div>
-                                  <p class="input-msg id-check-msg"></p>
                                 </td>
                                 <td>
-                                  <button type="button" class="my-check-btn">중복체크</button>
-                                </td>
+	                              <button type="button" class="nick-check-btn">중복체크</button>
+	                            </td>
                             </tr>
                             <tr>
                                 <th>
@@ -52,7 +52,7 @@
                                 </th>
                                 <td>
                                   <div class="input-item">
-                                    <input type="text" name="userInfo" id="userInfo" th:value="${session.user.userInfo}">
+                                    <input type="text" name="userInfo" id="userInfo" th:value="${session.user.userInfo}" placeholder="소개글 입력란">
                                   </div>
                                 </td>
                                 <td></td>
@@ -76,6 +76,16 @@
                                 </td>
                                 <td></td>
                             </tr>
+                            <tr>
+                                <th>비밀번호 확인</th>
+                                <td>
+                                  <div class="input-item">
+                                    <input type="password" name="userRePw" id="userRePw">
+                                    <p class="input-msg pw-check-msg none"></p>
+                                  </div>
+                                </td>
+                                <td></td>
+                            </tr>
                             <tr>                                
                               <th>가입일</th>
                               <td th:text="${session.user.createDate}">가입일</td>
@@ -86,14 +96,54 @@
                         <div class="mypage-btn">
                           <button type="submit" class="btn-point1">정보수정</button>
                           <button type="button" class="btn-point2">회원탈퇴</button>
-                          <a th:if="${session.user.userLevel == 1}" href="#" class="btn-point3">관리자 페이지로</a>
-                          <!-- <a th:if="${session.user.userLevel == 1}" href="/admin/allMember" class="btn-point3">관리자 페이지로</a> -->
+                          <a th:if="${session.user.userLevel == 1}" href="/admin/warning" class="btn-point3">관리자 페이지로</a>
                         </div>
                     </form>
                 </div>
                 
             </section>
           </div>
+        
+		<script>
+			$(".nick-check-btn").on("click",function(){
+				$(".nick-check-msg").removeClass("none");
+				console.log($("#userNick"));
+				console.log($("#userNick").val());
+				const userNick = $("#userNick").val();
+				console.log(userNick);
+				$.ajax({
+					url : "/user/ajaxCheckNick",
+					type : "get",
+					data : {userNick : userNick},
+					success : function(data){
+						if(data == 0){
+							$(".nick-check-msg").text("사용 가능한 닉네임 입니다.");
+							$(".nick-check-msg").addClass("valid");
+						}else{
+							$(".nick-check-msg").text("이미 사용중인 닉네임 입니다.");
+							$(".nick-check-msg").addClass("invalid");
+						}
+					},
+					error : function(){
+						console.log("에러 발생");
+					}
+				});
+			});
+			$("#userRePw").on("change",function(){
+				$(".pw-check-msg").removeClass("none");
+				const pwValue = $("#userPw").val();
+				const pwReValue = $("#userRePw").val();
+				if(pwValue === pwReValue){
+					$(".pw-check-msg").text("비밀번호가 일치합니다.");
+					$(".pw-check-msg").addClass("valid");
+				}else{
+					$(".pw-check-msg").text("비밀번호가 일치하지 않습니다.");
+					$(".pw-check-msg").addClass("invalid");				
+				}
+			});
+		</script>
+        
+        
 	<th:block th:include="common/footer"></th:block>
 </body>
 </html>

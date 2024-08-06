@@ -21,7 +21,24 @@ public class UserService {
 	public User selectOneUser(User u) {
 		User user = userDao.selectOneUser(u);
 		return user;
-	
+	}
+
+	public User selectOneUser(String userNick) {
+		User user = userDao.selectOneUser(userNick);
+		return user;
+	}
+
+	@Transactional
+	public int insertUser(User u) {
+		int result = userDao.insertUser(u);
+		return result;
+	}
+
+	@Transactional
+	public int updateUser(User u) {
+		int result = userDao.updateUser(u);
+		return result;
+	}
 	
 	
 	
@@ -91,5 +108,5 @@ public class UserService {
 	}
 */
 	
-	}
+	
 }
