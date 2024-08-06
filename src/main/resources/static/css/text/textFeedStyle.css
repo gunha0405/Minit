@@ -556,5 +556,6 @@ footer {
   }
   
   .comment-author{
-  	font-size: 18px;
+  	font-size: 14px;
+  	font-weight: bold;
   }

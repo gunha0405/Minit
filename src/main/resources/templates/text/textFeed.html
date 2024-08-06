@@ -80,6 +80,7 @@
             </div>
             <button th:if="${session.user != null}" id="load-more" class="text-feed-button">더보기</button>
             <button th:if="${session.user == null}" id="login-load-more" class="text-feed-button">
+            
             <a
            		class="nav-link"
                 aria-current="page"
@@ -102,7 +103,7 @@
         function showPage(page) {
             let start = (page - 1) * numPerPage;
             let end = page * numPerPage;
-            posts.slice(start, end).show();
+            posts.slice(start, end).fadeIn();
         }
 
         // 초기 로드 시 첫 번째 페이지를 표시
@@ -111,6 +112,7 @@
         $('#load-more').click(function() {
             currentPage++;
             showPage(currentPage);
+            
         });
 
         // 모든 포스트를 숨기고 처음 numPerPage개의 포스트만 표시
@@ -235,7 +237,7 @@
 
         if (isLoggedIn) {
             $(".fa-comment").click(function() {
-                $(this).closest(".post").find(".comment-section").toggle();
+                $(this).closest(".post").find(".comment-section").slideToggle();
             });
         }else{
         	$(".fa-comment").click(function(){
