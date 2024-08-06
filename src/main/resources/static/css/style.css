@@ -248,11 +248,10 @@ header {
   flex-direction: column;
 }
 .bottom-navBar {
-  margin-bottom: 20px;
   display: flex;
   justify-content: center;
-  position: fixed;
-  bottom: 0;
+  position: sticky;
+  bottom: 20px; /* 하단에서 15px 간격 */
   width: 100%;
   z-index: 1000; /* 하단 내비게이션 바가 다른 요소들 위에 표시되도록 함 */
 }
@@ -263,10 +262,10 @@ header {
   border: 0px solid darkgreen;
   display: flex;
   justify-content: space-around;
-  width: 80%;
+  width: 55%;
   height: 50px;
   align-items: center;
-  background-color: #75daa4;
+  background-color: #2cd37a;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 섀도우 추가로 입체감 부여 */
 }
 

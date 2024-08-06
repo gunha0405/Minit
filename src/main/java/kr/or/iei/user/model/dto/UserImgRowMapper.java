@@ -20,6 +20,5 @@ public class UserImgRowMapper implements RowMapper<UserImg> {
 		userImg.setCreateDate(rs.getString("create_date"));
 		userImg.setUpdateDate(rs.getString("update_date"));
 		return null;
-	}
-	
+	}	
 }

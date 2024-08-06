@@ -1,5 +1,7 @@
 package kr.or.iei.text.model.dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class TextFeed {
 	private int textFeedNo;
 	private String textFeedContent;
-	private int textFeedReadCount;
 	private String textFeedRegDate;
 	private String textFeedWriter;
+	private List<TextFeedComment> textFeedCommentList;
 }

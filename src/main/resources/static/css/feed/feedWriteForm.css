@@ -60,6 +60,7 @@
 }
 
 .button-tr td {
+	margin-top : 20px;
     text-align: center;
 }
 
@@ -68,3 +69,21 @@
     margin-bottom: 50px;
 }
 
+/* 부모 요소 설정 */
+.input-item {
+  display: flex; /* Flexbox 사용 */
+  justify-content: center; /* 수평 중앙 정렬 */
+  align-items: center; /* 수직 중앙 정렬 */
+  height: 500px; /* 부모 요소의 높이 설정 (필요에 따라 조정) */
+  width: 100%; /* 부모 요소의 너비 설정 (필요에 따라 조정) */
+  margin-bottom: 20px; /* 버튼과의 간격을 조정하기 위한 여백 설정 */
+  box-sizing: border-box; /* 패딩과 테두리가 전체 크기에 포함되도록 설정 */
+}
+
+/* textarea 설정 */
+textarea {
+  width: 80%; /* 원하는 너비 설정 */
+  max-width: 100%; /* 최대 너비를 부모 요소에 맞게 설정 */
+  height: 300px; /* 원하는 높이 설정 */
+  resize: none; /* 사용자 크기 조정 방지 */
+}
