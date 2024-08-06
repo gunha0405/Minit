@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.iei.photo.model.dao.PhotoDao;
 import kr.or.iei.photo.model.dto.Photo;
+import kr.or.iei.photo.model.dto.PhotoComment;
 
 @Service
 public class PhotoService {
@@ -15,6 +16,10 @@ public class PhotoService {
 	public int insertPhoto(Photo p) {
 		// TODO Auto-generated method stub
 		int result = photoDao.insertPhoto(p);
+		return result;
+	}
+	public static int insertComment(PhotoComment pc) {
+		int result = PhotoDao.insertComment(pc);
 		return result;
 	}
 }

@@ -6,6 +6,21 @@
 <link rel="stylesheet" href="/css/feed/feedStyle.css">
 <link rel="stylesheet" href="/css/feed/list.css">
 <link rel="stylesheet" href="/css/feed/followModal.css">
+<script defer src="index.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link
+   href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+   rel="stylesheet"
+   integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+   crossorigin="anonymous"
+/>
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
 <style>
 .feed-list {
 	margin-top: 100px;
@@ -17,6 +32,12 @@
 <body>
 	<th:block th:include="common/header"></th:block>
 
+
+<!-- 
+페이지에서 받아야 하는 정보 
+페이지 주인의 넘버, 유저의 아이디, 유저의 닉네임, 유저의 자기소개, 팔로워, 팔로잉, 게시물 갯수
+페이지 넘겨줄때 페이지 주인의 아이디 / 1페이지 
+ -->
 
 	<main class="content">
 		<section class="section feed-list">
@@ -32,10 +53,15 @@
 					<li>
 						<div class="user-introduce">
 							<ul>
-								<li><span class="user-introduce-id">user_id</span></li>
-								<li><span class="user-introduce-nick">user_nick</span></li>
-								<li><span class="user-introduce-content">안녕하세요.
-										user입니다</span></li>
+								<li><span class="user-introduce-id"></span>유저id</li>  <!-- 페이지를 누를때 유저의 넘버(아이디)를 보낸다, 유저의 번호와 로그인한 유저의 번호가 같으면 보이는 버튼  -->
+						
+								<li><span class="user-introduce-nick"></span>유저nick</li>
+								<li><span class="user-introduce-content"></span>유저content</li>
+							<!-- 
+								<li><span th:text="${user.userId}" class="user-introduce-id"></span></li>
+								<li><span th:text="${user.userNick}" class="user-introduce-nick"></span></li>
+								<li><span th:text="${user.userInfo}" class="user-introduce-content"></span></li>
+							 -->
 							</ul>
 						</div>
 					</li>
@@ -44,7 +70,6 @@
 						<div>
 							<ul>
 								<li>
-
 									<div class="user-content-no">
 										<ul>
 											<li>
@@ -181,9 +206,12 @@
 								</li>
 
 								<li class="user-content-repository">
-									<div>									
-										<button class="button-style" id="write-feed">피드작성</button>
-										<button class="button-style" id="storage">보관함</button>
+									<div>							 	<!-- th:if="${session.user != null && session.user.userNo == u.userNo}" -->
+										
+										<a href="/feed/writeForm"><button th:if="${session.user != null}" class="button-style" id="write-feed">피드작성</button></a>
+										<a href="/feed/userStorage"><button th:if="${session.user != null}" class="button-style" id="storage">보관함</button></a>
+										<button th:if="${session.user == null}" class="button-style" id="follow-btn" >팔로우</button>
+										<!-- 팔로우를 누르면 팔로우 취소 버튼으로 ,  -->
 									</div>
 								</li>
 							</ul>
@@ -193,6 +221,7 @@
 
 				</ul>
 			</div>
+			
 
 			<div class="feed-list-wrap">
 
@@ -233,15 +262,56 @@
 					<a href=""><li>5</li></a>
 				</ul>
 			</div>
+<div class="bottom-navBar">
+      <ul class="nav">
+        <li class="nav-item">
+          <a class="item" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="item" href="#">MY</a>
+        </li>
+        <li class="nav-item">
+          <a class="item" href="#">자유</a>
+        </li>
+        <li class="nav-item">
+          <a class="item" href="#">M</a>
+        </li>
+      </ul>
+    </div>
 
 
 		</section>
+	
 	</main>
 	<script src="/js/feed/followModal.js"></script>
+
 	<script>
+	$('write-feed').on('click', function() {
+		window.location.href = '/feed/writeForm'
+	})
 	
-	</script>
+	$(document).ready(function() {
+    $('#follow-btn').on('click', function() {
+        var $this = $(this);
+
+        // 현재 버튼의 텍스트를 확인하고 상태를 변경합니다.
+        if ($this.text().trim() === '팔로우') {
+            // '팔로우' 상태일 때
+            $this.text('팔로우 취소');
+            window.location.href = '/feed/userFollowCancle'+session.user;
+        } else {
+     	       // '팔로우 취소' 상태일 때
+            $this.text('팔로우');
+            window.location.href = '/feed/userFollow'+session.user;
+      	  }
+  	 	 });
+	});
+</script>
+	  <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
 	<th:block th:include="common/footer"></th:block>
-	
 </body>
 </html>

@@ -10,10 +10,20 @@ body {
   overflow-x: hidden;
 }
 
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  min-height: 100vh;
+  padding-top: 60px; /* header 높이 만큼 추가 */
+  display: flex;
+  align-items: center;
+}
+
 .wrapper section {
   flex: 1;
   position: relative; /* section 요소를 상대적으로 배치 */
-  width: 1000px; /* 고정된 너비 설정 */
+  width: 1100px; /* 고정된 너비 설정 */
   max-width: 1000px;
   overflow: auto;
   margin-top: 5px;
@@ -27,22 +37,17 @@ body {
   flex: 1; /* 스크롤바가 생기도록 설정 */
 }
 
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  height: auto;
-  min-height: 100vh;
-  padding-top: 60px; /* header 높이 만큼 추가 */
-  display: flex;
-  align-items: center;
-}
-
 header {
   background-color: white;
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 1000; /* header가 다른 요소들 위에 표시되도록 함 */
+}
+
+.dropDownMenu {
+  margin-top: 10px;
+  background-color: white;
 }
 
 .navbar-expand-lg {
@@ -55,6 +60,27 @@ header {
 }
 
 /* 메인 콘텐츠 부분 */
+
+#columns {
+  column-width: 250px;
+  column-gap: 15px;
+}
+#columns figure {
+  display: inline-block;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  margin: 0;
+  margin-bottom: 15px;
+  padding: 10px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+#columns figure img {
+  width: 100%;
+}
+#columns figure figcaption {
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  margin-top: 11px;
+}
 
 .carText {
   font-size: 30px;
@@ -79,9 +105,12 @@ header {
   justify-content: center;
   align-items: center;
   margin: 20px;
-  width: 222px;
-  height: 222px;
   transition: transform 0.3s ease; /* 애니메이션 추가 */
+}
+
+.card a {
+  display: flex;
+  justify-content: center;
 }
 
 .card img {
@@ -90,8 +119,8 @@ header {
   transition: transform 0.3s ease; /* 애니메이션 추가 */
 }
 
-.card:hover img {
-  transform: scale(1.1); /* 이미지 확대 효과 */
+.card:hover {
+  transform: scale(1.01); /* 이미지 확대 효과 */
 }
 
 .photoUpload {
@@ -100,8 +129,10 @@ header {
   display: flex;
   justify-content: center;
   position: sticky;
-  bottom: 0;
-  width: 60px;
+  bottom: 15px; /* 아래 간격 15px 설정 */
+  width: 70px;
+  height: 70px;
+  bottom: 70px;
   z-index: 1000;
 }
 
@@ -118,16 +149,43 @@ header {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 섀도우 추가로 입체감 부여 */
 }
 
+.imageIconMenu {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.imageRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
 .imageIconBox {
   display: flex;
   flex-direction: row;
   justify-content: end;
   padding: 10px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  transform: translateX(0px); /* 오른쪽에서 나타나도록 설정 */
+}
+
+.imageIconBox.active {
+  opacity: 1;
+  transform: translateX(0); /* 원래 위치로 이동 */
 }
 
 .imageIconBox i {
   font-size: 25px;
   margin-right: 15px;
+}
+
+.imageToggle {
+  font-size: 30px;
+  margin-right: 30px;
 }
 
 .uploadItem {
@@ -138,11 +196,10 @@ header {
 
 /* 메인 콘텐츠 끝 */
 .bottom-navBar {
-  margin-bottom: 30px;
   display: flex;
   justify-content: center;
   position: sticky;
-  bottom: 0;
+  bottom: 20px; /* 하단에서 15px 간격 */
   width: 100%;
   z-index: 1000; /* 하단 내비게이션 바가 다른 요소들 위에 표시되도록 함 */
 }
@@ -153,7 +210,7 @@ header {
   border: 0px solid darkgreen;
   display: flex;
   justify-content: space-around;
-  width: 60%;
+  width: 55%;
   height: 50px;
   align-items: center;
   background-color: #2cd37a;
@@ -219,6 +276,8 @@ footer div {
   border-bottom: 1px solid lightgrey;
 }
 
+/* 모달 댓글 부분 */
+
 .comment-section {
   padding: 10px;
   border-top: 1px solid #ddd;
@@ -283,6 +342,8 @@ footer div {
 #updateModal {
   z-index: 1060;
 }
+
+/* 오션 CSS*/
 
 .ocean {
   background: #34bd72;
