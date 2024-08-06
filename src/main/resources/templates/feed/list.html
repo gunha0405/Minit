@@ -6,6 +6,21 @@
 <link rel="stylesheet" href="/css/feed/feedStyle.css">
 <link rel="stylesheet" href="/css/feed/list.css">
 <link rel="stylesheet" href="/css/feed/followModal.css">
+<script defer src="index.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link
+   href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+   rel="stylesheet"
+   integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+   crossorigin="anonymous"
+/>
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
 <style>
 .feed-list {
 	margin-top: 100px;
@@ -193,8 +208,8 @@
 								<li class="user-content-repository">
 									<div>							 	<!-- th:if="${session.user != null && session.user.userNo == u.userNo}" -->
 										
-										<button th:if="${session.user != null}" class="button-style" id="write-feed">피드작성</button>
-										<button th:if="${session.user != null}" class="button-style" id="storage">보관함</button>
+										<a href="/feed/writeForm"><button th:if="${session.user != null}" class="button-style" id="write-feed">피드작성</button></a>
+										<a href="/feed/userStorage"><button th:if="${session.user != null}" class="button-style" id="storage">보관함</button></a>
 										<button th:if="${session.user == null}" class="button-style" id="follow-btn" >팔로우</button>
 										<!-- 팔로우를 누르면 팔로우 취소 버튼으로 ,  -->
 									</div>
@@ -247,7 +262,22 @@
 					<a href=""><li>5</li></a>
 				</ul>
 			</div>
-
+<div class="bottom-navBar">
+      <ul class="nav">
+        <li class="nav-item">
+          <a class="item" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="item" href="#">MY</a>
+        </li>
+        <li class="nav-item">
+          <a class="item" href="#">자유</a>
+        </li>
+        <li class="nav-item">
+          <a class="item" href="#">M</a>
+        </li>
+      </ul>
+    </div>
 
 
 		</section>
@@ -277,7 +307,11 @@
   	 	 });
 	});
 </script>
+	  <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
 	<th:block th:include="common/footer"></th:block>
-	
 </body>
 </html>

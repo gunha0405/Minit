@@ -29,13 +29,21 @@ public class FeedController {
 	public String view() {
 		return "feed/view";
 	}
-	@GetMapping(value="/userFollow")
+	@GetMapping(value="/userFollow") //피드.리스트 완성후 작업예정 
 	public void follow() {
 		
 	}
 	
-	@GetMapping(value="/userFollowCnacle")
+	@GetMapping(value="/userFollowCnacle")//피드.리스트완성후 작업예정 
 	public void userFollowCnacle() {
 		
+	}
+	@GetMapping(value="/writeForm")
+	public String wirteForm() {
+		return "feed/writeForm";
+	}
+	@GetMapping(value="/userStorage")
+	public String userStorage() {
+		return "/#";
 	}
 }
