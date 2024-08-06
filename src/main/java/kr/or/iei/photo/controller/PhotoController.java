@@ -1,12 +1,18 @@
 package kr.or.iei.photo.controller;
 
+import java.io.File;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.or.iei.photo.model.dto.Photo;
@@ -24,10 +30,21 @@ public class PhotoController {
 	@Autowired
 	private FileUtils fileUtils;
 	
+	
 	@GetMapping(value="/list")
 	public String list(Model model) {
+		List photoFeedList = photoService.selectPhotoFeed();
+		model.addAttribute("list",photoFeedList);
 		return "photo/list";
 	}
+	
+	@ResponseBody
+	@GetMapping(value="/more")
+	public List photoMore() {
+		List photoList = photoService.selectPhotoFeed();
+		return photoList;
+	}
+	
 	@PostMapping(value="/write")
 	public String write(MultipartFile imageFile,Model model) {
 		String savepath= root+"/photo/";
@@ -48,6 +65,10 @@ public class PhotoController {
 		model.addAttribute("loc","/photo/list");
 		return "common/msg";
 	}
+	
+	
+	
+	
 	@PostMapping(value="/insertComment")
 	public String insertComment(PhotoComment pc,Model model) {
 		int result = PhotoService.insertComment(pc);
@@ -62,5 +83,12 @@ public class PhotoController {
 		}
 		model.addAttribute("loc","/photo/list");
 		return "common/msg";
+	}
+	
+	@GetMapping(value="/delete")
+	@ResponseBody
+	public String delete(int photoNo,Model model) {
+		int list = photoService.deletePhoto(photoNo);
+		return "photo/list";
 	}
 }
