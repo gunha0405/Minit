@@ -8,8 +8,6 @@ import kr.or.iei.board.model.dto.BoardRowMapper;
 
 @Repository
 public class BoardDao {
-	@Autowired
-	private JdbcTemplate jdbc;
 	//@Autowired
 	//private BoardRowMapper boardRowMapper;
 }
