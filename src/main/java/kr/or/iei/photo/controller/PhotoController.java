@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.or.iei.photo.model.dto.Photo;
+import kr.or.iei.photo.model.dto.PhotoComment;
 import kr.or.iei.photo.model.service.PhotoService;
 import kr.or.iei.util.FileUtils;
 
@@ -43,6 +44,21 @@ public class PhotoController {
 			model.addAttribute("title","작성실패");
 			model.addAttribute("msg","작성되었습니다.");
 			model.addAttribute("icon","error");
+		}
+		model.addAttribute("loc","/photo/list");
+		return "common/msg";
+	}
+	@PostMapping(value="/insertComment")
+	public String insertComment(PhotoComment pc,Model model) {
+		int result = PhotoService.insertComment(pc);
+		if(result > 0){
+			model.addAttribute("title","댓글 작성 성공");
+			model.addAttribute("msg","댓글이 작성되었습니다.");
+			model.addAttribute("icon","success");
+		}else {
+			model.addAttribute("title","댓글 작성 실패");
+			model.addAttribute("msg","댓글이 작성되었습니다.");
+			model.addAttribute("icon","warning");
 		}
 		model.addAttribute("loc","/photo/list");
 		return "common/msg";

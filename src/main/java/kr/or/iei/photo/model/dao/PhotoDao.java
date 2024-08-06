@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import kr.or.iei.photo.model.dto.Photo;
+import kr.or.iei.photo.model.dto.PhotoComment;
 import kr.or.iei.photo.model.dto.PhotoRowMapper;
 
 @Repository
@@ -18,5 +19,9 @@ public class PhotoDao {
 		Object[] params = {p.getPhotoFeedImg(),p.getPhotoFeedWriter()};
 		int result = jdbc.update(query,params);
 		return result;
+	}
+	public static int insertComment(PhotoComment pc) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }
