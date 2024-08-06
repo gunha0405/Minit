@@ -33,7 +33,7 @@
     <!--여기에 콘텐츠 작성-->
       <div class="content">
         <div class="page-title"><p>새 게시물</p></div>
-        <form action="#" method="post" enctype="multipart/form-data" >
+        <form action="/feed/feedWrite" method="post" enctype="multipart/form-data" >
           <div class="image-container">
             <div class="image-box">
                 <input class="input-image-box" type="file" id="mainImageInput" accept="image/*">
@@ -53,14 +53,15 @@
         </div>          
         <table class="tbl">
               <td style="width:40%;">
-                <input type="buttons" name="noticeWriter" value="유저아이디"> <!--히든으로 숨길예정-->
+               <!--히든으로 숨길예정-->
+               <input type="hidden" name="userFeedWriter" th:value="${session.user.userId}">
               </td>
             </tr>
             <tr>
               <td colspan="4">
                 <div class="input-item">
                   <!-- 본문은 여러줄의 값을 입력하므로 input이 아닌 textarea로 입력 받음 -->
-                  <textarea name="noticeContent" id="noticeContent"></textarea>
+                  <textarea name="userFeedContent" id="userFeedContent"></textarea>
                 </div>
               </td>
 
@@ -104,7 +105,7 @@
       crossorigin="anonymous"
     ></script>
     <script>
-    $('#noticeContent').summernote({
+    $('#userFeedContent').summernote({
         // 에디터 높이
         height: 500,
         // 에디터 한글 설정
