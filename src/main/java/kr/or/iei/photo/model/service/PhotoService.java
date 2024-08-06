@@ -1,5 +1,7 @@
 package kr.or.iei.photo.model.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,5 +23,17 @@ public class PhotoService {
 	public static int insertComment(PhotoComment pc) {
 		int result = PhotoDao.insertComment(pc);
 		return result;
+	}
+	public List selectPhotoFeed() {
+		List photoList = photoDao.selectPhotoList();
+		return photoList;
+	}
+	public int deletePhoto(int photoNo) {
+		int result = photoDao.deletePhoto(photoNo);
+		if(result >0) {
+			return result;
+		}else {
+			return 0;
+		}
 	}
 }

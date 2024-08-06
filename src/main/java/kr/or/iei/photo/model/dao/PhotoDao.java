@@ -1,5 +1,7 @@
 package kr.or.iei.photo.model.dao;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -23,5 +25,16 @@ public class PhotoDao {
 	public static int insertComment(PhotoComment pc) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	public List selectPhotoList() {
+		String query = "select * from photo_feed order by 1";
+		List list = jdbc.query(query, photoRowMapper);
+		return list;
+	}
+	public int deletePhoto(int photoNo) {
+		String query = "delete from photo_feed where photo_feed_no=?";
+		Object[] params = {photoNo};
+		int result = jdbc.update(query,params);
+		return result;
 	}
 }
