@@ -6,29 +6,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import kr.or.iei.board.model.dto.Board;
 import kr.or.iei.board.model.dto.BoardRowMapper;
 import kr.or.iei.text.model.dto.TextFeed;
 
 @Repository
 public class BoardDao {
-	@Autowired
-	JdbcTemplate jdbc = new JdbcTemplate();
-	@Autowired
-	BoardRowMapper boardRowMapper = new BoardRowMapper();
-	public List AllTextFeeds() {
-		String query = "select * from text_feed";
-		List list = jdbc.query(query, boardRowMapper);
-		return list;
-	}
-	/*
-	public List allTextfeed() {
-		String query = "select * from text_feed";
-		List list = jdbc.query(query, boardRowMapper);
-		return list;
-	}
-	*/
-	
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private BoardRowMapper boardRowMapper;
+
+    public List<Board> getAllBoards() {
+        String query = "SELECT * FROM photo_feed "; // 전체 게시판 데이터 조회
+        return jdbcTemplate.query(query, boardRowMapper);
+    }
 }
 
 

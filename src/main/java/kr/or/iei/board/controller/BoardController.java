@@ -26,12 +26,14 @@ public class BoardController {
 	@Autowired
 	private FileUtils fileUtils;
 	// 모든 텍스트 피드를 목록으로 표시
-    @GetMapping("/index")
+   /*
+	@GetMapping("/index")
     public String textBoard(Model model) {
         List<TextFeed> textlist = boardService.AllTextFeeds();
         model.addAttribute("textlist", textlist);
         return "index"; // index.html 파일을 반환
     }
+    */
 }
 
 
