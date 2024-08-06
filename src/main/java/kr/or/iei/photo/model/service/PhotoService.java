@@ -28,12 +28,8 @@ public class PhotoService {
 		List photoList = photoDao.selectPhotoList();
 		return photoList;
 	}
-	public int deletePhoto(int photoNo) {
-		int result = photoDao.deletePhoto(photoNo);
-		if(result >0) {
-			return result;
-		}else {
-			return 0;
-		}
+	public int deletePhoto(int photoFeedNo) {
+		int result = photoDao.deletePhoto(photoFeedNo);
+		return result;
 	}
 }

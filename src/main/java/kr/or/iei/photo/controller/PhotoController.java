@@ -87,8 +87,9 @@ public class PhotoController {
 	
 	@GetMapping(value="/delete")
 	@ResponseBody
-	public String delete(int photoNo,Model model) {
-		int list = photoService.deletePhoto(photoNo);
-		return "photo/list";
+	public int delete(int photoFeedNo) {
+		System.out.println(photoFeedNo);
+		int result = photoService.deletePhoto(photoFeedNo);
+		return result;
 	}
 }

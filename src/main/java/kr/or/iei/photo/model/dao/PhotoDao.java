@@ -31,9 +31,9 @@ public class PhotoDao {
 		List list = jdbc.query(query, photoRowMapper);
 		return list;
 	}
-	public int deletePhoto(int photoNo) {
+	public int deletePhoto(int photoFeedNo) {
 		String query = "delete from photo_feed where photo_feed_no=?";
-		Object[] params = {photoNo};
+		Object[] params = {photoFeedNo};
 		int result = jdbc.update(query,params);
 		return result;
 	}
