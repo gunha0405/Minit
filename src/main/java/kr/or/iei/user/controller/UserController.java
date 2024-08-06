@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
@@ -54,10 +55,47 @@ public class UserController {
 		return "user/mypage";
 	}
 	
+	@PostMapping(value="/update")
+	public String update(User u, @SessionAttribute User user) {
+		int result = userService.updateUser(u);
+		if (result>0) {
+			user.setUserNick(u.getUserNick());
+			user.setUserInfo(u.getUserInfo());
+			user.setUserPw(u.getUserPw());
+			return "redirect:/user/mypage";
+		}else {
+			return "redirect:/";
+		}
+	}
+	
+	@ResponseBody
+	@GetMapping(value="/ajaxCheckNick")
+	public int ajaxCheckNick(String userNick) {
+		User user = userService.selectOneUser(userNick);
+		if(user == null) {
+			return 0;
+		}else {
+			return 1;
+		}
+	}
+	
 	@PostMapping(value = "/join")
 	public String join(User u, Model model) {
-		return null;
+		int result = userService.insertUser(u);
+		if(result > 0) {
+			model.addAttribute("title", "회원가입 성공");
+			model.addAttribute("msg", "MINIT의 회원이 되셨습니다!");
+			model.addAttribute("icon", "success");
+			model.addAttribute("loc", "/");
+			return "common/msg";
+		}else {
+			return "redirect:/";			
+		}
 	}
+	
+	
+	
+	
 	
 	
 	
