@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class TextFeed {
 	private int textFeedNo;
 	private String textFeedContent;
-	private int textFeedReadCount;
 	private String textFeedRegDate;
 	private String textFeedWriter;
 }

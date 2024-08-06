@@ -14,21 +14,20 @@
     <div class="wrapper">
         <section class="text-feed">
             <div th:if="${session.user != null}" class="text-feed-write-box">
-                <div class="profile-pic">
-                    <img src="logo1.jpg" alt="Profile Picture" />
-                </div>
+                
                 <div class="text-feed-write-area">
-                    <form action="/textFeedWrite" method="get">
+                    <!-- form 태그 대신 비동기 방식으로 글 작성 -->
                         <textarea name="text-feed-content" id="text-feed-content" placeholder="오늘 무슨일이 있었나요?(100자)"></textarea>
                         <div class="text-feed-actions">
-                            <button  type="submit" class="text-feed-button">작성하기</button>
+                            <button  type="submit" class="text-feed-button write-btn">작성하기</button>
                         </div>
-                    </form>
+                    
                 </div>
             </div>
             
             <div class="text-feed-posts" id="text-feed-posts">
                 <div class="post" th:each="textFeed : ${textFeedList}">
+                	<span class="textFeedNo" th:text="${textFeed.textFeedNo}" style="display:none;"></span>
                     <div class="post-profile-pic">
                         <img src="Profile Picture" alt="Profile Picture">
                     </div>
@@ -42,15 +41,14 @@
                             <span>댓글수</span>
                             <i class="fa fa-ellipsis-h"></i>
                             <div class="post-options">
-                                <button><span class="material-icons edit-btn">edit</span></button>
-                                <button><span class="material-icons">report_problem</span></button>
-                                <button><span class="material-icons">bookmark_border</span></button>
-                                <button><span class="material-icons delete-btn">delete_forever</span></button>
-                            </div>
+                                <button th:if="${session.user != null} and ${session.user.userId} == ${textFeed.textFeedWriter}"><span class="material-icons edit-btn">edit</span></button>
+                                <button><span class="material-icons report-btn">report_problem</span></button>
+                                <button><span class="material-icons bookmark-btn">bookmark_border</span></button>
+                                <button th:if="${session.user != null} and ${session.user.userId} == ${textFeed.textFeedWriter}"><span class="material-icons delete-btn">delete_forever</span></button>
                         </div>
                     </div>
-                    <div class="comment-section">
-                        <textarea placeholder="댓글을 작성해보세요 !"></textarea>
+                    <div th:if="${session.user != null}" class="comment-section">
+                        <textarea  placeholder="댓글을 작성해보세요 !"></textarea>
                         <button class="submit-comment">댓글 달기</button>
                         <div class="comments-container">
                             <!-- 댓글들이 여기에 추가됩니다 -->
@@ -96,11 +94,111 @@
         // 모든 포스트를 숨기고 처음 numPerPage개의 포스트만 표시
         posts.hide();
         showPage(currentPage);
+        
     });
     
-    $(".fa-ellipsis-h").click(function() {
-        $(this).siblings(".post-options").toggle();
+    $(document).ready(function() {
+        let posts = $('#text-feed-posts .post');
+        let numPerPage = 3;
+        let currentPage = 1;
+
+        function showPage(page) {
+            let start = (page - 1) * numPerPage;
+            let end = page * numPerPage;
+            posts.slice(start, end).show();
+        }
+
+        // 초기 로드 시 첫 번째 페이지를 표시
+        showPage(currentPage);
+
+        $('#load-more').click(function() {
+            currentPage++;
+            showPage(currentPage);
+        });
+
+        // 모든 포스트를 숨기고 처음 numPerPage개의 포스트만 표시
+        posts.hide();
+        showPage(currentPage);
+
+        function adjustPostOptionsDimensions() {
+            $('.post-options').each(function() {
+                const visibleButtons = $(this).find('button:visible').length;
+                const buttonHeight = 30; // 각 버튼의 높이 (px 단위로 지정)
+                const buttonWidth = 30; // 버튼의 너비 (px 단위로 지정)
+                const newHeight = visibleButtons * buttonHeight;
+                $(this).css('height', newHeight + 'px');
+                $(this).css('width', buttonWidth + 'px');
+            });
+        }
+
+        // 초기 조정
+        adjustPostOptionsDimensions();
+
+        // .fa-ellipsis-h 클릭 시 옵션 토글 및 높이 조정
+        $(".fa-ellipsis-h").click(function() {
+            const postOptions = $(this).siblings(".post-options");
+            postOptions.toggle();
+            adjustPostOptionsDimensions();
+        });
+
+        
+        $(".write-btn").on("click", function() {
+            const textFeedContent = $("#text-feed-content").val();
+            $.ajax({
+                url: "/text/textFeedWrite",
+                type: "get",
+                data: { textFeedContent: textFeedContent },
+                dataType: "json",
+                success: function(data) {
+                    console.log(data);
+                    const newPost = data.textFeed;
+                    const user = data.user;
+                    const postHtml = `
+                        <div class="post">
+                            <span class="textFeedNo" style="display:none;">${newPost.textFeedNo}</span>
+                            <div class="post-profile-pic">
+                                <img src="Profile Picture" alt="Profile Picture">
+                            </div>
+                            <div class="post-content">
+                                <p class="text-feed-writer">${newPost.textFeedWriter}</p>
+                                <p class="text-feed-content">${newPost.textFeedContent}</p>
+                                <div class="post-actions">
+                                    <i class="fa fa-heart"></i>
+                                    <i class="fa fa-paper-plane"></i>
+                                    <i class="fa fa-comment"></i>
+                                    <span>댓글수</span>
+                                    <i class="fa fa-ellipsis-h"></i>
+                                    <div class="post-options">
+                                    <button th:if="${session.user != null} and ${session.user.userId} == ${textFeed.textFeedWriter}"><span class="material-icons edit-btn">edit</span></button>
+                                        <button><span class="material-icons report-btn">report_problem</span></button>
+                                        <button><span class="material-icons bookmark-btn">bookmark_border</span></button>
+                                        <button th:if="${session.user != null} and ${session.user.userId} == ${textFeed.textFeedWriter}"><span class="material-icons delete-btn">delete_forever</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="comment-section">
+                                <textarea placeholder="댓글을 작성해보세요 !"></textarea>
+                                <button class="submit-comment">댓글 달기</button>
+                                <div class="comments-container">
+                                    <!-- 댓글들이 여기에 추가됩니다 -->
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    $("#text-feed-posts").prepend(postHtml);
+                    $("#text-feed-content").val("");
+                },
+                error: function() {
+                    console.log("서버연결 실패");
+                    alert("글 작성 실패");
+                }
+            });
+        });//글작성
+       
     });
+    
+	
 </script>
 </body>
 </html>
