@@ -47,6 +47,7 @@
 }
 .info-tbl td{
   background-color: white;
+  width: 65%
 }
 .info-tbl th{
   width: 20%;
@@ -111,7 +112,7 @@
   display: flex;
   justify-content: space-between;
 }
-.check-btn{ //커스텀
+.check-btn{
   margin-right: 5px;
   width: 90px;
   display: flex;
@@ -119,12 +120,12 @@
   justify-content: center;
 }
 
-.my-check-btn{
+.nick-check-btn{
   background-color: transparent;
   border: 1px solid #75daa4;
   border-radius: 5px;
   width: 100%;
-  height: 20px;
+  height: 30px;
   font-size: 13px;
 }
 
@@ -139,3 +140,26 @@
 	text-align: center;
 	border-bottom: 1px solid lightgray;
 }
+.input-item input:focus{
+	outline:none;
+}
+
+
+.nick-check-msg{
+	font-size: 13px;
+}
+.valid{
+	visibility: visible;
+	color: #61bb8b;
+}
+.invalid{
+	visibility: visible;
+	color: red;
+}
+.none{
+	visibility: hidden;
+}
+
+
+
+

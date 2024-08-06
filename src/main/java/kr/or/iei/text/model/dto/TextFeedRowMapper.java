@@ -13,7 +13,6 @@ public class TextFeedRowMapper implements RowMapper<TextFeed> {
 	public TextFeed mapRow(ResultSet rs, int rowNum) throws SQLException {
 		TextFeed t = new TextFeed();
 		t.setTextFeedNo(rs.getInt("text_feed_no"));
-		t.setTextFeedReadCount(rs.getInt("text_feed_read_count"));
 		t.setTextFeedRegDate(rs.getString("text_feed_reg_date"));
 		t.setTextFeedWriter(rs.getString("text_feed_writer"));
 		t.setTextFeedContent(rs.getString("text_feed_content"));
