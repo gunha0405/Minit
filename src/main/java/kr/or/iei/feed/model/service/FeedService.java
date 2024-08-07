@@ -1,9 +1,11 @@
 package kr.or.iei.feed.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.iei.feed.model.dao.FeedDao;
 import kr.or.iei.feed.model.dto.Feed;
@@ -18,26 +20,25 @@ public class FeedService {
 	@Autowired
 	private FeedDao feedDao;
 
-	public UserFeedNaviList feedList(String userId) {
-		List<Feed> feedList = feedDao.feedList(userId);
-		if(feedList == null) {
-			User user = feedDao.userInfo(userId);
-			UserFeedNaviList userFeedList = new UserFeedNaviList();
-			userFeedList.setUser(user);
-			return userFeedList;			
-		}else {
-			User user = feedDao.userInfo(userId);
-			UserFeedNaviList userFeedList = new UserFeedNaviList(user, feedList);
-			return userFeedList;	
-		}
-	}
+//	public List<Feed> feedList(String userId) {
+//		int numPerFeedImg = 8;
+//		//유저의 사진을 가져와야함
+//		//유저가 올린 글의 갯수 
+//		int num = feedDao.searchUserFeedNum(userId);
+//		for(int i = 0; i < num ; i++) {
+//			int feedNo = feedDao.searhFeedNo(userId, i);
+//			List<Feed> feedFath = feedDao.searchFeed
+//		}
+//		
+//		return ;
+//	}
 
 	public User searchUser(String userId) {
-		System.out.println("userId" + userId);
 		User u = feedDao.searchUser(userId);
 		return u;
 	}
 
+	@Transactional
 	public int insertfile(Feed f, List<FeedFile> fileList) {
 		 int result = feedDao.insertFeed(f);
 	        if(result >0) {
@@ -54,7 +55,7 @@ public class FeedService {
 	        return result;
 	}
 
-	public feedListData selectUserAllFeed(int reqPage) {
+	public feedListData selectUserAllFeed(int reqPage, User u) {
 		//reqPage : 사용자가 요청한 페이지 번호
         //한 페이지당 보여줄 게시물의 수(지정)   -> 8개
         int numPerPage = 8;
@@ -64,9 +65,27 @@ public class FeedService {
         //reqPage == 3 -> start = 17 / end = 24
         //reqPage == 4 -> start = 25 / end = 32
         int end = reqPage * numPerPage; 
-        int start = end -numPerPage + 1; 
+        int start = end -numPerPage + 1;
+        
+        String userId = u.getUserId();
         //요청페이지에 필요한 공지사항 목록을 조회
-        List list = feedDao.selectFeedList(start,end);
+        List<Feed> feedList = new ArrayList<Feed>();
+        
+        //해당 페이지에 있는 글의 갯수 
+        int num = feedDao.searchUserFeedNum(userId);
+        
+        //피드 갯수 만큼 for문 돌게 
+        int feedNum = feedDao.selectFeedList(start, end, u);
+        for(int i = 0; i < feedNum; i++) {
+        	//리스트에 담을 번호 
+        	int feedNo = feedDao.searhFeedNo(start, end, u , i+1);
+        	String filefath = feedDao.feedFilepath(start, end, u, feedNo);
+        	Feed f = new Feed();
+        	f.setUserFeedFilepath(filefath);
+        	f.setUserFeedNo(feedNo);
+        	feedList.add(f);
+        }
+        
         
         //페이지 네비게이션 제작(사용자가 클릭해서 다른 페이지를 요청할 수 있도록 하는 요소 ) 제작
         //페이지 네비게이션을 서비스에서 만드는 이유 -> 총 게시물수를 조회해와야 가능하기 떄문
@@ -102,10 +121,10 @@ public class FeedService {
         for(int i =0;i<pageNaviSize;i++) {
             pageNavi += "<li>";
             if(pageNo==reqPage) {
-                pageNavi += "<a class ='page-item active-page' href='/feed/list?reqPage="+pageNo+"'>";
+                pageNavi += "<a class ='page-item active-page' href='/feed/myPage?reqPage="+pageNo+"'>";
                 
             }else {
-                pageNavi += "<a class ='page-item' href='/feed/list?reqPage="+pageNo+"'>";
+                pageNavi += "<a class ='page-item' href='/feed/list?myPage="+pageNo+"'>";
                 
             }
             pageNavi += pageNo;
@@ -127,9 +146,9 @@ public class FeedService {
         //컨트롤러로 되돌려줄 데이터가 공지사항 목록, 만든 페이지 네비게이션
         //-> java의 메소드는 1개의 자료형만 리턴 가능 -> 2개를 되돌려줘야함 List, String
         //-> 되돌려주고 싶은 데이터 2개를 저장할 수 있는 객체를 생성해서 객체로 묶어서 하나로 리턴
-        feedListData fld = new feedListData(list,pageNavi);
-        
+        feedListData fld = new feedListData(feedList,pageNavi);
         return fld;
 	}
+
 
 }

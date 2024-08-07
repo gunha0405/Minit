@@ -47,7 +47,7 @@
 
 .user-profile > ul {
     display: flex;
-    flex-wrap: wrap; /* 반응형을 위한 줄바꿈 허용 */
+    /*flex-wrap: wrap; /* 반응형을 위한 줄바꿈 허용 */
 
     list-style: none;
     width: 100%; /* 부모 요소에 맞게 너비 설정 */
@@ -60,6 +60,8 @@
     align-items: flex-start;
     */
     margin: 10px; /* 항목 간 간격 */
+    margin-right: auto;
+    
 }
 
 /* 프로필 사진 스타일 */
@@ -109,7 +111,7 @@
 
 .user-content-no > ul {
     display: flex;
-    flex-wrap: wrap; /* 줄바꿈 허용 */
+   /* flex-wrap: wrap; /* 줄바꿈 허용 */
     justify-content: right;
     padding: 0;
     margin: 0;
@@ -180,11 +182,11 @@
     padding: 0;
     margin: 0;
     list-style: none;
-    gap: 15px;
+    gap: 10px;
 }
 
 .list-navi > ul > li {
-    margin: 0 30px;
+    margin: 0 10px;
 }
 
 .list-navi > ul > li a {
@@ -283,4 +285,8 @@
 
 #write-feed {
 	margin: 0 10px;
+}
+
+.content-no{
+	padding : 0;
 }

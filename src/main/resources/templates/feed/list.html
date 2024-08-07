@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 <link rel="stylesheet" href="/css/feed/feedStyle.css">
 <link rel="stylesheet" href="/css/feed/list.css">
 <link rel="stylesheet" href="/css/feed/followModal.css">
@@ -21,9 +23,22 @@
     crossorigin="anonymous"
     referrerpolicy="no-referrer"
   />
+
 <style>
 .feed-list {
 	margin-top: 100px;
+}
+
+.feed-list-wrap {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4개의 열 생성 */
+    gap: 5px; /* 칸 사이의 간격 */
+}
+
+.feed-list-wrap img {
+    width: 270px;
+    height: 270px;
+    display: block;
 }
 </style>
 
@@ -222,37 +237,23 @@
 				</ul>
 			</div>
 			
-
 			<div class="feed-list-wrap">
 
 
-				<div class="feed-list">
-					<ul>
-						<li class="peed-list-photo"><img
-							src="/image/feed/profilePhoto.jfif"></li>
-						<li class="peed-list-photo"><img
-							src="/image/feed/profilePhoto.jfif"></li>
-						<li class="peed-list-photo"><img
-							src="/image/feed/profilePhoto.jfif"></li>
-						<li class="peed-list-photo"><img
-							src="/image/feed/profilePhoto.jfif"></li>
-					</ul>
-				</div>
-				<div class="feed-list">
-					<ul>
-						<li class="peed-list-photo"><img
-							src="/image/feed/profilePhoto.jfif"></li>
-						<li class="peed-list-photo"><img
-							src="/image/feed/profilePhoto.jfif"></li>
-						<li class="peed-list-photo"><img
-							src="/image/feed/profilePhoto.jfif"></li>
-						<li class="peed-list-photo"><img
-							src="/image/feed/profilePhoto.jfif"></li>
-					</ul>
-				</div>
+			 <th:block th:each="item : ${list}">
+       			 <ul>
+          			  <li>
+           			     <a th:href="@{/feed/view?(userFeedNo=${item.userFeedNo})}">
+                 		   <img th:src="${item.userFeedFilepath}" alt="photo"/>
+           			     </a>
+        			   </li>
+     			 </ul>
+			</th:block>
 			</div>
-
-			<div id="list-navi" th:utext="${pageNavi}"></div>
+			
+			<div class="list-navi" th:utext="${pageNavi}"></div>
+			
+			
 <div class="bottom-navBar">
       <ul class="nav">
         <li class="nav-item">

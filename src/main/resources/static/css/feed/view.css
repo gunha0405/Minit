@@ -131,6 +131,7 @@ table tr{
 }
 .inputCommentBox{
     margin-left: auto;
+    margin: 0 auot;
 }
 .inputCommentBox>form{
     width: 100%;
