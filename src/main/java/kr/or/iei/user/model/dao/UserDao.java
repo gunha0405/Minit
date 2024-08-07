@@ -54,6 +54,13 @@ public class UserDao {
 		int result = jdbc.update(query, params);
 		return result;
 	}
+
+	public int deleteUser(User user) {
+		String query = "delete from user_tbl where user_id = ?";
+		Object[] params = {user.getUserId()};
+		int result = jdbc.update(query, params);
+		return result;
+	}
 	
 	
 	

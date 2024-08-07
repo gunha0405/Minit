@@ -52,7 +52,14 @@
 .info-tbl th{
   width: 20%;
 }
-.info-tbl td>img{
+.info-tbl td #userInfo{
+	width: 100%;
+}
+.info-tbl td>.basic-img{
+  width: 40%;
+  margin: 0 auto;
+}
+.info-tbl td>#img-viewer>img{
   width: 40%;
 }
 .info-tbl td>button{
@@ -106,6 +113,7 @@
   border-radius: 30px;
   width: 100%;
   height: 40px;
+  line-height: 40px;
 }
 
 .check{
@@ -160,6 +168,12 @@
 	visibility: hidden;
 }
 
+.img-none{
+	display: none;
+}
+.img-show{
+	display: block;
+}
 
 
 

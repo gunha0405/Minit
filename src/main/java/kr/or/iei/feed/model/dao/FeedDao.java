@@ -7,8 +7,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import kr.or.iei.feed.model.dto.Feed;
+import kr.or.iei.feed.model.dto.FeedFile;
 import kr.or.iei.feed.model.dto.FeedRowMapper;
-import kr.or.iei.feed.model.dto.UserFeedList;
+import kr.or.iei.feed.model.dto.UserFeedNaviList;
 import kr.or.iei.user.model.dto.User;
 import kr.or.iei.user.model.dto.UserRowMapper;
 
@@ -21,13 +22,13 @@ public class FeedDao {
 	@Autowired
 	UserRowMapper userRowMapper = new UserRowMapper();
 	
-	public UserFeedList userList(String userId) {
+	public UserFeedNaviList userList(String userId) {
 		String query = "select user_id, user_info, USER_FEED_WRITER, USER_FEED_CONTENT,USER_FEED_DATE\r\n" + 
 				"from user_tbl\r\n" + 
 				"join user_feed_tbl on (user_id=user_feed_writer) \r\n" + 
 				"where user_feed_writer=?";
 		Object[] params = {userId};
-		UserFeedList userFeedList = (UserFeedList)jdbc.query(query, feedRowMapper, params);
+		UserFeedNaviList userFeedList = (UserFeedNaviList)jdbc.query(query, feedRowMapper, params);
 		return userFeedList;
 	}
 	
@@ -53,5 +54,25 @@ public class FeedDao {
 		Object[] params = {userId};
 		List list = jdbc.query(query, userRowMapper, params);
 		return (User)list.get(0);
+	}
+
+	public int insertFeed(Feed f) {
+		String query = "insert into user_feed_tbl values(user_feed_tbl_seq.nextval,?,?,to_char(sysdate,'YYYY-MM-DD'),0)";
+		Object[] params = {f.getUserFeedWriter(), f.getUserFeedContnet()};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+	public int selectFeedNo() {
+		String query = "select max(user_feed_no) from user_feed_tbl";
+		int feedNo = jdbc.queryForObject(query, Integer.class);
+		return feedNo;
+	}
+
+	public int insertFeedFile(FeedFile feedFile) {
+		String query = "insert into user_feed_file values(user_feed_file_seq.nextval,?,?)";
+		Object[] params = {feedFile.getUserFeedNo(),feedFile.getUserFeedFilpath()};
+		int result = jdbc.update(query, params);
+		return result;
 	}
 }
