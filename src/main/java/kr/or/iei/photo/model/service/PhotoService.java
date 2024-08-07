@@ -25,8 +25,12 @@ public class PhotoService {
 		int result = PhotoDao.insertComment(pc);
 		return result;
 	}
-	public List selectPhotoFeed() {
-		List photoList = photoDao.selectPhotoList();
+	public List<Photo> selectPhotoFeed(int userNo) {
+		List<Photo> photoList = photoDao.selectPhotoList();
+		for(Photo photo : photoList) {
+			int isLike = photoDao.selectPhotoLike(photo.getPhotoFeedNo(),userNo);
+			photo.setIsLike(isLike);
+		}
 		return photoList;
 	}
 	public int deletePhoto(int photoFeedNo) {
@@ -40,10 +44,15 @@ public class PhotoService {
 	public int likePush(int photoFeedNo, int isLike, int userNo) {
 		int result = 0;
 		if(isLike == 0) {
-			result = photoDao.insertPhotoLike(photoFeedNo,userNo);
+			if(!photoDao.isLikecheck(photoFeedNo,userNo)) {
+				result = photoDao.insertPhotoLike(photoFeedNo,userNo);
+			}
 		}else if(isLike ==1) {
 			result = photoDao.deletePhotoLike(photoFeedNo,userNo);
 		}
 		return result;
 	}
+	public boolean isLikecheck(int photoFeedNo, int userNo) {
+        return photoDao.isLikecheck(photoFeedNo, userNo);
+    }
 }

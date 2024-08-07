@@ -36,16 +36,20 @@ public class PhotoController {
 	
 	
 	@GetMapping(value="/list")
-	public String list(Model model) {
-		List photoFeedList = photoService.selectPhotoFeed();
+	public String list(Model model,@SessionAttribute (required = false) User user) {
+		int userNo = user != null ? user.getUserNo() : 0;
+		System.out.println(userNo);
+		List photoFeedList = photoService.selectPhotoFeed(userNo);
+		System.out.println(photoFeedList);
 		model.addAttribute("list",photoFeedList);
 		return "photo/list";
 	}
 	
 	@ResponseBody
 	@GetMapping(value="/more")
-	public List photoMore() {
-		List photoList = photoService.selectPhotoFeed();
+	public List photoMore(@SessionAttribute (required = false) User user) {
+		int userNo = user != null ? user.getUserNo() : 0;
+		List photoList = photoService.selectPhotoFeed(userNo);
 		return photoList;
 	}
 	
@@ -122,5 +126,19 @@ public class PhotoController {
 			return result;
 		}
 	}
+	
+	@ResponseBody
+	  @GetMapping(value="/likeStatus")
+	  public int likeStatus(int photoFeedNo, @SessionAttribute(required = false) User user) {
+	    if (user == null) {
+	      return -10; // 로그인 필요
+	    } else {
+	      int userNo = user.getUserNo();
+	      boolean isLiked = photoService.isLikecheck(photoFeedNo, userNo);
+	      return isLiked ? 1 : 0;
+	    }
+	  }
+	
+	
 	
 }

@@ -84,8 +84,11 @@
               <i class="fa-regular fa-heart like-button" id="likeBtn"></i>
               <i class="fa-solid fa-comment"></i>
               <i class="fa-solid fa-bookmark"></i>
-              <i class="fa-solid fa-pen"></i>
-              <i class="fa-solid fa-trash"></i>
+              
+              <th:block th:if="${session.user != null && session.user.id == p.photoFeedWriter}">
+                <i class="fa-solid fa-pen"></i>
+                <i class="fa-solid fa-trash"></i>							
+              </th:block>
               <i class="fa-solid fa-exclamation"></i>
             </div>
             <i class="fa-solid fa-ellipsis-vertical imageToggle"></i>
@@ -157,11 +160,27 @@
 	          e.preventDefault();
 	          const imgSrc = $(this).find("img").attr("src");
 	          const photoFeedNo = $(this).data("photoFeedNo");
-	          console.log("Photo Feed No: " + photoFeedNo); // For debugging purposes
+	          console.log("Photo Feed No: " + photoFeedNo);
 	          $("#modalImage").attr("src", imgSrc);
 	          $("#imageModal").modal("show");
 
-	          $(".imageIconBox").on("click", ".like-button, .liked-button", function() {
+	          $.ajax({
+	            url: "/photo/likeStatus",
+	            type: "GET",
+	            data: { photoFeedNo: photoFeedNo },
+	            success: function(likeStatus) {
+	              if (likeStatus === 1) {
+	                $("#likeBtn").removeClass("fa-regular").addClass("fa-solid").data('liked', 1);
+	              } else {
+	                $("#likeBtn").removeClass("fa-solid").addClass("fa-regular").data('liked', 0);
+	              }
+	            },
+	            error: function(xhr, status, error) {
+	              console.log("Error: " + error);
+	            }
+	          });
+
+	          $(".imageIconBox").off("click", ".like-button, .liked-button").on("click", ".like-button, .liked-button", function() {
 	            const isLike = $(this).data('liked') ? 1 : 0;
 	            const likeButton = $(this);
 	            console.log("포토번호: " + photoFeedNo);
@@ -177,12 +196,18 @@
 	                    text: "로그인 후 이용해 주세요",
 	                    icon: "info"
 	                  });
-	                } else if(data == 0) {
-	                  
-	                  likeButton.removeClass("fa-solid").addClass("fa-regular").data('liked', 0);
+	                } else if(data == -1) {
+	                  Swal.fire({
+	                    title: "데이터 처리 오류",
+	                    text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+	                    icon: "warning"
+	                  });
 	                } else {
-	                  likeButton.removeClass("fa-regular").addClass("fa-solid").data('liked', 1);
-	                  
+	                  if(isLike === 1){
+	                    likeButton.removeClass("fa-solid").addClass("fa-regular").data('liked', 0);
+	                  } else {
+	                    likeButton.removeClass("fa-regular").addClass("fa-solid").data('liked', 1);
+	                  }
 	                }
 	              },
 	              error: function(xhr, status, error) {
@@ -196,12 +221,12 @@
 	            });
 	          });
 
-	          $('.fa-trash').on('click', function() {
+	          $('.fa-trash').off('click').on('click', function() {
 	            del(this, photoFeedNo);
 	            $("#imageModal").modal("hide");
 	          });
 
-	          $('.fa-pen').on('click', function() {
+	          $('.fa-pen').off('click').on('click', function() {
 	            update(this, photoFeedNo);
 	          });
 	        });
@@ -297,6 +322,7 @@
 	    });
 	  }
 	});
+
 
   </script>
   <th:block th:include="common/footer"></th:block>

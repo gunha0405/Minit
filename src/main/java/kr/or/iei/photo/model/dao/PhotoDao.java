@@ -51,9 +51,21 @@ public class PhotoDao {
 		return result;
 	}
 	public int deletePhotoLike(int photoFeedNo, int userNo) {
-		String query = "delete from photo_feed_like where photo_feed_like_no=? and user_no=?";
+		String query = "delete from photo_feed_like where photo_feed_like_no=? and photo_feed_like_writer=?";
 		Object[] params = {photoFeedNo, userNo};
 		int result = jdbc.update(query, params);
 		return result;
+	}
+	public int selectPhotoLike(int photoFeedNo,int userNo) {
+		String query = "SELECT COUNT(*) FROM photo_feed_like WHERE photo_feed_like_no = ? AND photo_feed_like_writer = ?";
+		Object[] params = {photoFeedNo, userNo};
+        int isLike = jdbc.queryForObject(query,Integer.class ,params);
+        return isLike;
+	}
+	public boolean isLikecheck(int photoFeedNo, int userNo) {
+		String query = "SELECT COUNT(*) FROM photo_feed_like WHERE photo_feed_like_no = ? AND photo_feed_like_writer = ?";
+		Object[] params = { photoFeedNo, userNo };
+	    int count = jdbc.queryForObject(query,Integer.class ,params);
+	    return count > 0;
 	}
 }
