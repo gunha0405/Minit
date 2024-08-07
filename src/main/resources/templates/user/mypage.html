@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <title>MINIT 마이페이지</title>
+
 </head>
 <body>
 	<th:block th:include="common/header"></th:block>
@@ -15,16 +16,23 @@
                     	마이 페이지
                 </div>
                 <div class="my-info-wrap">
-                    <form action="/user/update" method="post" autocomplete="off">
+                    <form action="/user/update" method="post" autocomplete="off" enctype="multipart/form-data">
                         <table class="info-tbl">
                             <tr>
                                 <th>프로필 사진</th>
                                 <td width="530px">
-                                  <img src="/image/logo/minit_logo_2.png">
+	                              <img class="basic-img img-show" src="/image/logo/minit_logo_2.png">                               
+	                              <div id="img-viewer" class="img-none">
+	                                <img id="img-view">
+	                              </div>
                                 </td>
                                 <td>
-                                  <button type="button" class="img-change-btn">변경</button>
-                                  <button type="button" class="img-delete-btn">삭제</button>
+                                  <label for="upfile" class="img-change-btn">변경
+                                	<input type="file" name="upfile" id="upfile" accept=".jpg,.png,.jpeg" onchange="loadImg(this);" style="display: none;">
+                                  </label>
+                                  <!-- <button type="button" class="img-change-btn">변경</button> -->
+                                  <button type="button" class="img-delete-btn">기본이미지</button>
+                                  <!-- <button type="button" class="img-delete-btn">기본이미지</button> -->
                                 </td>
                             </tr>
                             <tr>
@@ -95,7 +103,7 @@
                         <input type="hidden" name="userNo" th:value="${session.user.userNo}">
                         <div class="mypage-btn">
                           <button type="submit" class="btn-point1">정보수정</button>
-                          <button type="button" class="btn-point2">회원탈퇴</button>
+                          <button type="button" class="btn-point2 delBtn">회원탈퇴</button>
                           <a th:if="${session.user.userLevel == 1}" href="/admin/warning" class="btn-point3">관리자 페이지로</a>
                         </div>
                     </form>
@@ -105,10 +113,62 @@
           </div>
         
 		<script>
+		$(".delBtn").on("click",function(){
+			swal({
+				title : "회원탈퇴",
+				text : "탈퇴하시겠습니까?",
+				icon : "warning",
+				buttons : {
+					cancle : {
+						text : "취소",
+						value : false,
+						visible : true,
+						className : "",
+						closeModal : true
+					},
+					confirm : {
+						text : "탈퇴",
+						value : true,
+						visible : true,
+						className : "",
+						closeModal : true
+					}
+				}
+			}).then(function(isConfirm){
+				if(isConfirm){
+					location.href="/user/delete";					
+				}
+			});
+		});
+		
+
+		$(".img-delete-btn").on("click",function(){
+			$(".basic-img").addClass("img-show").removeClass("img-none");
+			$("#img-viewer").removeClass("img-show").addClass("img-none");
+			$("#upfile").val(null); //이벤트의 주체가 이거니까! 제대로 확인
+		});
+		
+			function loadImg(obj){
+				console.log(obj.files);
+				if(obj.files.length != 0 && obj.files[0] != 0){
+					const reader = new FileReader();
+					reader.readAsDataURL(obj.files[0]);
+					reader.onload = function(e){
+						$(".basic-img").removeClass("img-show").addClass("img-none");
+						$("#img-viewer").removeClass("img-none").addClass("img-show");
+						console.log(1);
+						$("#img-view").attr("src",e.target.result);
+					}
+					console.log(2); //이게 먼저
+				}else{
+					$(".basic-img").addClass("img-show").removeClass("img-none");
+					$("#img-viewer").removeClass("img-show").addClass("img-none");
+					$("#img-view").attr("src","");
+				}
+			}
+		
 			$(".nick-check-btn").on("click",function(){
 				$(".nick-check-msg").removeClass("none");
-				console.log($("#userNick"));
-				console.log($("#userNick").val());
 				const userNick = $("#userNick").val();
 				console.log(userNick);
 				$.ajax({

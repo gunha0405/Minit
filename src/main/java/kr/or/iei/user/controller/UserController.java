@@ -93,6 +93,23 @@ public class UserController {
 		}
 	}
 	
+	@GetMapping(value="/delete")
+	public String deleteUser(@SessionAttribute User user, Model model) {
+		int result = userService.deleteUser(user);
+		if(result > 0) {
+			model.addAttribute("title", "탈퇴완료");
+			model.addAttribute("msg", "그동안 MINIT과 함께 해주셔서 감사했습니다.");
+			model.addAttribute("icon", "success");			
+			model.addAttribute("loc", "/user/logout");			
+		}else {
+			model.addAttribute("title", "탈퇴실패");
+			model.addAttribute("msg", "처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+			model.addAttribute("icon", "error");			
+			model.addAttribute("loc", "/user/mypage");			
+		}
+		return "common/msg";
+	}
+	
 	
 	
 	

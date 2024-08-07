@@ -16,5 +16,5 @@ public class Feed {
 	private String userFeedContnet;
 	private String userFeedDate;
 	private int userFeedCount;
-	private List<User> user;
+	private User user;
 }

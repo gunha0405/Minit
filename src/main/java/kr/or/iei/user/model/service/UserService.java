@@ -39,6 +39,16 @@ public class UserService {
 		int result = userDao.updateUser(u);
 		return result;
 	}
+
+	public int deleteUser(User user) {
+		int result = userDao.deleteUser(user);
+		/*
+		UserImg userImgParam = new UserImg();
+		userImgParam.setUserId(user.getUserId());
+		userImgDao.deleteUserImg(userImgParam);
+		*/
+		return result;
+	}
 	
 	
 	
