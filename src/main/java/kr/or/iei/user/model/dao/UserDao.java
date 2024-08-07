@@ -27,7 +27,7 @@ public class UserDao {
 		}
 	}
 
-	public User selectOneUser(String userNick) {
+	public User selectUserNick(String userNick) {
 		String query = "select * from user_tbl where user_nick=?";
 		Object[] params = {userNick};
 		List list =  jdbc.query(query, userRowMapper, params);
@@ -38,6 +38,28 @@ public class UserDao {
 		}
 	}
 
+	public User selectUserId(String userId) {
+		String query = "select * from user_tbl where user_id=?";
+		Object[] params = {userId};
+		List list =  jdbc.query(query, userRowMapper, params);
+		if(list.isEmpty()) {
+			return null;
+		}else {
+			return (User)list.get(0);
+		}
+	}
+
+	public User selectUserEmail(String receiver) {
+		String query = "select * from user_tbl where user_email=?";
+		Object[] params = {receiver};
+		List list =  jdbc.query(query, userRowMapper, params);
+		if(list.isEmpty()) {
+			return null;
+		}else {
+			return (User)list.get(0);
+		}
+	}
+	
 	public int insertUser(User u) {
 		String query = "insert into user_tbl "
 				+ "(user_no, user_id, user_pw, user_name, user_nick, user_email, create_date) "
@@ -61,6 +83,7 @@ public class UserDao {
 		int result = jdbc.update(query, params);
 		return result;
 	}
+
 	
 	
 	

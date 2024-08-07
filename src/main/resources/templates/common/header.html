@@ -173,7 +173,7 @@
                         name="userEmail"
                         id="userEmail"
                         placeholder="이메일을 입력하세요! ex)minit@minit.com"/>
-                        
+                      <p class="input-msg email-check-msg none"></p>
                       <div id="auth" class="input-item" style="display:none;">
 						<input type="text" id="authCode" placeholder="인증번호입력">
 						<button type="button" class="btn-point1" id="authBtn">인증하기</button>
@@ -271,16 +271,23 @@
     	/*이메일인증*/
 	    let mailCode = null;
 		$("#sendBtn").on("click",function(){
+			$(".email-check-msg").addClass("none").removeClass("invalid");
 			const receiver = $("#userEmail").val();
 				$.ajax({
 				url : "/user/sendCode",
 				data : {receiver : receiver},
 				type : "post",
 				success : function(data){
-					console.log(data);
-					mailCode = data;
-					$("#auth").show();
-					authTime(); //시간 가는 함수
+					if(data != ""){
+						console.log(data);
+						mailCode = data;
+						$("#auth").show();
+						authTime(); //시간 가는 함수
+						$(".email-check-msg").hide();
+					}else{
+						$(".email-check-msg").text("이미 가입된 이메일입니다. 다른 이메일을 사용해주세요.");
+						$(".email-check-msg").removeClass("none").addClass("invalid");
+					}
 				},
 				error : function(){
 					console.log("에러");

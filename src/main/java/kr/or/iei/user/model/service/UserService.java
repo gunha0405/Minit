@@ -23,11 +23,21 @@ public class UserService {
 		return user;
 	}
 
-	public User selectOneUser(String userNick) {
-		User user = userDao.selectOneUser(userNick);
+	public User selectUserNick(String userNick) {
+		User user = userDao.selectUserNick(userNick);
+		return user;
+	}
+	
+	public User selectUserId(String userId) {
+		User user = userDao.selectUserId(userId);
 		return user;
 	}
 
+	public User selectUserEmail(String receiver) {
+		User user = userDao.selectUserEmail(receiver);
+		return user;
+	}
+	
 	@Transactional
 	public int insertUser(User u) {
 		int result = userDao.insertUser(u);
@@ -49,7 +59,7 @@ public class UserService {
 		*/
 		return result;
 	}
-	
+
 	
 	
 	
