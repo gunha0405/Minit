@@ -55,7 +55,14 @@ public class FeedDao {
 		return user;
 	}
 
-	public User searchUser(String userId) {
+	public User searchUser(String userFeedNo) {
+		String query = "select * from user_tbl where user_id = ?";
+		Object[] params = {userFeedNo};
+		List list = jdbc.query(query, userRowMapper, params);
+		return (User)list.get(0);
+	}
+	
+	public User searchUser(int userId) {
 		String query = "select * from user_tbl where user_id = ?";
 		Object[] params = {userId};
 		List list = jdbc.query(query, userRowMapper, params);
@@ -123,6 +130,29 @@ public class FeedDao {
 		Object[] params = {feedNo};
 		String file = jdbc.queryForObject(query, String.class, params);
 		return file;
+	}
+
+	public Feed searchFeedUser(int userFeedNo) {
+		String query = "select * from user_feed_tbl where user_feed_no = ?";
+		Object[] params = {userFeedNo};
+		List list = jdbc.query(query, feedFileRowMapper, params);
+		return (Feed)list;
+	}
+
+	public int totalImg(int userFeedNo) {
+		String query = "select count(*) from user_feed_file where user_feed_no=?";
+		Object[] params = {userFeedNo};
+		int totalImgNo = jdbc.queryForObject(query, Integer.class, params);
+		return totalImgNo;
+	}
+
+	public String searchFeedImg(int userFeedNo) {
+		String query = "select user_feed_filepath from user_feed_file where user_feed_no = ?";
+		Object[] params = {userFeedNo};
+		String file = jdbc.queryForObject(query, String.class, params);
+		String fath = root +"/photo/";
+		String filefath = fath+file;
+		return filefath;
 	}
 
 }
