@@ -94,7 +94,7 @@ public class FeedController {
 				f.setUserFeedFilepath(filepath);
 				f.setUserFeedNo(feedlist.getUserFeedNo());
 				filefath.add(f);
-				System.out.println(filepath);
+				//System.out.println(filepath);
 			}
 
 			model.addAttribute("list", filefath);
@@ -134,5 +134,23 @@ public class FeedController {
             return "common/msg";
         }
         return "redirect:/feed/myPage?reqPage=1";
+	}
+	
+	@GetMapping(value ="/delete")
+	public String delete(int userFeedNo, Model model) {
+		int result = feedService.deleteFeed(userFeedNo);
+		if(result > 0) {
+			 model.addAttribute("title","게시글 삭제성공!");
+	            model.addAttribute("msg","게시글 삭제 성공했습니다.");
+	            model.addAttribute("icon","success");
+	            model.addAttribute("loc","/feed/myPage?reqPage=1");
+	            return "common/msg";
+		}else {
+			 model.addAttribute("title","삭제 실패");
+	            model.addAttribute("msg","관리자에게 문의하세요.");
+	            model.addAttribute("icon","warning");
+	            model.addAttribute("loc","/feed/view?userFeedNo="+userFeedNo);
+	            return "common/msg";
+		}
 	}
 }

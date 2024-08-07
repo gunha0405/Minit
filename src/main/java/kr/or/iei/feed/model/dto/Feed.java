@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class Feed {
 	private int userFeedNo;
 	private String userFeedWriter;
-	private String userFeedContnet;
+	private String userFeedContent;
 	private String userFeedDate;
 	private int userFeedCount;
 	private User user;

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import jakarta.servlet.http.HttpSession;
-import kr.or.iei.util.EmailSender;
+//import kr.or.iei.util.EmailSender;
 import kr.or.iei.user.model.dto.User;
 import kr.or.iei.user.model.service.UserService;
 

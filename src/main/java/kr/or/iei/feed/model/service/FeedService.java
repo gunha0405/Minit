@@ -157,19 +157,26 @@ public class FeedService {
 	public Feed selectUserOneFeed(int userFeedNo) {
 		//게시물정보
 		Feed feed = feedDao.searchFeedUser(userFeedNo);
-		List<FeedFile> feedImgList = new ArrayList<FeedFile>();
 		//게시물당 사진 게시물 몇개인지
 		int totalImgNo = feedDao.totalImg(userFeedNo);
+		//System.out.println(totalImgNo);
 		//게시물 갯수만큼 배열만큼 사진저장
 		List<FeedFile> feedList = new ArrayList<FeedFile>();
 		for(int i = 0; i < totalImgNo; i++) {
-			String filepath = feedDao.searchFeedImg(userFeedNo);
+			String filepath = feedDao.searchFeedImg(userFeedNo, i);
 		    FeedFile fF = new FeedFile();
 		    fF.setUserFeedFilepath(filepath);
-		    feedImgList.add(fF);
+		    feedList.add(fF);
+		    //System.out.println(filepath);
 		}
 		feed.setFeedList(feedList);;
 		return feed;
+	}
+	
+	@Transactional
+	public int deleteFeed(int userFeedNo) {
+		int result = feedDao.deleteFeed(userFeedNo);
+		return result;
 	}
 
 

@@ -40,25 +40,18 @@
 				<tr class="content-imgs">
 					<td colspan="3">
 						<div class="slider-img">
-							<div class="slides-img">
-								<div class="slide-img">
-									<img class="full-width-img" src="/image/feed/profilePhoto.jfif"
-										alt="Image 1">
-								</div>
-								<div class="slide-img">
-									<img class="full-width-img" src="/image/feed/profilePhoto.jfif"
-										alt="Image 2">
-								</div>
-								<div class="slide-img">
-									<img class="full-width-img" src="/image/feed/profilePhoto.jfif"
-										alt="Image 3">
-								</div>
-							</div>
+					 <th:block th:each="item : ${list}">
+						<div class="slides-img">
+						
+                			 <img class="slide-img" th:src="${item.userFeedFilepath}" alt="photo"/>
+						</div>
+					 </th:block>
 							<button class="nav-button-img prev-img" onclick="prevSlide()">❮</button>
 							<button class="nav-button-img next-img" onclick="nextSlide()">❯</button>
 						</div>
 					</td>
 				</tr>
+		
 				<tr class="icons-row">
 					<td colspan="2">
 						<div class="left-icons">
@@ -70,7 +63,7 @@
 					</td>
 				</tr>
 				<tr class="peed-content">
-					<td><span> content </span></td>
+					<td th:utext="${feed.userFeedContent}"></td>
 				</tr>
 				<tr>
 					<td colspan="3" class="chat-icon"><span class="material-icons"
@@ -131,17 +124,45 @@
 		<div class="btn-wrap">
 			<ul>
 				<li>
-					<button class="button-style">수정</button>
+					<button class="button-style" id="insertBtn">수정</button>
 				</li>
 				<li>
-					<button class="button-style">삭제</button>
+					<button class="button-style" th:onclick="feedDelete([[${feed.userFeedNo}]])">삭제</button>
 				</li>
 			</ul>
 		</div>
 
 		</section>
-		<script src="/js/feed/view.js"></script>
+	
 		<script>
+		function feedDelete(userFeedNo) {
+			swal({
+                title:"게시글 삭제",
+                text :"게시글을 삭제하시겠습니까?",
+                icon :"warning",
+                buttons:{
+                    cancel:{
+                        text:"취소",
+                        value:false,
+                        visible:true,
+                        className:"btn-secondary",
+                        closeModal:true
+                    },
+                    confirm:{
+                        text:"삭제",
+                        value:true,
+                        visible:true,
+                        className:"btn-point",
+                        closeModal:true
+                    }
+                }
+            }).then(function(isConfirm){
+                if(isConfirm){
+                    location.href="/feed/delete?userFeedNo="+userFeedNo;
+                }   
+            });
+		}
+		
     document.addEventListener('DOMContentLoaded', () => {
         const slides = document.querySelector('.slides-img');
         const slideCount = document.querySelectorAll('.slide-img').length;
