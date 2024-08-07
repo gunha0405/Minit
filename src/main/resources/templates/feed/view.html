@@ -22,6 +22,11 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <style>
+    .content-info{
+    	margin-top: 150px;
+    }
+    </style>
 </head>
 
 <body>
@@ -36,11 +41,19 @@
               <td class="user-nick"><span>user-nick</span></td>
               <td class="date"><span>YY-MM-DD</span></td>
           </tr>
-          <tr class="content-imgs">
-              <td colspan="3">
-                <img class="full-width-img" src="/image/profilePhoto.jfif" alt="Full Width Image">
-              </td>
-          </tr>
+   		  <tr class="content-imgs">
+                    <td colspan="3">
+                        <div class="slider-img">
+                            <div class="slides-img">
+                                <div class="slide-img"><img class="full-width-img" src="/image/feed/profilePhoto.jfif" alt="Image 1"></div>
+                                <div class="slide-img"><img class="full-width-img" src="/image/feed/profilePhoto.jfif" alt="Image 2"></div>
+                                <div class="slide-img"><img class="full-width-img" src="/image/feed/profilePhoto.jfif" alt="Image 3"></div>
+                            </div>
+                            <button class="nav-button-img prev-img" onclick="prevSlide()">❮</button>
+                            <button class="nav-button-img next-img" onclick="nextSlide()">❯</button>
+                        </div>
+                    </td>
+                </tr>        
           <tr class="icons-row">
               <td colspan="2">
                   <div class="left-icons">
@@ -132,7 +145,37 @@
     </div>
 
       </section>
-    
+    <script src="/js/feed/view.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const slides = document.querySelector('.slides-img');
+        const slideCount = document.querySelectorAll('.slide-img').length;
+        let index = 0;
+
+        function showSlide(newIndex) {
+            if (newIndex >= slideCount) {
+                index = 0;
+            } else if (newIndex < 0) {
+                index = slideCount - 1;
+            } else {
+                index = newIndex;
+            }
+            slides.style.transform = `translateX(${-index * 100}%)`;
+        }
+
+        function prevSlide() {
+            showSlide(index - 1);
+        }
+
+        function nextSlide() {
+            showSlide(index + 1);
+        }
+
+        // Assign functions to buttons
+        document.querySelector('.prev-img').addEventListener('click', prevSlide);
+        document.querySelector('.next-img').addEventListener('click', nextSlide);
+    });
+    </script>
 	
 	
 	<th:block th:include="common/footer"></th:block>
