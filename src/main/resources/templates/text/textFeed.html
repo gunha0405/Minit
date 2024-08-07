@@ -8,6 +8,16 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+.comment-edit-textarea {
+    width: 600px !important;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    resize: none;
+}
+</style>
 <title>텍스트 피드</title>
 </head>
 <body>
@@ -39,10 +49,10 @@
 	                        <p class="text-feed-writer" th:text="${textFeed.textFeedWriter}"></p>
 	                        <p class="text-feed-content" th:text="${textFeed.textFeedContent}"></p>
 	                        <div class="feed-actions">
-	                            <i class="fa fa-heart"></i>
+	                            <i th:if="${textFeed.isLike == 1}" id="feed-like" class="fa fa-heart" th:onclick="likePush(this,[[${textFeed.textFeedNo}]])"></i>
+								<i th:if="${textFeed.isLike == 0}" id="feed-not-like" class="fa fa-regular fa-heart" th:onclick="likePush(this,[[${textFeed.textFeedNo}]])"></i>	
 	                            <i class="fa fa-paper-plane"></i>
 	                            <i class="fa fa-comment"></i>
-	                            <span>댓글수</span>
 	                            <i class="fa fa-ellipsis-h"></i>
 	                            <div class="feed-options">
 	                                <button class="feed-edit-btn" th:if="${session.user != null} and ${session.user.userId} == ${textFeed.textFeedWriter}"><span class="material-icons">edit</span></button>
@@ -68,13 +78,14 @@
 							            <textarea class="comment-edit-textarea" style="display:none;" th:text="${comment.textFeedCommentContent}"></textarea>
 							            <div class="comment-actions">
 							                <i class="fa fa-heart"></i>
+							                <i class="fa fa-regular fa-heart"></i>
 							            </div>
 							        </div>
 							        <div class="comment-options">
 							        	<button class="comment-edit-btn"><span class="material-icons">edit</span></button>
 							            <button class="comment-report-btn"><span class="material-icons">report_problem</span></button>
 							            <button class="comment-delete-btn" th:if="${session.user != null} and ${session.user.userId} == ${comment.textFeedCommentWriter}"><span class="material-icons">delete_forever</span></button>
-							            <button class="comment-save-btn" style="display:none;"><span class="material-icons">save</span></button>
+							            <button class="comment-save-btn" style="display:none;"><span class="material-icons">done</span></button>
 							        </div>
 							    </div>
 							</div>
@@ -122,6 +133,44 @@
     
     <script>
     
+    function likePush(obj, textFeedNo) {
+        const currentLike = $(obj).attr('id');
+        const isLike = (currentLike == "feed-not-like") ? 0 : 1;
+
+        $.ajax({
+            url: "/text/textFeedLikePush",
+            type: "post",
+            data: {
+                textFeedNo: textFeedNo,
+                isLike: isLike
+            },
+            success: function(data) {
+                if (data == -10) {
+                    swal({
+                        title: "로그인 필요",
+                        text: "로그인 후 이용해 주세요",
+                        icon: "info"
+                    });
+                } else if (data == -1) {
+                    swal({
+                        title: "데이터 처리 오류",
+                        text: "잠시 후 다시 시도해주세요",
+                        icon: "warning"
+                    });
+                } else {
+                    if (isLike == 0) {
+                        $(obj).attr('id', 'feed-like').removeClass('fa-regular fa-heart').addClass('fa-heart');
+                    } else {
+                        $(obj).attr('id', 'feed-not-like').removeClass('fa-heart').addClass('fa-regular fa-heart');
+                    }
+                }
+            },
+            error: function() {
+                alert("서버 연결 실패");
+            }
+        });
+    }
+    
     $(document).ready(function() {
         let feeds = $('#text-feed-feeds .feed');
         let numPerPage = 4;
@@ -168,7 +217,7 @@
             
             $.ajax({
                 url: "/text/deleteTextFeed",
-                type: "get",
+                type: "post",
                 data: { textFeedNo: textFeedNo },
                 dataType: "json",
                 success : function(result){
@@ -241,7 +290,7 @@
             
             $.ajax({
                 url: "/text/textFeedWrite",
-                type: "get",
+                type: "post",
                 data: { textFeedContent: textFeedContent },
                 dataType: "json",
                 success: function(data) {
@@ -258,10 +307,10 @@
                                 <p class="text-feed-writer">${newfeed.textFeedWriter}</p>
                                 <p class="text-feed-content">${newfeed.textFeedContent}</p>
                                 <div class="feed-actions">
-                                    <i class="fa fa-heart"></i>
+                                    <i id="feed-like" class="fa fa-heart"></i>
+                                    <i id="not-feed-like" class="fa fa-regular fa-heart"></i>
                                     <i class="fa fa-paper-plane"></i>
                                     <i class="fa fa-comment"></i>
-                                    <span>댓글수</span>
                                     <i class="fa fa-ellipsis-h"></i>
                                     <div class="feed-options">
                                         <button class="feed-edit-btn"><span class="material-icons">edit</span></button>
@@ -316,7 +365,7 @@
             const textFeedNo = textFeedElement.find(".textFeedNo").text();
             $.ajax({
                 url: "/text/textFeedCommentWrite",
-                type: "get",
+                type: "post",
                 data: {
                     textFeedCommentContent: textFeedCommentContent,
                     textFeedNo: textFeedNo
@@ -337,13 +386,14 @@
                                 <textarea class="comment-edit-textarea" style="display:none;">${comment.textFeedCommentContent}</textarea>
                                 <div class="comment-actions">
                                     <i class="fa fa-heart"></i>
+                                    <i class="fa fa-regular fa-heart"></i>
                                 </div>
                             </div>
                             <div class="comment-options">
                                 <button class="comment-edit-btn"><span class="material-icons">edit</span></button>
                                 <button class="comment-report-btn"><span class="material-icons">report_problem</span></button>
                                 <button class="comment-delete-btn"><span class="material-icons">delete_forever</span></button>
-                                <button class="comment-save-btn" style="display:none;"><span class="material-icons">save</span></button>
+                                <button class="comment-save-btn" style="display:none;"><span class="material-icons">done</span></button>
                             </div>
                         </div>
                     `;
@@ -364,7 +414,7 @@
             
             $.ajax({
                 url : "/text/deleteTextFeedComment",
-                type : "get",
+                type : "post",
                 data : {
                     textFeedCommentNo : textFeedCommentNo
                 },
@@ -439,7 +489,7 @@
             
             $.ajax({
                 url : "/text/editTextFeed",
-                type : "get",
+                type : "post",
                 data : {
                     textFeedEditContent : textFeedEditContent,
                     textFeedEditNo : textFeedEditNo
@@ -470,11 +520,57 @@
         
         $(document).on("click",".comment-edit-btn",function(){
         	const textFeedCommentElement = $(this).closest(".comment");
-        	const textFeedCommentNo = textFeedCommentElement.find(".textFeedCommentNo").text();
-        	
-        	//내용 hide
-        	//textarea 보여주기
+        	textFeedCommentElement.find(".comment-text").hide();
+        	textFeedCommentElement.find(".comment-edit-textarea").show();
+        	textFeedCommentElement.find(".comment-save-btn").show();
+            $(this).hide();
+    		
+            const textFeedCommentNo = textFeedCommentElement.find(".textFeedCommentNo").text();
+            $(".comment-save-btn").data("textFeedCommentNo", textFeedCommentNo);
         });
+        
+        $(document).on("click", ".comment-save-btn",function(){
+        	const textFeedCommentEditContent = $(".comment-edit-textarea").val();
+        	const textFeedCommentEditNo = $(this).data("textFeedCommentNo");
+	
+        	$.ajax({
+        		url : "/text/editTextFeedComment",
+        		type : "post",
+        		data : {
+        			textFeedCommentEditContent : textFeedCommentEditContent,
+        			textFeedCommentEditNo : textFeedCommentEditNo
+        		},
+        		success : function(result){
+        			if(result === 1){
+                        swal({
+                            title: "수정 성공",
+                            text: "댓글 수정 성공",
+                            icon: "success"
+                        });
+                         const textFeedCommentElement = $(".textFeedCommentNo:contains('" + textFeedCommentEditNo + "')").closest(".comment");
+                         textFeedCommentElement.find(".comment-text").text(textFeedCommentEditContent);
+                         textFeedCommentElement.find(".comment-text").show();
+                     	textFeedCommentElement.find(".comment-edit-textarea").hide();
+                    } else {
+                        swal({
+                            title: "수정 실패",
+                            text: "댓글 수정 실패",
+                            icon: "warning"
+                        });
+                    }
+        		},
+        		error : function(){
+        			swal({
+                        title: "수정 실패",
+                        text: "댓글 수정 실패",
+                        icon: "warning"
+                    });
+        		}
+        	})
+        });
+        
+        
+        
         
     });
     

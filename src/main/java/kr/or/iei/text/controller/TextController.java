@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
+
 
 import kr.or.iei.text.model.dto.TextFeed;
 import kr.or.iei.text.model.dto.TextFeedComment;
@@ -30,18 +32,15 @@ public class TextController {
     private UserService userService;
     
     @GetMapping(value="/textFeedList")
-    public String textList(Model model) {
-        List<TextFeed> textFeedList = textService.selectTextFeed();
-        for (TextFeed textFeed : textFeedList) {
-            List<TextFeedComment> comments = textService.selectTextFeedComment(textFeed.getTextFeedNo());
-            textFeed.setTextFeedCommentList(comments);
-        }
+    public String textList(Model model, @SessionAttribute(required =false) User user) {
+        int userNo = user != null ? user.getUserNo() : 0;
+        List<TextFeed> textFeedList = textService.selectTextFeed(userNo);
         model.addAttribute("textFeedList", textFeedList);
         return "text/textFeed";
     }
     
     @ResponseBody
-    @GetMapping(value="/textFeedWrite")
+    @PostMapping(value="/textFeedWrite")
     public TextFeedJsonList textFeedWrite(String textFeedContent, @SessionAttribute(required =false) User user) {
     	int result = textService.textFeedWrite(textFeedContent, user);
     	if(result > 0) {
@@ -59,7 +58,7 @@ public class TextController {
     }
     
     @ResponseBody
-    @GetMapping(value="/deleteTextFeed")
+    @PostMapping(value="/deleteTextFeed")
     public int deleteTextFeed(int textFeedNo) {
     	int result = textService.deleteTextFeed(textFeedNo);
     	
@@ -67,7 +66,7 @@ public class TextController {
     }
     
     @ResponseBody
-    @GetMapping(value="/textFeedCommentWrite")
+    @PostMapping(value="/textFeedCommentWrite")
     public TextFeedCommentJsonList textFeedCommentWrite(@SessionAttribute(required =false) User user,String textFeedCommentContent,int textFeedNo) {
     	int result = textService.textFeedCommentWrite(textFeedCommentContent, textFeedNo,user);
     	if(result > 0) {
@@ -84,17 +83,36 @@ public class TextController {
     }
     
     @ResponseBody
-    @GetMapping(value="/deleteTextFeedComment")
+    @PostMapping(value="/deleteTextFeedComment")
     public int deleteTextFeedComment(int textFeedCommentNo) {
     	int result = textService.deleteTextFeedComment(textFeedCommentNo);
     	return result;
     }
     
     @ResponseBody
-    @GetMapping(value="/editTextFeed")
+    @PostMapping(value="/editTextFeed")
     public int editTextFeed(String textFeedEditContent, int textFeedEditNo) {
     	int result = textService.editTextFeed(textFeedEditContent, textFeedEditNo);
     	return result;
+    }
+    
+    @ResponseBody
+    @PostMapping(value="/editTextFeedComment")
+    public int editTextFeedComment(String textFeedCommentEditContent, int textFeedCommentEditNo) {
+    	int result = textService.editTextFeedComment(textFeedCommentEditContent, textFeedCommentEditNo);
+    	return result;
+    }
+    
+    @ResponseBody
+    @PostMapping(value="/textFeedLikePush")
+    public int textFeedLikePush(int textFeedNo, int isLike,@SessionAttribute(required =false) User user) {
+    	if(user == null) {
+    		return -10;
+    	}else {
+    		int userNo = user.getUserNo();
+    		int result = textService.textFeedLikePush(textFeedNo, isLike, userNo);
+    		return result;
+    	}
     }
     
 }
