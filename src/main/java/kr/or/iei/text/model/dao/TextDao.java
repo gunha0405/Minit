@@ -81,9 +81,23 @@ public class TextDao {
 	
 
 	public List<TextFeedComment> selectTextFeedComment(int textFeedNo) {
-	    String query = "select * from text_feed_comment where text_feed_comment_ref = ?";
+	    String query = "select * from text_feed_comment where text_feed_comment_ref = ? order by 1 desc";
 	    Object[] params = {textFeedNo};
 	    List<TextFeedComment> list= jdbc.query(query, textFeedCommentRowMapper, params);
 	    return list;
+	}
+
+	public int deleteTextFeedComment(int textFeedCommentNo) {
+		String query = "delete from text_feed_comment where text_feed_comment_no = ?";
+		Object[] params = {textFeedCommentNo};
+		int result = jdbc.update(query,params);
+		return result;
+	}
+
+	public int editTextFeed(String textFeedEditContent, int textFeedEditNo) {
+		String query = "update text_feed set text_feed_content = ? where text_feed_no = ?";
+		Object[] params = {textFeedEditContent, textFeedEditNo};
+		int result = jdbc.update(query, params);
+		return result;
 	}
 }

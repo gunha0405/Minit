@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <script defer src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/js/sweetalert.min.js"></script>
 <link rel="stylesheet" href="/css/text/textFeedStyle.css" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.24/dist/sweetalert2.min.css">
 <title>텍스트 피드</title>
 </head>
 <body>
@@ -28,27 +28,27 @@
                 </div>
             </div>
             
-            <div class="text-feed-posts" id="text-feed-posts">
-	                <div class="post" th:each="textFeed : ${textFeedList}">
+            <div class="text-feed-feeds" id="text-feed-feeds">
+	                <div class="feed" th:each="textFeed : ${textFeedList}">
 	                
 	                	<span class="textFeedNo" th:text="${textFeed.textFeedNo}" style="display:none;"></span>
-	                    <div class="post-profile-pic">
+	                    <div class="feed-profile-pic">
 	                        <img src="Profile Picture" alt="Profile Picture">
 	                    </div>
-	                    <div class="post-content">
+	                    <div class="feed-content">
 	                        <p class="text-feed-writer" th:text="${textFeed.textFeedWriter}"></p>
 	                        <p class="text-feed-content" th:text="${textFeed.textFeedContent}"></p>
-	                        <div class="post-actions">
+	                        <div class="feed-actions">
 	                            <i class="fa fa-heart"></i>
 	                            <i class="fa fa-paper-plane"></i>
 	                            <i class="fa fa-comment"></i>
 	                            <span>댓글수</span>
 	                            <i class="fa fa-ellipsis-h"></i>
-	                            <div class="post-options">
-	                                <button th:if="${session.user != null} and ${session.user.userId} == ${textFeed.textFeedWriter}"><span class="material-icons edit-btn">edit</span></button>
-	                                <button><span class="material-icons report-btn">report_problem</span></button>
-	                                <button><span class="material-icons bookmark-btn">bookmark_border</span></button>
-	                                <button th:if="${session.user != null} and ${session.user.userId} == ${textFeed.textFeedWriter}"><span class="material-icons delete-btn">delete_forever</span></button>
+	                            <div class="feed-options">
+	                                <button class="feed-edit-btn" th:if="${session.user != null} and ${session.user.userId} == ${textFeed.textFeedWriter}"><span class="material-icons">edit</span></button>
+	                                <button class="feed-report-btn"><span class="material-icons">report_problem</span></button>
+	                                <button class="feed-bookmark-btn"><span class="material-icons">bookmark_border</span></button>
+	                                <button class="feed-delete-btn" th:if="${session.user != null} and ${session.user.userId} == ${textFeed.textFeedWriter}"><span class="material-icons">delete_forever</span></button>
 	                        </div>
 	                    </div>
 	                    
@@ -58,25 +58,30 @@
 	                        <button class="submit-comment">댓글 달기</button>
 	                        <div class="comments-container">
 							    <div class="comment" th:each="comment : ${textFeed.textFeedCommentList}">
+							    	<span class="textFeedCommentNo" th:text="${comment.textFeedCommentNo}" style="display:none;"></span>
 							        <div class="comment-profile-pic">
 							            <img src="Profile Picture" alt="Profile Picture">
 							        </div>
 							        <div class="comment-content">
 							            <p class="comment-author" th:text="${comment.textFeedCommentWriter}"></p>
 							            <p class="comment-text" th:text="${comment.textFeedCommentContent}"></p>
+							            <textarea class="comment-edit-textarea" style="display:none;" th:text="${comment.textFeedCommentContent}"></textarea>
 							            <div class="comment-actions">
 							                <i class="fa fa-heart"></i>
 							            </div>
 							        </div>
 							        <div class="comment-options">
-							            <button><span class="material-icons report-btn">report_problem</span></button>
-							            <button th:if="${session.user != null} and ${session.user.userId} == ${comment.textFeedCommentWriter}"><span class="material-icons comment-delete-btn">delete_forever</span></button>
+							        	<button class="comment-edit-btn"><span class="material-icons">edit</span></button>
+							            <button class="comment-report-btn"><span class="material-icons">report_problem</span></button>
+							            <button class="comment-delete-btn" th:if="${session.user != null} and ${session.user.userId} == ${comment.textFeedCommentWriter}"><span class="material-icons">delete_forever</span></button>
+							            <button class="comment-save-btn" style="display:none;"><span class="material-icons">save</span></button>
 							        </div>
 							    </div>
 							</div>
 
 	                </div>
 	            </div>
+            </div>
             </div>
             <button th:if="${session.user != null}" id="load-more" class="text-feed-button">더보기</button>
             <button th:if="${session.user == null}" id="login-load-more" class="text-feed-button">
@@ -92,18 +97,40 @@
         </section>
     </div>
     
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.24/dist/sweetalert2.min.js"></script>
+    
+	
+	
+	<!-- 피드 수정 모달 -->
+	<div class="modal fade" id="feed-edit-modal" tabindex="-1" aria-labelledby="feed-edit-modalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="feed-edit-modalLabel">글 수정</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	        <div class="text-feed-write-area">
+	          <textarea name="text-feed-content" id="modal-text-feed-content" placeholder="글 내용 수정하기(100자)"></textarea>
+	          <div class="text-feed-actions">
+	            <button type="submit" class="text-feed-button modal-write-btn">수정하기</button>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+    
     <script>
     
     $(document).ready(function() {
-        let posts = $('#text-feed-posts .post');
-        let numPerPage = 3;
+        let feeds = $('#text-feed-feeds .feed');
+        let numPerPage = 4;
         let currentPage = 1;
 
         function showPage(page) {
             let start = (page - 1) * numPerPage;
             let end = page * numPerPage;
-            posts.slice(start, end).fadeIn();
+            feeds.slice(start, end).fadeIn();
         }
 
         // 초기 로드 시 첫 번째 페이지를 표시
@@ -112,15 +139,14 @@
         $('#load-more').click(function() {
             currentPage++;
             showPage(currentPage);
-            
         });
 
         // 모든 포스트를 숨기고 처음 numPerPage개의 포스트만 표시
-        posts.hide();
+        feeds.hide();
         showPage(currentPage);
 
-        function adjustPostOptionsDimensions() {
-            $('.post-options').each(function() {
+        function adjustfeedOptionsDimensions() {
+            $('.feed-options').each(function() {
                 const visibleButtons = $(this).find('button:visible').length;
                 const buttonHeight = 30; // 각 버튼의 높이 (px 단위로 지정)
                 const buttonWidth = 30; // 버튼의 너비 (px 단위로 지정)
@@ -130,53 +156,89 @@
             });
         }
 
-        function bindPostEvents(postElement) {
-            postElement.find(".fa-ellipsis-h").click(function() {
-                const postOptions = $(this).siblings(".post-options");
-                postOptions.toggle();
-                adjustPostOptionsDimensions();
-            });
+        $(document).on("click", ".fa-ellipsis-h", function() {
+            const feedOptions = $(this).siblings(".feed-options");
+            feedOptions.toggle();
+            adjustfeedOptionsDimensions();
+        });
 
-            postElement.find(".delete-btn").click(function() {
-                const textFeedElement = $(this).closest(".post");
-                const textFeedNo = textFeedElement.find(".textFeedNo").text();
-                
-                $.ajax({
-                    url: "/text/deleteTextFeed",
-                    type: "get",
-                    data: { textFeedNo: textFeedNo },
-                    dataType: "json",
-                    success: function(result) {
-                        if (result === 1) {
-                        	Swal.fire({
-	                            title : "삭제 성공",
-	                            text : "피드 삭제 성공",
-	                            icon : "success"
-	                        });
-                            textFeedElement.remove();
-                        } else {
-                        	Swal.fire({
-	                            title : "삭제 실패",
-	                            text : "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
-	                            icon : "warning"
-	                        });
-                        }
-                    },
-                    error: function() {
-                        console.log("서버 전송 실패");
+        $(document).on("click", ".feed-delete-btn", function() {
+            const textFeedElement = $(this).closest(".feed");
+            const textFeedNo = textFeedElement.find(".textFeedNo").text();
+            
+            $.ajax({
+                url: "/text/deleteTextFeed",
+                type: "get",
+                data: { textFeedNo: textFeedNo },
+                dataType: "json",
+                success : function(result){
+                    if (result === 1) {
+                        swal({
+                            title: "게시물 삭제",
+                            text: "게시물을 삭제하시겠습니까?",
+                            icon: "warning",
+                            buttons: {
+                                cancel: {
+                                    text: "취소",
+                                    value: null,
+                                    visible: true,
+                                    className: "btn-secondary",
+                                    closeModal: true
+                                },
+                                confirm: {
+                                    text: "삭제",
+                                    value: true,
+                                    visible: true,
+                                    className: "btn-point",
+                                    closeModal: true
+                                }
+                            }
+                        }).then(function(isConfirm) {
+                            if (isConfirm) {
+                                swal({
+                                    title: "삭제 성공",
+                                    text: "피드 삭제 성공",
+                                    icon: "success"
+                                });
+                                textFeedElement.fadeOut("slow", function() {
+                                    $(this).remove();
+                                });
+                            }
+                        });
+                    
+                        
+                    } else {
+                        swal({
+                            title: "삭제 실패",
+                            text: "피드 삭제 실패",
+                            icon: "warning"
+                        });
                     }
-                });
+                },
+                error: function() {
+                    swal({
+                        title : "삭제 실패",
+                        text : "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+                        icon : "warning"
+                    });
+                }
             });
-        }
+        });
 
-        // 초기 조정
-        adjustPostOptionsDimensions();
-
-        // 페이지 로드 시 기존 포스트에 이벤트 바인딩
-        bindPostEvents($(".post"));
+        $(document).on("click", ".feed-edit-btn", function() {
+            const textFeedElement = $(this).closest(".feed");
+            const textFeedContent = textFeedElement.find(".text-feed-content").text();
+            
+            $("#modal-text-feed-content").val(textFeedContent);
+            
+            const textFeedNo = textFeedElement.find(".textFeedNo").text();
+            $(".modal-write-btn").data("textFeedNo", textFeedNo);
+            $("#feed-edit-modal").modal("show");
+        });
 
         $(".write-btn").on("click", function() {
             const textFeedContent = $("#text-feed-content").val();
+            
             $.ajax({
                 url: "/text/textFeedWrite",
                 type: "get",
@@ -184,28 +246,28 @@
                 dataType: "json",
                 success: function(data) {
                     console.log(data);
-                    const newPost = data.textFeed;
+                    const newfeed = data.textFeed;
                     const user = data.user;
-                    const postHtml = `
-                        <div class="post" style="display:none;">
-                            <span class="textFeedNo" style="display:none;">${newPost.textFeedNo}</span>
-                            <div class="post-profile-pic">
+                    const feedHtml = `
+                        <div class="feed" style="display:none;">
+                            <span class="textFeedNo" style="display:none;">${newfeed.textFeedNo}</span>
+                            <div class="feed-profile-pic">
                                 <img src="Profile Picture" alt="Profile Picture">
                             </div>
-                            <div class="post-content">
-                                <p class="text-feed-writer">${newPost.textFeedWriter}</p>
-                                <p class="text-feed-content">${newPost.textFeedContent}</p>
-                                <div class="post-actions">
+                            <div class="feed-content">
+                                <p class="text-feed-writer">${newfeed.textFeedWriter}</p>
+                                <p class="text-feed-content">${newfeed.textFeedContent}</p>
+                                <div class="feed-actions">
                                     <i class="fa fa-heart"></i>
                                     <i class="fa fa-paper-plane"></i>
                                     <i class="fa fa-comment"></i>
                                     <span>댓글수</span>
                                     <i class="fa fa-ellipsis-h"></i>
-                                    <div class="post-options">
-                                        <button><span class="material-icons edit-btn">edit</span></button>
-                                        <button><span class="material-icons report-btn">report_problem</span></button>
-                                        <button><span class="material-icons bookmark-btn">bookmark_border</span></button>
-                                        <button><span class="material-icons delete-btn">delete_forever</span></button>
+                                    <div class="feed-options">
+                                        <button class="feed-edit-btn"><span class="material-icons">edit</span></button>
+                                        <button class="feed-report-btn"><span class="material-icons">report_problem</span></button>
+                                        <button class="feed-bookmark-btn"><span class="material-icons">bookmark_border</span></button>
+                                        <button class="feed-delete-btn"><span class="material-icons">delete_forever</span></button>
                                     </div>
                                 </div>
                             </div>
@@ -219,11 +281,10 @@
                         </div>
                     `;
 
-                    const newPostElement = $(postHtml);
-                    $("#text-feed-posts").prepend(newPostElement);
-                    newPostElement.slideDown("slow");
+                    const newfeedElement = $(feedHtml);
+                    $("#text-feed-feeds").prepend(newfeedElement);
+                    newfeedElement.slideDown("slow");
                     
-                    bindPostEvents(newPostElement);
                     $("#text-feed-content").val("");
                 },
                 error: function() {
@@ -236,64 +297,184 @@
         const isLoggedIn = $('#currentUser').val() === 'true';
 
         if (isLoggedIn) {
-            $(".fa-comment").click(function() {
-                $(this).closest(".post").find(".comment-section").slideToggle();
+            $(document).on("click", ".fa-comment", function() {
+                $(this).closest(".feed").find(".comment-section").slideToggle();
             });
-        }else{
-        	$(".fa-comment").click(function(){
-        		Swal.fire({
+        } else {
+            $(document).on("click", ".fa-comment", function(){
+                swal({
                     title : "",
                     text : "댓글은 로그인 후 볼 수 있어요!",
                     icon : "warning"
-                });	
-        	})
-        	
+                });
+            });
         }
-	
-        $(".submit-comment").click(function() {
+
+        $(document).on("click", ".submit-comment", function() {
             const textFeedCommentContent = $(this).siblings("textarea").val();
-            const textFeedElement = $(this).closest(".post"); 
+            const textFeedElement = $(this).closest(".feed");
             const textFeedNo = textFeedElement.find(".textFeedNo").text();
             $.ajax({
-            	url : "/text/textFeedCommentWrite",
-            	type : "get",
-            	data : {textFeedCommentContent : textFeedCommentContent,
-            			textFeedNo : textFeedNo},
-            	dataType : "json",
-            	success : function(data){
-            		const comment = data.textFeedComment;
+                url: "/text/textFeedCommentWrite",
+                type: "get",
+                data: {
+                    textFeedCommentContent: textFeedCommentContent,
+                    textFeedNo: textFeedNo
+                },
+                dataType: "json",
+                success: function(data){
+                    const comment = data.textFeedComment;
                     const user = data.commentWriterUser;
                     const commentHtml = `
-                        <div class="comment">
+                        <div class="comment" style="display:none;">
+                            <span class="textFeedCommentNo" style="display:none;">${comment.textFeedCommentNo}</span>
                             <div class="comment-profile-pic">
-                                <img src="user.profilePic" alt="Profile Picture">
+                                <img src="userprofilePic" alt="Profile Picture">
                             </div>
                             <div class="comment-content">
                                 <p class="comment-author">${comment.textFeedCommentWriter}</p>
                                 <p class="comment-text">${comment.textFeedCommentContent}</p>
+                                <textarea class="comment-edit-textarea" style="display:none;">${comment.textFeedCommentContent}</textarea>
                                 <div class="comment-actions">
                                     <i class="fa fa-heart"></i>
                                 </div>
                             </div>
                             <div class="comment-options">
-                                <button><span class="material-icons report-btn">report_problem</span></button>
-                                <button><span class="material-icons delete-btn">delete_forever</span></button>
+                                <button class="comment-edit-btn"><span class="material-icons">edit</span></button>
+                                <button class="comment-report-btn"><span class="material-icons">report_problem</span></button>
+                                <button class="comment-delete-btn"><span class="material-icons">delete_forever</span></button>
+                                <button class="comment-save-btn" style="display:none;"><span class="material-icons">save</span></button>
                             </div>
                         </div>
                     `;
-                    textFeedElement.find(".comments-container").append(commentHtml);
+                    const newComment = $(commentHtml);
+                    textFeedElement.find(".comments-container").prepend(newComment);
+                    newComment.slideDown("slow");
                     textFeedElement.find("textarea").val(""); 
-            	},
-            	error : function(){
-            		console.log("데이터 전송 실패");
-            		
-            	}
+                },
+                error: function(){
+                    console.log("데이터 전송 실패");
+                }
             })
+        });//댓글 작성
+        
+        $(document).on("click", ".comment-delete-btn", function() {
+            const textFeedCommentElement = $(this).closest(".comment")
+            const textFeedCommentNo = textFeedCommentElement.find(".textFeedCommentNo").text();
             
-          
-        });    
+            $.ajax({
+                url : "/text/deleteTextFeedComment",
+                type : "get",
+                data : {
+                    textFeedCommentNo : textFeedCommentNo
+                },
+                dataType : "json",
+                success : function(result){
+                    if (result === 1) {
+                        swal({
+                            title: "댓글 삭제",
+                            text: "댓글을 삭제하시겠습니까?",
+                            icon: "warning",
+                            buttons: {
+                                cancel: {
+                                    text: "취소",
+                                    value: null,
+                                    visible: true,
+                                    className: "btn-secondary",
+                                    closeModal: true
+                                },
+                                confirm: {
+                                    text: "삭제",
+                                    value: true,
+                                    visible: true,
+                                    className: "btn-point",
+                                    closeModal: true
+                                }
+                            }
+                        }).then(function(isConfirm) {
+                            if (isConfirm) {
+                                swal({
+                                    title: "삭제 성공",
+                                    text: "댓글 삭제 성공",
+                                    icon: "success"
+                                });
+                                textFeedCommentElement.fadeOut("slow", function() {
+                                    $(this).remove();
+                                });
+                            }
+                        });
+                    
+                        
+                    } else {
+                        swal({
+                            title: "삭제 실패",
+                            text: "댓글 삭제 실패",
+                            icon: "warning"
+                        });
+                    }
+                },
+                error : function(){
+                    swal({
+                        title : "삭제 실패",
+                        text : "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+                        icon : "warning"
+                    });
+                }
+            });
+        });//댓글 삭제
         
+        $(document).on("click", ".feed-edit-btn", function() {
+            const textFeedElement = $(this).closest(".feed");
+            const textFeedContent = textFeedElement.find(".text-feed-content").text();
+            
+            $("#modal-text-feed-content").val(textFeedContent);
+            
+            const textFeedNo = textFeedElement.find(".textFeedNo").text();
+            $(".modal-write-btn").data("textFeedNo", textFeedNo);
+        });//피드 수정 버튼 클릭시 모달창 띄우기
         
+        $(".modal-write-btn").click(function(){
+            const textFeedEditContent = $("#modal-text-feed-content").val();
+            const textFeedEditNo = $(this).data("textFeedNo");
+            
+            $.ajax({
+                url : "/text/editTextFeed",
+                type : "get",
+                data : {
+                    textFeedEditContent : textFeedEditContent,
+                    textFeedEditNo : textFeedEditNo
+                },
+                success : function(result){
+                    if(result === 1){
+                        swal({
+                            title: "수정 성공",
+                            text: "피드 수정 성공",
+                            icon: "success"
+                        });
+                         const textFeedElement = $(".textFeedNo:contains('" + textFeedEditNo + "')").closest(".feed");
+                         textFeedElement.find(".text-feed-content").text(textFeedEditContent);
+                         $("#feed-edit-modal").modal('hide');
+                    } else {
+                        swal({
+                            title: "수정 실패",
+                            text: "피드 수정 실패",
+                            icon: "warning"
+                        });
+                    }
+                },
+                error : function(){
+                    console.log("피드 수정 실패");
+                }
+            });
+        });//피드 수정
+        
+        $(document).on("click",".comment-edit-btn",function(){
+        	const textFeedCommentElement = $(this).closest(".comment");
+        	const textFeedCommentNo = textFeedCommentElement.find(".textFeedCommentNo").text();
+        	
+        	//내용 hide
+        	//textarea 보여주기
+        });
         
     });
     

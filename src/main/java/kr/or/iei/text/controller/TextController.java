@@ -82,4 +82,19 @@ public class TextController {
     		return null;
     	}
     }
+    
+    @ResponseBody
+    @GetMapping(value="/deleteTextFeedComment")
+    public int deleteTextFeedComment(int textFeedCommentNo) {
+    	int result = textService.deleteTextFeedComment(textFeedCommentNo);
+    	return result;
+    }
+    
+    @ResponseBody
+    @GetMapping(value="/editTextFeed")
+    public int editTextFeed(String textFeedEditContent, int textFeedEditNo) {
+    	int result = textService.editTextFeed(textFeedEditContent, textFeedEditNo);
+    	return result;
+    }
+    
 }

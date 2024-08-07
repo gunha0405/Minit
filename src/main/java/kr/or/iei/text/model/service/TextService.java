@@ -62,5 +62,13 @@ public class TextService {
 		List<TextFeedComment> list = textDao.selectTextFeedComment(textFeedNo);
 		return list;
 	}
+	public int deleteTextFeedComment(int textFeedCommentNo) {
+		int result = textDao.deleteTextFeedComment(textFeedCommentNo);
+		return result;
+	}
+	public int editTextFeed(String textFeedEditContent, int textFeedEditNo) {
+		int result = textDao.editTextFeed(textFeedEditContent, textFeedEditNo);
+		return result;
+	}
 	
 }

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class TextFeedComment {
-	private int textFeedCommentNO;
+	private int textFeedCommentNo;
 	private String textFeedCommentContent;
 	private String textFeedCommentWriter;
 	private String textFeedCommentRegDate;
