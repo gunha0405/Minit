@@ -39,7 +39,8 @@ public class FeedController {
 	}
 
 	@GetMapping(value = "/view")
-	public String view() {
+	public String view(int userFeedNo) {
+		Feed feed = feedService.selectUserAllFeed(userFeedNo);
 		return "feed/view";
 	}
 
