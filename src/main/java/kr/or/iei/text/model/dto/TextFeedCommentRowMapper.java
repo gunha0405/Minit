@@ -13,7 +13,7 @@ public class TextFeedCommentRowMapper implements RowMapper<TextFeedComment>{
 	public TextFeedComment mapRow(ResultSet rs, int rowNum) throws SQLException {
 		TextFeedComment tfc = new TextFeedComment();
 		tfc.setTextFeedCommentContent(rs.getString("text_feed_comment_content"));
-		tfc.setTextFeedCommentNO(rs.getInt("text_feed_comment_no"));
+		tfc.setTextFeedCommentNo(rs.getInt("text_feed_comment_no"));
 		tfc.setTextFeedCommentRef(rs.getInt("text_feed_comment_ref"));
 		tfc.setTextFeedCommentRegDate(rs.getString("text_feed_comment_reg_date"));
 		tfc.setTextFeedCommentWriter(rs.getString("text_feed_comment_writer"));

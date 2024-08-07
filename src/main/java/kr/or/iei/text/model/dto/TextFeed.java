@@ -15,4 +15,6 @@ public class TextFeed {
 	private String textFeedRegDate;
 	private String textFeedWriter;
 	private List<TextFeedComment> textFeedCommentList;
+	private int isLike;
+	
 }

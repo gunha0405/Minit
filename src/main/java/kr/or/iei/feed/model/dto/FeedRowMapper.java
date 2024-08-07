@@ -17,6 +17,7 @@ public class FeedRowMapper implements RowMapper<Feed>{
 		feed.setUserFeedContnet(rs.getString("user_feed_content"));
 		feed.setUserFeedDate(rs.getString("user_feed_date"));
 		feed.setUserFeedCount(rs.getInt("user_feed_count"));
+		feed.setUserFeedFilepath(rs.getNString("user_feed_filepath"));
 		return feed;
 	}
 

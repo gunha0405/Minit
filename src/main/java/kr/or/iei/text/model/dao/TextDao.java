@@ -25,8 +25,8 @@ public class TextDao {
 
 	public List selectTextFeed() {
 		String query = "select * from text_feed order by 1 desc";
-		List list = jdbc.query(query, textFeedRowMapper);
-		return list;
+		List textFeedList = jdbc.query(query, textFeedRowMapper);
+		return textFeedList;
 	}
 
 	public int textFeedWrite(String textFeedContent, User user) {
@@ -81,9 +81,58 @@ public class TextDao {
 	
 
 	public List<TextFeedComment> selectTextFeedComment(int textFeedNo) {
-	    String query = "select * from text_feed_comment where text_feed_comment_ref = ?";
+	    String query = "select * from text_feed_comment where text_feed_comment_ref = ? order by 1 desc";
 	    Object[] params = {textFeedNo};
 	    List<TextFeedComment> list= jdbc.query(query, textFeedCommentRowMapper, params);
 	    return list;
 	}
+
+	public int deleteTextFeedComment(int textFeedCommentNo) {
+		String query = "delete from text_feed_comment where text_feed_comment_no = ?";
+		Object[] params = {textFeedCommentNo};
+		int result = jdbc.update(query,params);
+		return result;
+	}
+
+	public int editTextFeed(String textFeedEditContent, int textFeedEditNo) {
+		String query = "update text_feed set text_feed_content = ? where text_feed_no = ?";
+		Object[] params = {textFeedEditContent, textFeedEditNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+	public int editTextFeedComment(String textFeedCommentEditContent, int textFeedCommentEditNo) {
+		String query = "update text_feed_comment set text_feed_comment_content = ? where text_feed_comment_no = ?";
+		Object[] params = {textFeedCommentEditContent, textFeedCommentEditNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+	public int insertTextFeedLike(int textFeedNo, int userNo) {
+		String query = "insert into text_feed_like values(?,?)";
+		Object[] params = {textFeedNo, userNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+	public int deleteTextFeedLike(int textFeedNo, int userNo) {
+		String query = "delete from text_feed_like where text_feed_no = ? and user_no = ?";
+		Object[] params = {textFeedNo, userNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+	
+	public boolean isLikeExists(int textFeedNo, int userNo) {
+	    String query = "SELECT COUNT(*) FROM text_feed_like WHERE text_feed_no = ? AND user_no = ?";
+	    Object[] params = { textFeedNo, userNo };
+	    int count = jdbc.queryForObject(query,Integer.class ,params);
+	    return count > 0;
+	}
+	
+	 public int selectTextFeedLikeStatus(int textFeedNo, int userNo) {
+	        String query = "SELECT COUNT(*) FROM text_feed_like WHERE text_feed_no = ? AND user_no = ?";
+	        Object[] params = {textFeedNo, userNo};
+	        int isLike = jdbc.queryForObject(query,Integer.class ,params);
+	        return isLike;
+	    }
 }

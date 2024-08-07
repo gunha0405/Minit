@@ -305,14 +305,14 @@ footer div {
     cursor: not-allowed;
 }
 
-.text-feed-posts {
+.text-feed-feeds {
     display: flex;
     flex-direction: column;
     gap: 15px;
     width: 100%; /* 추가 */
 }
 
-.post {
+.feed {
     display: flex;
     flex-direction: column;
     background-color: #fff;
@@ -323,18 +323,18 @@ footer div {
     position: relative;
 }
 
-.post-profile-pic {
+.feed-profile-pic {
     flex-shrink: 0;
     margin-right: 15px;
 }
 
-.post-profile-pic img {
+.feed-profile-pic img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
 }
 
-.post-content {
+.feed-content {
     flex-grow: 1;
 }
 
@@ -354,7 +354,7 @@ footer div {
     line-height: 1.5;
 }
 
-.post-actions {
+.feed-actions {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -362,18 +362,18 @@ footer div {
     position: relative;
 }
 
-.post-actions i {
+.feed-actions i {
     cursor: pointer;
 }
 
-.post-actions .fa-ellipsis-h {
+.feed-actions .fa-ellipsis-h {
     position: absolute;
     right: 0;
     bottom: 0;
     cursor: pointer;
 }
 
-.post-options {
+.feed-options {
     position: absolute;
     right: 10px;
     bottom: 30px;
@@ -386,7 +386,7 @@ footer div {
     overflow: hidden;
 }
 
-.post-options button {
+.feed-options button {
     display: block;
     width: 100%;
     height: 30px; /* 버튼 높이 설정 */
@@ -397,28 +397,28 @@ footer div {
     transition: background-color 0.3s;
 }
 
-.post-options button:hover {
+.feed-options button:hover {
     background-color: #f0f0f0;
 }
 
-.post-options button > span {
+.feed-options button > span {
     font-size: 18px;
 }
-.post-options button:hover {
+.feed-options button:hover {
     background-color: #f0f0f0;
 }
 
-.post-options button:first-child {
+.feed-options button:first-child {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
 
-.post-options button:last-child {
+.feed-options button:last-child {
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
 }
 
-.post-actions span {
+.feed-actions span {
     font-size: 14px;
     color: #657786;
 }
@@ -556,6 +556,74 @@ footer {
   }
   
   .comment-author{
-  	font-size: 14px;
+  	font-size: 16px;
   	font-weight: bold;
   }
+  
+  
+#feed-edit-modal .modal-dialog {
+    max-width: 800px; /* 모달 창 너비를 800px로 설정 */
+    margin: 1.75rem auto; /* 수직 및 수평 중앙 정렬 */
+}
+
+#feed-edit-modal .modal-content {
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#feed-edit-modal .modal-header {
+    border-bottom: none;
+}
+
+#feed-edit-modal .modal-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#feed-edit-modal .modal-body {
+    padding: 20px;
+}
+
+#feed-edit-modal .text-feed-write-area {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+#feed-edit-modal .text-feed-write-area textarea {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    resize: none;
+    font-size: 16px;
+    outline: none;
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+#feed-edit-modal .text-feed-write-area .text-feed-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#feed-edit-modal .text-feed-write-area .text-feed-button {
+    background-color: #6dd19c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#feed-edit-modal .text-feed-write-area .text-feed-button:hover {
+    background-color: #5cb488;
+}
+
+#feed-edit-modal .text-feed-write-area .text-feed-button:disabled {
+    background-color: #a1c9f1;
+    cursor: not-allowed;
+}
+

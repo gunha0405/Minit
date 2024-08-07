@@ -3,11 +3,13 @@ package kr.or.iei.feed.model.dao;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import kr.or.iei.feed.model.dto.Feed;
 import kr.or.iei.feed.model.dto.FeedFile;
+import kr.or.iei.feed.model.dto.FeedFileRowMapper;
 import kr.or.iei.feed.model.dto.FeedRowMapper;
 import kr.or.iei.feed.model.dto.UserFeedNaviList;
 import kr.or.iei.user.model.dto.User;
@@ -20,7 +22,11 @@ public class FeedDao {
 	@Autowired
 	FeedRowMapper feedRowMapper = new FeedRowMapper();
 	@Autowired
+	FeedFileRowMapper feedFileRowMapper = new FeedFileRowMapper();
+	@Autowired
 	UserRowMapper userRowMapper = new UserRowMapper();
+	@Value("${file.root}")
+	private String root;
 	
 	public UserFeedNaviList userList(String userId) {
 		String query = "select user_id, user_info, USER_FEED_WRITER, USER_FEED_CONTENT,USER_FEED_DATE\r\n" + 
@@ -71,8 +77,52 @@ public class FeedDao {
 
 	public int insertFeedFile(FeedFile feedFile) {
 		String query = "insert into user_feed_file values(user_feed_file_seq.nextval,?,?)";
-		Object[] params = {feedFile.getUserFeedNo(),feedFile.getUserFeedFilpath()};
+		Object[] params = {feedFile.getUserFeedNo(),feedFile.getUserFeedFilepath()};
 		int result = jdbc.update(query, params);
 		return result;
 	}
+
+	public int selectFeedList(int start, int end, User u) {
+		String userId = u.getUserId();
+		String query = "select count(*)from (select user_feed_no \r\n" + 
+				"from (select rownum as rnum, n.*from(select user_feed_no from user_feed_tbl join user_feed_file using(user_feed_no) \r\n" + 
+				"where USER_FEED_WRITER = ? group by user_feed_no order by 1)n) \r\n" + 
+				"where rnum between ? and ?)";
+        Object[] params = {u.getUserId(),start,end};
+        int totalCount = jdbc.queryForObject(query, Integer.class,params);
+        return totalCount;
+	}
+
+	public int selectFeedTotalCount() {
+		String query = "select count(*) from user_feed_tbl";
+		int totalCount = jdbc.queryForObject(query, Integer.class);
+		return totalCount;
+	}
+
+	public int searchUserFeedNum(String userId) {
+		String query = "select count(*) from (select user_feed_no from user_feed_tbl join user_feed_file using(user_feed_no) where USER_FEED_WRITER = ? group by user_feed_no)"; 
+		Object[] parmas = {userId};
+		int totalCount = jdbc.queryForObject(query, Integer.class, parmas);
+		return totalCount;
+	}
+
+	public int searhFeedNo(int start, int end, User u, int i) {
+		String query = "select user_feed_no from\r\n" + 
+				"(select rownum as rnum, \r\n" + 
+				"n.*from(select user_feed_no from (select rownum as rnum, \r\n" + 
+				"n.*from(select user_feed_no from user_feed_tbl join user_feed_file using(user_feed_no) \r\n" + 
+				"where USER_FEED_WRITER = ? group by user_feed_no order by 1)n)\r\n" + 
+				"where rnum between ? and ?)n) where rnum=?";
+		Object[] params = {u.getUserId(),start,end, i};
+		int feedNo = jdbc.queryForObject(query, Integer.class, params);
+		return feedNo;
+	}
+
+	public String feedFilepath(int start, int end, User u, int feedNo) {
+		String query = "select user_feed_filepath from (select rownum as rnum, n.*from(select * from user_feed_tbl join user_feed_file using(user_feed_no) where user_feed_no=?)n) where rownum=1";
+		Object[] params = {feedNo};
+		String file = jdbc.queryForObject(query, String.class, params);
+		return file;
+	}
+
 }

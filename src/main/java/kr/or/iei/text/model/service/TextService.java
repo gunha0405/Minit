@@ -16,10 +16,14 @@ public class TextService {
 	@Autowired
 	private TextDao textDao;
 
-	public List selectTextFeed() {
-		List list = textDao.selectTextFeed();
-		return list;
-	}
+	public List<TextFeed> selectTextFeed(int userNo) {
+        List<TextFeed> textFeedList = textDao.selectTextFeed();
+        for (TextFeed textFeed : textFeedList) {
+            int isLike = textDao.selectTextFeedLikeStatus(textFeed.getTextFeedNo(), userNo);
+            textFeed.setIsLike(isLike);
+        }
+        return textFeedList;
+    }
 	@Transactional
     public int textFeedWrite(String textFeedContent, User user) {
         
@@ -61,6 +65,35 @@ public class TextService {
 	public List<TextFeedComment> selectTextFeedComment(int textFeedNo) {
 		List<TextFeedComment> list = textDao.selectTextFeedComment(textFeedNo);
 		return list;
+	}
+	@Transactional
+	public int deleteTextFeedComment(int textFeedCommentNo) {
+		int result = textDao.deleteTextFeedComment(textFeedCommentNo);
+		return result;
+	}
+	@Transactional
+	public int editTextFeed(String textFeedEditContent, int textFeedEditNo) {
+		int result = textDao.editTextFeed(textFeedEditContent, textFeedEditNo);
+		return result;
+	}
+	@Transactional
+	public int editTextFeedComment(String textFeedCommentEditContent, int textFeedCommentEditNo) {
+		int result = textDao.editTextFeedComment(textFeedCommentEditContent, textFeedCommentEditNo);
+		return result;
+	}
+	@Transactional
+	public int textFeedLikePush(int textFeedNo, int isLike, int userNo) {
+	    int result = 0;
+	    if (isLike == 0) {
+	        // 좋아요를 누르지 않은 상태
+	        if (!textDao.isLikeExists(textFeedNo, userNo)) {
+	            result = textDao.insertTextFeedLike(textFeedNo, userNo);
+	        }
+	    } else if (isLike == 1) {
+	        // 좋아요가 눌러진 상태
+	        result = textDao.deleteTextFeedLike(textFeedNo, userNo);
+	    }
+	    return result;
 	}
 	
 }
