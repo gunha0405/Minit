@@ -139,13 +139,13 @@
 					location.href="/user/delete";					
 				}
 			});
-			
 		});
 		
 
 		$(".img-delete-btn").on("click",function(){
 			$(".basic-img").addClass("img-show").removeClass("img-none");
 			$("#img-viewer").removeClass("img-show").addClass("img-none");
+			$("#upfile").val(null); //이벤트의 주체가 이거니까! 제대로 확인
 		});
 		
 			function loadImg(obj){
