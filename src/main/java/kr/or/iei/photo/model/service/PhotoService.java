@@ -32,4 +32,8 @@ public class PhotoService {
 		int result = photoDao.deletePhoto(photoFeedNo);
 		return result;
 	}
+	public int updatePhoto(Photo photoFeedNo) {
+		int result = photoDao.updatePhoto(photoFeedNo);
+		return result;
+	}
 }

@@ -37,4 +37,10 @@ public class PhotoDao {
 		int result = jdbc.update(query,params);
 		return result;
 	}
+	public int updatePhoto(Photo p) {
+        String query = "update photo_feed set photo_feed_img = ? where photo_feed_no = ?";
+        Object[] params = {p.getPhotoFeedImg(), p.getPhotoFeedNo()};
+        int result = jdbc.update(query, params);
+        return result;
+    }
 }
