@@ -81,7 +81,7 @@
           </div>
           <div class="imageRow">
             <div class="imageIconBox">
-              <i class="fa-regular fa-heart"></i>
+              <i class="fa-regular fa-heart like-button" id="likeBtn"></i>
               <i class="fa-solid fa-comment"></i>
               <i class="fa-solid fa-bookmark"></i>
               <i class="fa-solid fa-pen"></i>
@@ -138,130 +138,166 @@
   
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script th:inline="javascript">
-    $(document).ready(function() {
-      function loadImages() {
-        $.ajax({
-          url: "/photo/more",
-          type: "GET",
-          success: function(data) {
-            console.log(data);
-            $("#columns").empty();
-            for (let i = 0; i < data.length; i++) {
-              const p = data[i];
-              const figure = $("<figure>").addClass("card").data("photoFeedNo", p.photoFeedNo);
-              const img = $("<img>").attr("src", "/photo/" + p.photoFeedImg).attr("alt", "Photo");
-              figure.append(img);
-              $("#columns").append(figure);
-            }
-            $(".card").click(function(e) {
-              e.preventDefault();
-              const imgSrc = $(this).find("img").attr("src");
-              const photoFeedNo = $(this).data("photoFeedNo");
-              console.log("Photo Feed No: " + photoFeedNo); // For debugging purposes
-              $("#modalImage").attr("src", imgSrc);
-              $("#imageModal").modal("show");
+  $(document).ready(function() {
+	  function loadImages() {
+	    $.ajax({
+	      url: "/photo/more",
+	      type: "GET",
+	      success: function(data) {
+	        console.log(data);
+	        $("#columns").empty();
+	        for (let i = 0; i < data.length; i++) {
+	          const p = data[i];
+	          const figure = $("<figure>").addClass("card").data("photoFeedNo", p.photoFeedNo);
+	          const img = $("<img>").attr("src", "/photo/" + p.photoFeedImg).attr("alt", "Photo");
+	          figure.append(img);
+	          $("#columns").append(figure);
+	        }
+	        $(".card").click(function(e) {
+	          e.preventDefault();
+	          const imgSrc = $(this).find("img").attr("src");
+	          const photoFeedNo = $(this).data("photoFeedNo");
+	          console.log("Photo Feed No: " + photoFeedNo); // For debugging purposes
+	          $("#modalImage").attr("src", imgSrc);
+	          $("#imageModal").modal("show");
 
-              $('.fa-trash').on('click', function() {
-                del(this, photoFeedNo);
-                $("#imageModal").modal("hide");
-              });
+	          $(".imageIconBox").on("click", ".like-button, .liked-button", function() {
+	            const isLike = $(this).data('liked') ? 1 : 0;
+	            const likeButton = $(this);
+	            console.log("포토번호: " + photoFeedNo);
+	            console.log("좋아요 상태: " + isLike);
+	            $.ajax({
+	              url: "/photo/likePush",
+	              type: "post",
+	              data: { photoFeedNo: photoFeedNo, isLike: isLike },
+	              success: function(data) {
+	                if (data == -10) {
+	                  Swal.fire({
+	                    title: "로그인 필요",
+	                    text: "로그인 후 이용해 주세요",
+	                    icon: "info"
+	                  });
+	                } else if(data == 0) {
+	                  
+	                  likeButton.removeClass("fa-solid").addClass("fa-regular").data('liked', 0);
+	                } else {
+	                  likeButton.removeClass("fa-regular").addClass("fa-solid").data('liked', 1);
+	                  
+	                }
+	              },
+	              error: function(xhr, status, error) {
+	                console.log("Error: " + error);
+	                Swal.fire({
+	                  title: "서버 전송 실패",
+	                  text: "서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.",
+	                  icon: "error"
+	                });
+	              }
+	            });
+	          });
 
-              $('.fa-pen').on('click', function() {
-                update(this, photoFeedNo);
-              });
-            });
-          },
-          error: function(xhr, status, error) {
-            console.log("Error: " + error);
-            Swal.fire({
-              title: "로드 실패",
-              text: "이미지를 로드하는 중 오류가 발생했습니다.",
-              icon: "error"
-            });
-          }
-        });
-      }
+	          $('.fa-trash').on('click', function() {
+	            del(this, photoFeedNo);
+	            $("#imageModal").modal("hide");
+	          });
 
-      // 페이지 로드 시 모든 데이터 로드
-      loadImages();
+	          $('.fa-pen').on('click', function() {
+	            update(this, photoFeedNo);
+	          });
+	        });
+	      },
+	      error: function(xhr, status, error) {
+	        console.log("Error: " + error);
+	        Swal.fire({
+	          title: "로드 실패",
+	          text: "이미지를 로드하는 중 오류가 발생했습니다.",
+	          icon: "error"
+	        });
+	      }
+	    });
+	  }
 
-      // 삭제 버튼 클릭 이벤트 핸들러
-      function del(element, photoFeedNo) {
-        console.log(photoFeedNo)
-        $.ajax({
-          url: "/photo/delete",
-          type: "get",
-          data: { photoFeedNo: photoFeedNo },
-          dataType: "json",
-          success: function(result) {
-            if (result === 1) {
-              Swal.fire({
-                title: "삭제 성공",
-                text: "피드 삭제 성공",
-                icon: "success"
-              });
-              $(element).closest(".card").remove();
-            } else {
-              Swal.fire({
-                title: "삭제 실패",
-                text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
-                icon: "warning"
-              });
-            }
-          },
-          error: function(xhr, status, error) {
-            console.log("Error: " + error);
-            Swal.fire({
-              title: "서버 전송 실패",
-              text: "서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.",
-              icon: "error"
-            });
-          }
-        });
-      }
+	  // 페이지 로드 시 모든 데이터 로드
+	  loadImages();
 
-      // 업데이트 버튼 클릭 이벤트 핸들러
-      function update(element, photoFeedNo) {
-        $("#updateModal").modal("show");
-        $("#saveUpdateBtn").off("click").on("click", function() {
-          const formData = new FormData($("#updateForm")[0]);
-          formData.append("photoFeedNo", photoFeedNo);
-          $.ajax({
-            url: "/photo/update",
-            type: "post",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(result) {
-              if (result === 1) {
-                Swal.fire({
-                  title: "수정 성공",
-                  text: "피드 수정 성공",
-                  icon: "success"
-                });
-                $("#updateModal").modal("hide");
-                $("#imageModal").modal("hide");
-                loadImages();
-              } else {
-                Swal.fire({
-                  title: "수정 실패",
-                  text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
-                  icon: "warning"
-                });
-              }
-            },
-            error: function(xhr, status, error) {
-              console.log("Error: " + error);
-              Swal.fire({
-                title: "서버 전송 실패",
-                text: "서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.",
-                icon: "error"
-              });
-            }
-          });
-        });
-      }
-    });
+	  // 삭제 버튼 클릭 이벤트 핸들러
+	  function del(element, photoFeedNo) {
+	    console.log(photoFeedNo);
+	    $.ajax({
+	      url: "/photo/delete",
+	      type: "get",
+	      data: { photoFeedNo: photoFeedNo },
+	      dataType: "json",
+	      success: function(result) {
+	        if (result === 1) {
+	          Swal.fire({
+	            title: "삭제 성공",
+	            text: "피드 삭제 성공",
+	            icon: "success"
+	          });
+	          $(element).closest(".card").remove();
+	        } else {
+	          Swal.fire({
+	            title: "삭제 실패",
+	            text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+	            icon: "warning"
+	          });
+	        }
+	      },
+	      error: function(xhr, status, error) {
+	        console.log("Error: " + error);
+	        Swal.fire({
+	          title: "서버 전송 실패",
+	          text: "서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.",
+	          icon: "error"
+	        });
+	      }
+	    });
+	  }
+
+	  // 업데이트 버튼 클릭 이벤트 핸들러
+	  function update(element, photoFeedNo) {
+	    $("#updateModal").modal("show");
+	    $("#saveUpdateBtn").off("click").on("click", function() {
+	      const formData = new FormData($("#updateForm")[0]);
+	      formData.append("photoFeedNo", photoFeedNo);
+	      $.ajax({
+	        url: "/photo/update",
+	        type: "post",
+	        data: formData,
+	        processData: false,
+	        contentType: false,
+	        success: function(result) {
+	          if (result === 1) {
+	            Swal.fire({
+	              title: "수정 성공",
+	              text: "피드 수정 성공",
+	              icon: "success"
+	            });
+	            $("#updateModal").modal("hide");
+	            $("#imageModal").modal("hide");
+	            loadImages();
+	          } else {
+	            Swal.fire({
+	              title: "수정 실패",
+	              text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+	              icon: "warning"
+	            });
+	          }
+	        },
+	        error: function(xhr, status, error) {
+	          console.log("Error: " + error);
+	          Swal.fire({
+	            title: "서버 전송 실패",
+	            text: "서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.",
+	            icon: "error"
+	          });
+	        }
+	      });
+	    });
+	  }
+	});
+
   </script>
   <th:block th:include="common/footer"></th:block>
 </body>

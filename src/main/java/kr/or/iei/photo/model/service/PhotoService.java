@@ -37,4 +37,13 @@ public class PhotoService {
 		int result = photoDao.updatePhoto(photoFeedNo);
 		return result;
 	}
+	public int likePush(int photoFeedNo, int isLike, int userNo) {
+		int result = 0;
+		if(isLike == 0) {
+			result = photoDao.insertPhotoLike(photoFeedNo,userNo);
+		}else if(isLike ==1) {
+			result = photoDao.deletePhotoLike(photoFeedNo,userNo);
+		}
+		return result;
+	}
 }

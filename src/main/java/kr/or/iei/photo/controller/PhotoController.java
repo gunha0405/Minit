@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import kr.or.iei.photo.model.dto.Photo;
 import kr.or.iei.photo.model.dto.PhotoComment;
 import kr.or.iei.photo.model.service.PhotoService;
@@ -109,6 +110,17 @@ public class PhotoController {
         p.setPhotoFeedImg(filePath);
         int result = photoService.updatePhoto(p);
         return result;
+	}
+	@ResponseBody
+	@PostMapping(value="/likePush")
+	public int likePush(int photoFeedNo,int isLike,@SessionAttribute (required = false) User user) {
+		if(user == null) {
+			return -10;
+		}else {
+			int userNo = user.getUserNo();
+			int result = photoService.likePush(photoFeedNo,isLike,userNo);
+			return result;
+		}
 	}
 	
 }

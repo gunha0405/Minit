@@ -13,4 +13,5 @@ public class Photo {
 	private String photoFeedWriter;
 	private int readCount;
 	private String regDate;
+	private int isLike;
 }

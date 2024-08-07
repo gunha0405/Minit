@@ -15,7 +15,7 @@ public class PhotoRowMapper implements RowMapper<Photo> {
 		p.setPhotoFeedImg(rs.getString("photo_feed_img"));
 		p.setPhotoFeedWriter(rs.getString("photo_feed_writer"));
 		p.setReadCount(rs.getInt("read_count"));
-		p.setRegDate(rs.getNString("reg_date"));
+		p.setRegDate(rs.getString("reg_date"));
 		return p;
 	}
 }
