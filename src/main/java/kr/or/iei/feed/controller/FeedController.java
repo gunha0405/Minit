@@ -39,8 +39,10 @@ public class FeedController {
 	}
 
 	@GetMapping(value = "/view")
-	public String view(int userFeedNo) {
-		Feed feed = feedService.selectUserAllFeed(userFeedNo);
+	public String view(int userFeedNo, Model model) {
+		Feed feed = feedService.selectUserOneFeed(userFeedNo); //해당 글 유저의 정보와 사진 파일리스트
+		model.addAttribute("feed", feed);
+		model.addAttribute("list", feed.getFeedList());
 		return "feed/view";
 	}
 
