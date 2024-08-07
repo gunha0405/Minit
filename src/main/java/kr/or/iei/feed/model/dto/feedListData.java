@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class feedListData {
-	private List list;
+	private List<Feed> list;
 	private String pageNavi;
 }

@@ -168,7 +168,7 @@
 			}
 		
 			$(".nick-check-btn").on("click",function(){
-				$(".nick-check-msg").removeClass("none");
+				$(".nick-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
 				const userNick = $("#userNick").val();
 				console.log(userNick);
 				$.ajax({

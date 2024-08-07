@@ -436,3 +436,22 @@ footer div {
 .none{
 	visibility: hidden;
 }
+.mb-3 p{
+	font-size: 13px
+}
+
+
+.input-item input{
+    border: none;
+	text-align: center;
+	border-bottom: 1px solid lightgray;
+}
+.input-item input:focus{
+	outline:none;
+}
+
+.btn-point1{
+	background-color: #75daa4;
+	border: none;
+  	border-radius: 30px;
+}
