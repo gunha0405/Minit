@@ -79,6 +79,17 @@ public class UserController {
 		}
 	}
 	
+	@ResponseBody
+	@GetMapping(value="/ajaxCheckId")
+	public int ajaxCheckId(String userId) {
+		User user = userService.selectOneUser(userId);
+		if(user == null) {
+			return 0;
+		}else {
+			return 1;
+		}
+	}
+	
 	@PostMapping(value = "/join")
 	public String join(User u, Model model) {
 		int result = userService.insertUser(u);
