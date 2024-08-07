@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import kr.or.iei.photo.model.dto.Photo;
 import kr.or.iei.photo.model.dto.PhotoComment;
 import kr.or.iei.photo.model.dto.PhotoRowMapper;
+import kr.or.iei.user.model.dto.User;
 
 @Repository
 public class PhotoDao {
@@ -16,9 +17,9 @@ public class PhotoDao {
 	private JdbcTemplate jdbc;
 	@Autowired
 	private PhotoRowMapper photoRowMapper;
-	public int insertPhoto(Photo p) {
+	public int insertPhoto(Photo p,User user) {
 		String query = "insert into photo_feed values(photo_feed_seq.nextval,?,?,0,to_char(sysdate,'yyyy-mm-dd'))";
-		Object[] params = {p.getPhotoFeedImg(),p.getPhotoFeedWriter()};
+		Object[] params = {p.getPhotoFeedImg(),user.getUserId()};
 		int result = jdbc.update(query,params);
 		return result;
 	}

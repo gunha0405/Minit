@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.or.iei.photo.model.dto.Photo;
 import kr.or.iei.photo.model.dto.PhotoComment;
 import kr.or.iei.photo.model.service.PhotoService;
+import kr.or.iei.user.model.dto.User;
 import kr.or.iei.util.FileUtils;
 
 @Controller
@@ -47,12 +49,11 @@ public class PhotoController {
 	}
 	
 	@PostMapping(value="/write")
-	public String write(MultipartFile imageFile,Model model) {
+	public String write(Photo p ,MultipartFile imageFile,Model model,@SessionAttribute(required =false) User user) {
 		String savepath= root+"/photo/";
 		String filepath = fileUtils.upload(savepath, imageFile);
-				Photo p = new Photo();
 				p.setPhotoFeedImg(filepath);
-		int result = photoService.insertPhoto(p);
+		int result = photoService.insertPhoto(p,user);
 		if(result>0) {
 			model.addAttribute("title","작성완료");
 			model.addAttribute("msg","작성되었습니다.");
