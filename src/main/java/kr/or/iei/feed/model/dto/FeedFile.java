@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class FeedFile {
 	private int userFeedFileNo;
 	private int userFeedNo; //유저 넘버
-	private String UserFeedFilpath;
+	private String userFeedFilepath;
 }
