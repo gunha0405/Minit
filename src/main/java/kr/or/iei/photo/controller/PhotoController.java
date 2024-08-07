@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -87,8 +88,26 @@ public class PhotoController {
 	
 	@GetMapping(value="/delete")
 	@ResponseBody
-	public String delete(int photoNo,Model model) {
-		int list = photoService.deletePhoto(photoNo);
-		return "photo/list";
+	public int delete(int photoFeedNo) {
+		int result = photoService.deletePhoto(photoFeedNo);
+		return result;
 	}
+	
+	@PostMapping(value="/update")
+	@ResponseBody
+	public int update(int photoFeedNo,MultipartFile imageFile) {
+		String savePath = root + "/photo/";
+        String filePath = fileUtils.upload(savePath, imageFile);
+        
+        if (filePath == null || filePath.isEmpty()) {
+            return 0; // 파일 경로가 유효하지 않으면 업데이트하지 않음
+        }
+        
+        Photo p = new Photo();
+        p.setPhotoFeedNo(photoFeedNo);
+        p.setPhotoFeedImg(filePath);
+        int result = photoService.updatePhoto(p);
+        return result;
+	}
+	
 }

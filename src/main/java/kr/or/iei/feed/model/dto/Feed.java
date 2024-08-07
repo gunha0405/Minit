@@ -17,4 +17,6 @@ public class Feed {
 	private String userFeedDate;
 	private int userFeedCount;
 	private User user;
+	private List<FeedFile> feedList;
+	private String userFeedFilepath;
 }

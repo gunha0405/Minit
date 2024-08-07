@@ -13,7 +13,7 @@ public class FeedFileRowMapper implements RowMapper<FeedFile>{
 	public FeedFile mapRow(ResultSet rs, int rowNum) throws SQLException {
 		FeedFile f = new FeedFile();
 		f.setUserFeedFileNo(rs.getInt("user_feed_file_no"));
-		f.setUserFeedFilpath(rs.getString("user_feed_filepath"));
+		f.setUserFeedFilepath(rs.getString("user_feed_filepath"));
 		f.setUserFeedNo(rs.getInt("user_feed_no"));
 		return f;
 	}
