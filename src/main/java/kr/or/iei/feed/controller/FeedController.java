@@ -17,8 +17,10 @@ import jakarta.servlet.http.HttpSession;
 import kr.or.iei.feed.model.dto.Feed;
 import kr.or.iei.feed.model.dto.FeedFile;
 import kr.or.iei.feed.model.dto.UserFeedNaviList;
+import kr.or.iei.feed.model.dto.feedListData;
 import kr.or.iei.feed.model.service.FeedService;
 import kr.or.iei.user.model.dto.User;
+import kr.or.iei.user.model.dto.UserRowMapper;
 import kr.or.iei.util.FileUtils;
 
 @Controller
@@ -31,10 +33,10 @@ public class FeedController {
 	@Autowired
 	FileUtils fileUtils = new FileUtils();
 
-//	@GetMapping(value="/list")
-//	public String list() {
-//		return "feed/list";   //작성자의 아이디나 넘버를 보낸다 
-//	}
+	@GetMapping(value="/list")
+	public String list() {
+		return "feed/list";   //작성자의 아이디나 넘버를 보낸다 
+	}
 
 	@GetMapping(value = "/view")
 	public String view() {
@@ -62,7 +64,7 @@ public class FeedController {
 	}
 
 	@GetMapping(value = "/myPage")
-	public String myPage(HttpSession session, Model model) {
+	public String myPage(HttpSession session, Model model, Integer reqPage) {
 		User user = (User)session.getAttribute("user");
 		if (user == null) {
 			model.addAttribute("title", "로그인을 해주세요");
@@ -71,15 +73,14 @@ public class FeedController {
 			model.addAttribute("loc", "/#");
 			return "common/msg";
 		} else {
+			int page = reqPage != null ? reqPage : 1;
 			Feed feed = new Feed();
 			User u = feedService.searchUser(user.getUserId());
 			//페이지 구현 / 유저와 페이지에 들어가는 피드, 네비바
 			//또다른 유저로 들어가게 되면은 그 유저의 번호 가지고 있게 하자. ??? 
-			int reqPage = 1;
-			//BoardListData list = boardService.selectAllBoard(reqPage);
-			//model.addAttribute("list", list.getList());
-			//model.addAttribute("pageNavi", list.getPageNavi());
-			
+			feedListData list = feedService.selectUserAllFeed(reqPage);
+			model.addAttribute("list", list.getList());
+			model.addAttribute("pageNavi", list.getPageNavi());
 			feed.setUser(u);
 			model.addAttribute("user", u);
 			return "/feed/list";

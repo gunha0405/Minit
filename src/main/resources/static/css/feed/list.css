@@ -30,6 +30,8 @@
 
 .feed-list-wrap {
     margin: 0 auto;
+   width:100%;
+   hegith:650px;
 }
 
 /* 전체 레이아웃 */

@@ -75,4 +75,19 @@ public class FeedDao {
 		int result = jdbc.update(query, params);
 		return result;
 	}
+
+	public List selectFeedList(int start, int end) {
+		String query = "select * from (select rownum as rnum,n.* from (select * from user_feed_tbl order by 1 desc)n) where rnum between ? and ?";
+        Object[] params = {start,end};
+        
+        List list = jdbc.query(query, feedRowMapper,params);
+        
+        return list;
+	}
+
+	public int selectFeedTotalCount() {
+		String query = "select count(*) from user_feed_tbl";
+		int totalCount = jdbc.queryForObject(query, Integer.class);
+		return totalCount;
+	}
 }
