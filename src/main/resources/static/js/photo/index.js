@@ -31,6 +31,8 @@ $(document).ready(function () {
   $(".card").click(function (e) {
     e.preventDefault();
     const imgSrc = $(this).find("img").attr("src");
+    const imgPhotoFeedNo = $(this).find("photoFeedNo").attr("photoFeedNo");
+    $("#modalImage").attr("photoFeedNo",imgSrc);
     $("#modalImage").attr("src", imgSrc);
     $("#imageModal").modal("show");
   });

@@ -252,6 +252,12 @@
     	           console.log("Photo Feed No: " + photoFeedNo); // For debugging purposes
     	           $("#modalImage").attr("src", imgSrc);
     	           $("#imageModal").modal("show");
+    	           
+    	           
+    	           $('.fa-trash').on('click', function() {
+    	      	     del(this, photoFeedNo);
+    	      	   $("#imageModal").modal("hide");
+    	      	   });
     	         });
     	       },
     	       error: function(xhr, status, error) {
@@ -269,17 +275,15 @@
     	   loadImages();
     	   
     	   // 삭제 버튼 클릭 이벤트 핸들러
-    	   $(document).on('click', '.fa-trash', function() {
-    	     const photoFeedNo = $(this).data(".card");
-    	     del(this, photoFeedNo);
-    	   });
+    	   
     	   
     	   function del(element, photoFeedNo) {
+    		   console.log(photoFeedNo)
     	     $.ajax({
     	       url: "/photo/delete",
     	       type: "get",
-    	       data: JSON.stringify({ photoFeedNo: photoFeedNo }),
-    	       Type: "json",
+    	       data: { photoFeedNo: photoFeedNo },
+    	       dataType: "json",
     	       success: function(result) {
     	         if (result === 1) {
     	           Swal.fire({
