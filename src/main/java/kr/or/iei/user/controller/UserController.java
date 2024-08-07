@@ -1,5 +1,7 @@
 package kr.or.iei.user.controller;
 
+import java.util.Random;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import jakarta.servlet.http.HttpSession;
+import kr.or.iei.util.EmailSender;
 import kr.or.iei.user.model.dto.User;
 import kr.or.iei.user.model.service.UserService;
 
@@ -20,6 +23,7 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+	//로그인
 	@PostMapping(value="/login")
 	public String login(User u, Model model, HttpSession session) {
 		User user = userService.selectOneUser(u);
@@ -44,17 +48,20 @@ public class UserController {
 		}
 	}
 	
+	//로그아웃
 	@GetMapping(value="/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
 		return "redirect:/";
 	}
 
+	//마이페이지
 	@GetMapping(value="/mypage")
 	public String mypage() {
 		return "user/mypage";
 	}
 	
+	//마이페이지 회원정보 수정
 	@PostMapping(value="/update")
 	public String update(User u, @SessionAttribute User user) {
 		int result = userService.updateUser(u);
@@ -68,6 +75,7 @@ public class UserController {
 		}
 	}
 	
+	//사용자이름 중복체크
 	@ResponseBody
 	@GetMapping(value="/ajaxCheckNick")
 	public int ajaxCheckNick(String userNick) {
@@ -79,6 +87,7 @@ public class UserController {
 		}
 	}
 	
+	//아이디중복체크
 	@ResponseBody
 	@GetMapping(value="/ajaxCheckId")
 	public int ajaxCheckId(String userId) {
@@ -90,6 +99,7 @@ public class UserController {
 		}
 	}
 	
+	//회원가입
 	@PostMapping(value = "/join")
 	public String join(User u, Model model) {
 		int result = userService.insertUser(u);
@@ -104,6 +114,7 @@ public class UserController {
 		}
 	}
 	
+	//회원탈퇴
 	@GetMapping(value="/delete")
 	public String deleteUser(@SessionAttribute User user, Model model) {
 		int result = userService.deleteUser(user);
@@ -123,55 +134,40 @@ public class UserController {
 	
 	
 	
+	//회원가입 시 email인증 관련
+	@Autowired
+	private EmailSender emailSender;
 	
-	
-	
-	
-	
-	
-	
-	/*
-	@GetMapping(value="/login")
-	public String login(User user, Model model, HttpSession session) {
-		User getUser = userService.selectUser(user, null);
-		return "redirect:/";
-	}
-	
-	
-	@GetMapping(value="/join")
-	public String join(User user, Model model) {
-		int result = userService.insertUser(user);
-		return "redirect:/";
-	}
-	
-	@GetMapping(value="/update")
-	public String update(User user, @SessionAttribute User getUSer) {
-		int result = userService.updateUser(user);
-		return "redirect:/";
-	}
-	
-	@GetMapping(value="/delete")
-	public String deleteUser(@SessionAttribute User user, Model model) {
-		int result = userService.deleteUser(user);
-		if(result > 0) {
-			model.addAttribute("title", "탈퇴완료");
-			model.addAttribute("msg", "만나서 반가웠고 다시는 보지말자");
-			model.addAttribute("icon", "success");			
-			model.addAttribute("loc", "/user/logout");			
-		}else {
-			model.addAttribute("title", "탈퇴실패");
-			model.addAttribute("msg", "처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
-			model.addAttribute("icon", "error");			
-			model.addAttribute("loc", "/user/mypage");			
+	@ResponseBody
+	@PostMapping(value="/sendCode")
+	public String sendCode(String receiver) {
+		System.out.println(receiver);
+		//인증메일 제목
+		String emailTitle = "MINIT 회원가입 이메일 인증 메일";
+		//인증메일 인증코드
+		Random r = new Random();
+		StringBuffer sb = new StringBuffer();
+		for(int i=0; i<6; i++) {
+			int flag = r.nextInt(3);
+			if(flag == 0) { //숫자사용
+				int randomCode = r.nextInt(10);
+				sb.append(randomCode);
+			}else if(flag == 1) {//대문자사용
+				char randomCode = (char)(r.nextInt(26)+65);
+				sb.append(randomCode);
+			}else if(flag == 2) {//소문자사용
+				char randomCode = (char)(r.nextInt(26)+97);
+				sb.append(randomCode);
+			}
 		}
-		return "common/msg";
+		String emailContent = "<h2>순간을 기록하다,MINIT 입니다.</h2>"
+							+"<h3>귀하의 인증번호는 [ <span style='color:red;'>"
+							+sb.toString()
+							+"</span> ] 입니다.</h3>"
+							+"<h3>대소문자를 꼭 구별하여 인증해주세요!</h3>";
+		emailSender.sendMail(emailTitle, receiver, emailContent);
+		return sb.toString();
 	}
 	
-	@GetMapping(value="/mypage")
-//	public String mypage(User user, Model model, HttpSession session) {
-	public String mypage(User user, Model model) {
-		
-		return "/user/mypage";
-	}
-*/
+	
 }
