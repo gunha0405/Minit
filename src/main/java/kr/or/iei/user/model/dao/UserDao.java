@@ -84,6 +84,35 @@ public class UserDao {
 		return result;
 	}
 
+	public User searchUserId(User u) {
+		String query = "select * from user_tbl where user_name=? and user_email=?";
+		Object[] params = {u.getUserName(), u.getUserEmail()};
+		List list =  jdbc.query(query, userRowMapper, params);
+		if(list.isEmpty()) {
+			return null;
+		}else {
+			return (User)list.get(0);
+		}
+	}
+
+	public User ajaxFindUser(String userId, String userEmail) {
+		String query = "select * from user_tbl where user_id=? and user_email=?";
+		Object[] params = {userId, userEmail};
+		List list =  jdbc.query(query, userRowMapper, params);
+		if(list.isEmpty()) {
+			return null;
+		}else {
+			return (User)list.get(0);
+		}
+	}
+
+	public int updatePw(User u) {
+		String query = "update user_tbl set user_pw=?, update_date=to_char(sysdate,'yyyy-mm-dd') where user_id=?";
+		Object[] params = {u.getUserPw(),u.getUserId()};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
 	
 	
 	

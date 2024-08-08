@@ -175,5 +175,18 @@
 	display: block;
 }
 
-
+.valid{
+	visibility: visible;
+	color: #61bb8b;
+}
+.invalid{
+	visibility: visible;
+	color: red;
+}
+.none{
+	visibility: hidden;
+}
+.mb-3 p{
+	font-size: 13px;
+}
 
