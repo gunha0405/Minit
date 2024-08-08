@@ -13,6 +13,14 @@
   border-radius: 15px;
 }
 
+.checked-warn-btn{
+  background-color: #75daa4;
+  border: none;
+  border-radius: 15px;
+  width: 80%;
+  height: 30px;
+}
+
 .page-title{
   text-align: center;
   margin: 50px auto;
@@ -227,5 +235,5 @@
 }
 .btn-basic a{
 	line-height: 40px;
-	color: white;
+	color: black;
 }

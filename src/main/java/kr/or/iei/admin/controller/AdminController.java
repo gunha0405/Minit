@@ -25,7 +25,7 @@ public class AdminController {
 	@GetMapping(value="/warningUser")
 	public String warningUser(Model model) {
 		List list = userService.selectAllUser();
-		System.out.println(list);
+		//System.out.println(list);
 		model.addAttribute("list", list);
 		return "admin/warningUser";
 	}
@@ -36,7 +36,23 @@ public class AdminController {
 		if(result>0) {
 			return "redirect:/admin/warningUser";
 		}else {
-			model.addAttribute("title", "경고주기 실패");
+			model.addAttribute("title", "경고 실패");
+			model.addAttribute("msg", "개발자에게 문의하세요.");
+			model.addAttribute("icon","error");
+			model.addAttribute("loc", "/admin/warningUser");
+			return "common/msg";
+		}
+	}
+	
+	@GetMapping(value="/checkedChangeCount")
+	public String checkedChangeCount(String no, String count, Model model) {
+		//System.out.println(no);
+		//System.out.println(count);
+		boolean result = userService.checkedChangeCount(no, count);
+		if(result) {
+			return "redirect:/admin/warningUser";			
+		}else {
+			model.addAttribute("title", "경고 실패");
 			model.addAttribute("msg", "개발자에게 문의하세요.");
 			model.addAttribute("icon","error");
 			model.addAttribute("loc", "/admin/warningUser");
