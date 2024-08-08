@@ -77,6 +77,17 @@ public class UserService {
 		return result;
 	}
 
+	public List selectAllUser() {
+		List list = userDao.selectAllUser();
+		return list;
+	}
+
+	@Transactional
+	public int changeCount(User u) {
+		int result = userDao.changeCount(u);
+		return result;
+	}
+
 	
 	
 	

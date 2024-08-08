@@ -113,6 +113,19 @@ public class UserDao {
 		return result;
 	}
 
+	public List selectAllUser() {
+		String query = "select * from user_tbl order by 1";
+		List list = jdbc.query(query, userRowMapper);
+		return list;
+	}
+
+	public int changeCount(User u) {
+		String query = "update user_tbl set warning_count=(?+1) where user_no=?";
+		Object[] params = {u.getWarningCount(), u.getUserNo()};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
 	
 	
 	
