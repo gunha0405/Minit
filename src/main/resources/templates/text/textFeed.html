@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
 .feed-is-report{
-	
+	display: none;
 }
 .comment-edit-textarea {
     width: 600px !important;
@@ -44,6 +44,7 @@
                 <div class="text-feed-write-area">
                     <!-- form 태그 대신 비동기 방식으로 글 작성 -->
                         <textarea name="text-feed-content" id="text-feed-content" placeholder="오늘 무슨일이 있었나요?(100자)"></textarea>
+                        <div id="text-feed-content-count" class="char-count">0/100</div>
                         <div class="text-feed-actions">
                             <button type="submit" class="text-feed-button write-btn">작성하기</button>
                         </div>
@@ -78,7 +79,8 @@
 	                    
 	                    
 	                    <div th:if="${session.user != null}" class="comment-section" style="display:none;">
-	                        <textarea  placeholder="댓글을 작성해보세요 !"></textarea>
+	                        <textarea id="text-feed-comment"  placeholder="댓글을 작성해보세요 !"></textarea>
+	                        <div id="text-feed-comment-count" class="char-count">글자 수: 0/50</div>
 	                        <button class="submit-comment">댓글 달기</button>
 	                        <div class="comments-container">
 							    <div class="comment" th:each="comment : ${textFeed.textFeedCommentList}">
@@ -90,6 +92,7 @@
 							            <p class="comment-author" th:text="${comment.textFeedCommentWriter}"></p>
 							            <p class="comment-text" th:text="${comment.textFeedCommentContent}"></p>
 							            <textarea class="comment-edit-textarea" style="display:none;" th:text="${comment.textFeedCommentContent}"></textarea>
+							            <div id="text-feed-comment-count" class="char-count" style="display:none;">글자 수: 0/50</div>
 							            <div class="comment-actions">
 							                <i th:if="${comment.isLike == 1}" id="comment-like" class="fa fa-heart" th:onclick="commentLikePush(this,[[${comment.textFeedCommentNo}]])"></i>
 							                <i th:if="${comment.isLike == 0}" id="comment-not-like" class="fa fa-regular fa-heart" th:onclick="commentLikePush(this,[[${comment.textFeedCommentNo}]])"></i>
@@ -136,6 +139,7 @@
 	      <div class="modal-body">
 	        <div class="text-feed-write-area">
 	          <textarea name="text-feed-content" id="modal-text-feed-content" placeholder="글 내용 수정하기(100자)"></textarea>
+	          <div id="name-text-feed-content-count" class="char-count">글자 수: 0/100</div>
 	          <div class="text-feed-actions">
 	            <button type="submit" class="text-feed-button modal-write-btn">수정하기</button>
 	          </div>
@@ -225,6 +229,24 @@
     
     
     $(document).ready(function() {
+    	function limitTextWithoutSpaces(input, maxLength, counterId) {
+            $(input).on('input', function() {
+                let content = $(this).val();
+                let contentLength = content.replace(/\s/g, '').length; // 공백을 제외한 길이 계산
+
+                if (contentLength > maxLength) {
+                    content = content.substring(0, maxLength + (content.length - content.replace(/\s/g, '').length));
+                    $(this).val(content);
+                    contentLength = maxLength;
+                }
+                $(counterId).text(`글자 수: ${contentLength}/${maxLength}`);
+            });
+        }
+
+        limitTextWithoutSpaces('#text-feed-content', 100, '#text-feed-content-count');
+        limitTextWithoutSpaces('#text-feed-comment', 50, '#text-feed-comment-count');
+        limitTextWithoutSpaces('textarea[name="text-feed-content"]', 100, '#name-text-feed-content-count');
+    	
         let feeds = $('#text-feed-feeds .feed');
         let numPerPage = 4;
         let currentPage = 1;
@@ -377,7 +399,7 @@
                                 </div>
                             </div>
                             <div class="comment-section" style="display: none;">
-                                <textarea placeholder="댓글을 작성해보세요 !"></textarea>
+                                <textarea id="text-feed-comment" placeholder="댓글을 작성해보세요 !"></textarea>
                                 <button class="submit-comment">댓글 달기</button>
                                 <div class="comments-container">
                                 
@@ -583,7 +605,9 @@
             const textFeedCommentElement = $(this).closest(".comment");
             textFeedCommentElement.find(".comment-text").hide();
             textFeedCommentElement.find(".comment-edit-textarea").show();
+            textFeedCommentElement.find("#text-feed-comment-count").show();
             textFeedCommentElement.find(".comment-save-btn").show();
+            
             $(this).hide();
             
             const textFeedCommentNo = textFeedCommentElement.find(".textFeedCommentNo").text();
@@ -612,6 +636,7 @@
                             icon: "success"
                         });
                         textFeedCommentElement.find(".comment-text").text(textFeedCommentEditContent).show();
+                        
                         textFeedCommentElement.find(".comment-edit-textarea").hide();
                         textFeedCommentElement.find(".comment-save-btn").hide();
                         textFeedCommentElement.find(".comment-edit-btn").show();
