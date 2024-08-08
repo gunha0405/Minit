@@ -1,6 +1,7 @@
 package kr.or.iei.user.model.service;
 
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -85,6 +86,25 @@ public class UserService {
 	@Transactional
 	public int changeCount(User u) {
 		int result = userDao.changeCount(u);
+		return result;
+	}
+
+	public boolean checkedChangeCount(String no, String count) {
+		StringTokenizer sTno = new StringTokenizer(no, "/");
+		StringTokenizer sTcount = new StringTokenizer(count, "/");
+		boolean result = true;
+		while(sTno.hasMoreTokens()) {
+			int userNo = Integer.parseInt(sTno.nextToken());
+			int warningCount = Integer.parseInt(sTcount.nextToken());
+			User u = new User();
+			u.setUserNo(userNo);
+			u.setWarningCount(warningCount);
+			int intResult = userDao.changeCount(u);
+			if(intResult == 0) {
+				result = false;
+				break;
+			}
+		}
 		return result;
 	}
 

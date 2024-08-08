@@ -19,6 +19,11 @@
 	crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <title>게시물 작성</title>
+<style>
+.tbl{
+	    margin: 100px auto;
+}
+</style>
 </head>
 <body>
 	<th:block th:include="common/header"></th:block>
@@ -29,57 +34,64 @@
 		<!--여기에 콘텐츠 작성-->
 		<div class="content">
 			<div class="page-title">
-				<p>새 게시물</p>
-			</div>
-			<form action="/feed/feedWrite" method="post" enctype="multipart/form-data">
-				 <div class="image-container">
-			        <div class="image-box">
-			            <input class="input-image-box" type="file" id="mainImageInput" name="upfile1"> 
-			            <label for="mainImageInput" class="image-label">이미지 선택</label> 
-			            <img id="mainImage" src="" alt="">
-			            <button type="button" class="delete-image" data-target="#mainImage">삭제</button>
-			        </div>
-			        <div class="image-box" id="topRightBox">
-			            <input class="input-image-box" type="file" id="topRightImageInput" name="upfile2"> 
-			            <label for="topRightImageInput" class="image-label">이미지 선택</label> 
-			            <img id="topRightImage" src="" alt="">
-			            <button type="button" class="delete-image" data-target="#topRightImage">삭제</button>
-			        </div>
-			        <div class="image-box" id="bottomRightBox">
-			            <input class="input-image-box" type="file" id="bottomRightImageInput" name="upfile3"> 
-			            <label for="bottomRightImageInput" class="image-label">이미지 선택</label> 
-			            <img id="bottomRightImage" src="" alt="">
-			            <button type="button" class="delete-image" data-target="#bottomRightImage">삭제</button>
-			        </div>
-			    </div>
-				<table class="tbl">
-					<td style="width: 40%;">
-						<!--히든으로 숨길예정--> 
-						<input type="hidden" name="userFeedWriter" th:value="${session.user.userId}">
-						<!--<input type="hidden" name="userFeedWriter" th:value="${session.user.userNo}">-->
-					</td>
-					</tr>
-					<tr>
-						<td colspan="4">
-							<div class="input-item">
-								<!-- 본문은 여러줄의 값을 입력하므로 input이 아닌 textarea로 입력 받음 -->
-								<textarea name="userFeedContent" id="userFeedContent"></textarea>
-							</div>
-						</td>
-
-					</tr>
-
-					<tr class="button-tr">
-						<td colspan="4">
-							<button type="submit" class="button-style">글 올리기</button>
-						</td>
-					</tr>
-				</table>
-			</form>
+				<p>게시물 수정</p>
+			</div>			
+			<form action="/feed/feedUpdate" method="post" enctype="multipart/form-data">
+    <div class="image-container">
+        <div class="image-box">
+            <input class="input-image-box" type="file" id="mainImageInput" name="upfile"> 
+            <label for="mainImageInput" class="image-label">이미지 선택</label> 
+            <img id="mainImage" th:if="${list[0] == null}" src="" alt="" /> 
+            <img id="mainImage" th:if="${list[0] != null}" th:src="${list[0].userFeedFilepath}" alt="">
+            <button type="button" class="delete-image" data-target="#mainImage">삭제</button>
+        </div>
+        <div class="image-box" id="topRightBox">
+            <input class="input-image-box" type="file" id="topRightImageInput" name="upfile"> 
+            <label for="topRightImageInput" class="image-label">이미지 선택</label> 
+            <img id="topRightImage" th:if="${list[1] == null}" src="" alt="" /> 
+            <img id="topRightImage" th:if="${list[1] != null}" th:src="${list[1].userFeedFilepath}" alt="">
+            <button type="button" class="delete-image" data-target="#topRightImage">삭제</button>
+        </div>
+        <div class="image-box" id="bottomRightBox">
+            <input class="input-image-box" type="file" id="bottomRightImageInput" name="upfile">
+            <label for="bottomRightImageInput" class="image-label">이미지 선택</label> 
+            <img id="bottomRightImage" th:if="${list[2] == null}" src="" alt="" /> 
+            <img id="bottomRightImage" th:if="${list[2] != null}" th:src="${list[2].userFeedFilepath}" alt="">
+            <button type="button" class="delete-image" data-target="#bottomRightImage">삭제</button>
+        </div>
+    </div>
+    <input type="hidden" name="file1" th:if="${list[0] != null}" th:value="${list[0].userFeedFilepath}">
+    <input type="hidden" name="file2" th:if="${list[1] != null}" th:value="${list[1].userFeedFilepath}">
+    <input type="hidden" name="file3" th:if="${list[2] != null}" th:value="${list[2].userFeedFilepath}"> 
+    
+    <table class="tbl">
+        <tr>
+            <td style="width: 40%;">
+                <!--히든으로 숨길예정--> 
+                <input type="hidden" name="userFeedWriter" th:value="${feed.userFeedWriter}">
+                <input type="hidden" name="userFeedWriter" th:value="${feed.userFeedNo}">
+            </td>
+            <td colspan="3"></td> <!-- 필요에 따라 colspan 조정 -->
+        </tr>
+        <tr>
+            <td colspan="4">
+                <div class="input-item">
+                    <!-- 본문은 여러줄의 값을 입력하므로 input이 아닌 textarea로 입력 받음 -->
+                    <textarea name="userFeedContent" id="userFeedContent" th:utext="${feed.userFeedContent}"></textarea>
+                </div>
+            </td>
+        </tr>
+        <tr class="button-tr">
+            <td colspan="4">
+                <button type="submit" class="button-style">수정하기</button>
+            </td>
+        </tr>
+    </table>
+</form>
 		</div>
-		</div>
-	</section>
-	<!--밑에 네비게이션 바-->
+	</div>
+</section>
+	<!--밑에 네비게이션 바
 	<div class="bottom-navBar">
 		<ul class="nav">
 			<li class="nav-item"><a class="item" aria-current="page"
@@ -89,8 +101,9 @@
 			<li class="nav-item"><a class="item" href="#">M</a></li>
 		</ul>
 	</div>
-
+	-->
 	<th:block th:include="common/footer"></th:block>
+	
 	<script src="/js/feed/writeForm.js"></script>
 	<script src="/summernote/summernote-lite.js"></script>
 	<script src="/summernote/lang/summernote-ko-KR.js"></script>

@@ -17,7 +17,7 @@ public class Board {
 	private String photoFeedWriter;
 	private int readCount;
 	private String regDate;
-	
+	/*
 	//피드
 	private int userFeedNo;
 	private String userFeedWriter;
@@ -25,14 +25,5 @@ public class Board {
 	private String userFeedDate;
 	private int userFeedCount;
 	private String followingId;
-	
-	//텍스트
-	private int textFeedNo;
-	private String textFeedContent;
-	private int textFeedReadCount;
-	private String textFeedRegDate;
-	private String textFeedWriter;
-	
-
-	
+	*/
 }
