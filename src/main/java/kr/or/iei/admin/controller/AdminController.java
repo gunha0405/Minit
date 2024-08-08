@@ -17,6 +17,11 @@ public class AdminController {
 	@Autowired
 	private UserService userService;
 	
+	@GetMapping(value="/warningMain")
+	public String warningMain() {
+		return "admin/warningMain";
+	}
+	
 	@GetMapping(value="/warningUser")
 	public String warningUser(Model model) {
 		List list = userService.selectAllUser();
@@ -37,5 +42,25 @@ public class AdminController {
 			model.addAttribute("loc", "/admin/warningUser");
 			return "common/msg";
 		}
+	}
+	
+	
+	
+	@GetMapping(value="/warningText")
+	public String warningText(Model model) {
+		List list = userService.selectAllUser();
+		System.out.println(list);
+		model.addAttribute("list", list);
+		return "admin/warningText";
+	}
+	
+	
+	
+	@GetMapping(value="/warningPhoto")
+	public String warningPhoto(Model model) {
+		List list = userService.selectAllUser();
+		System.out.println(list);
+		model.addAttribute("list", list);
+		return "admin/warningPhoto";
 	}
 }
