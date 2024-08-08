@@ -1,5 +1,8 @@
 package kr.or.iei.photo.model.dto;
 
+import java.util.List;
+
+import kr.or.iei.text.model.dto.TextFeedComment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,5 +16,7 @@ public class Photo {
 	private String photoFeedWriter;
 	private int readCount;
 	private String regDate;
+	private List<PhotoComment> photoCommentList;
 	private int isLike;
+	private int isDec;
 }

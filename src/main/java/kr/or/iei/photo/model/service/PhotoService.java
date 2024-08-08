@@ -21,13 +21,15 @@ public class PhotoService {
 		int result = photoDao.insertPhoto(p,user);
 		return result;
 	}
-	public static int insertComment(PhotoComment pc) {
-		int result = PhotoDao.insertComment(pc);
+	public int insertComment(PhotoComment pc,User user,int photoFeedNo) {
+		int result = photoDao.insertComment(pc,user,photoFeedNo);
 		return result;
 	}
 	public List<Photo> selectPhotoFeed(int userNo) {
 		List<Photo> photoList = photoDao.selectPhotoList();
 		for(Photo photo : photoList) {
+			List<PhotoComment> comments = photoDao.getCommentList(photo.getPhotoFeedNo());
+			photo.setPhotoCommentList(comments);
 			int isLike = photoDao.selectPhotoLike(photo.getPhotoFeedNo(),userNo);
 			photo.setIsLike(isLike);
 		}
@@ -55,4 +57,28 @@ public class PhotoService {
 	public boolean isLikecheck(int photoFeedNo, int userNo) {
         return photoDao.isLikecheck(photoFeedNo, userNo);
     }
+	public List<PhotoComment> getCommentList(int photoFeedNo) {
+		List cl = photoDao.getCommentList(photoFeedNo);
+		return cl;
+	}
+	@Transactional
+	public int updateComment(PhotoComment photoFeedCommentContent) {
+		int result = photoDao.updateComment(photoFeedCommentContent);
+		return result;
+	}
+	public int deleteComment(PhotoComment pc) {
+		int result = photoDao.deleteComment(pc);
+		return result;
+	}
+	public int contentsDec(int photoFeedNo, int isDec, int userNo) {
+		int result = 0;
+		System.out.println(isDec);
+		if(isDec == 1) {
+				//result = photoDao.contentsDec(photoFeedNo,userNo);
+				result = photoDao.insertDec(photoFeedNo,userNo);
+			
+		}
+		return result;
+	}
+	
 }
