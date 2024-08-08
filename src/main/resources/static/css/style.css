@@ -402,6 +402,12 @@ footer div {
   text-align: left;
 }
 
+
+.btn-point1{
+	background-color: #75daa4;
+	border: none;
+  	border-radius: 30px;
+}
 .check{
   display: flex;
   justify-content: space-between;
@@ -413,8 +419,6 @@ footer div {
   align-items: center;
   justify-content: center;
 }
-
-
 .my-check-btn{
   background-color: transparent;
   border: 1px solid #75daa4;
@@ -431,6 +435,7 @@ footer div {
 }
 
 
+
 .valid{
 	visibility: visible;
 	color: #61bb8b;
@@ -443,7 +448,10 @@ footer div {
 	visibility: hidden;
 }
 .mb-3 p{
-	font-size: 13px
+	font-size: 13px;
+}
+#authMsg{
+	font-size: 13px;
 }
 
 
@@ -454,10 +462,4 @@ footer div {
 }
 .input-item input:focus{
 	outline:none;
-}
-
-.btn-point1{
-	background-color: #75daa4;
-	border: none;
-  	border-radius: 30px;
 }

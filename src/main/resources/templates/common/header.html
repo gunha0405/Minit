@@ -273,6 +273,8 @@
 		$("#sendBtn").on("click",function(){
 			$(".email-check-msg").addClass("none").removeClass("invalid");
 			const receiver = $("#userEmail").val();
+			const emailReg = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+			if(emailReg.test(receiver)){
 				$.ajax({
 				url : "/user/sendCode",
 				data : {receiver : receiver},
@@ -293,6 +295,10 @@
 					console.log("에러");
 				}
 				});			
+			}else{
+				$(".email-check-msg").text("올바른 이메일을 작성해주세요.");
+				$(".email-check-msg").removeClass("none").addClass("invalid");
+			}
 		});
 		let interverId = null;
 		function authTime(){
