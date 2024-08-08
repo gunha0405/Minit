@@ -91,25 +91,38 @@ public class PhotoController {
 
     @GetMapping(value="/delete")
     @ResponseBody
-    public int delete(int photoFeedNo) {
+    public int delete(int photoFeedNo, @SessionAttribute(required = false) User user) {
+        if (user == null) {
+            return -10; // 로그인되지 않음
+        }
+        Photo photo = photoService.getPhotoById(photoFeedNo);
+        if (photo == null || !photo.getPhotoFeedWriter().equals(user.getUserId())) {
+            return -1; // 권한 없음
+        }
         int result = photoService.deletePhoto(photoFeedNo);
         return result;
     }
 
     @PostMapping(value="/update")
     @ResponseBody
-    public int update(int photoFeedNo, MultipartFile imageFile) {
+    public int update(int photoFeedNo, MultipartFile imageFile, @SessionAttribute(required = false) User user) {
+        if (user == null) {
+            return -10; // 로그인되지 않음
+        }
+        Photo photo = photoService.getPhotoById(photoFeedNo);
+        if (photo == null || !photo.getPhotoFeedWriter().equals(user.getUserId())) {
+            return -1; // 권한 없음
+        }
+
         String savePath = root + "/photo/";
         String filePath = fileUtils.upload(savePath, imageFile);
 
         if (filePath == null || filePath.isEmpty()) {
-            return 0; // 파일 경로가 유효하지 않으면 업데이트하지 않음
+            return 0; // 유효하지 않은 파일 경로
         }
 
-        Photo p = new Photo();
-        p.setPhotoFeedNo(photoFeedNo);
-        p.setPhotoFeedImg(filePath);
-        int result = photoService.updatePhoto(p);
+        photo.setPhotoFeedImg(filePath);
+        int result = photoService.updatePhoto(photo);
         return result;
     }
 
@@ -142,28 +155,28 @@ public class PhotoController {
     @GetMapping(value="comments")
     @ResponseBody
     public List<PhotoComment> getComment(int photoFeedNo) {
-    	List cl = photoService.getCommentList(photoFeedNo);
-    	return cl;
+        List cl = photoService.getCommentList(photoFeedNo);
+        return cl;
     }
     
     @PostMapping(value="/updateComment")
     @ResponseBody
     public String updateComment(PhotoComment photoFeedCommentContent,Model model) {
-    	int result = photoService.updateComment(photoFeedCommentContent);
-    	model.addAttribute("loc","/photo/list");
-    	return "common/msg";
+        int result = photoService.updateComment(photoFeedCommentContent);
+        model.addAttribute("loc","/photo/list");
+        return "common/msg";
     }
     @GetMapping(value="/deleteComment")
     @ResponseBody
     public String deleteComment(PhotoComment pc,Model model) {
-    	int result = photoService.deleteComment(pc);
-    	model.addAttribute("loc","/photo/list");
-    	return "common/msg";
+        int result = photoService.deleteComment(pc);
+        model.addAttribute("loc","/photo/list");
+        return "common/msg";
     }
     @ResponseBody
     @PostMapping(value="/report")
     public int contentsDec(int photoFeedNo, int isDec, @SessionAttribute(required = false) User user) {
-    	if (user == null) {
+        if (user == null) {
             return -10;
         } else {
             int userNo = user.getUserNo();
@@ -174,7 +187,6 @@ public class PhotoController {
     @RestController
     @RequestMapping("/user")
     public class UserController {
-
         @GetMapping("/checkLoginStatus")
         public boolean checkLoginStatus(HttpSession session) {
             // 로그인 상태를 확인하는 로직을 여기에 구현

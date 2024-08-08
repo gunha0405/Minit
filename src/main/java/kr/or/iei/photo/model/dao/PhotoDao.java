@@ -139,4 +139,9 @@ public class PhotoDao {
         int resultDec = jdbc.update(query, params);
         return resultDec;
 	}
+	public Photo getPhotoById(int photoFeedNo) {
+	    String query = "SELECT * FROM photo_feed WHERE photo_feed_no=?";
+	    Object[] params = {photoFeedNo};
+	    return jdbc.queryForObject(query, photoRowMapper, params);
+	}
 }
