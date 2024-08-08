@@ -114,7 +114,10 @@
           ></a>
         </li>
         <li class="nav-item">
-           <a class="item" href="/feed/myPage?reqPage=1"><i class="fa-solid fa-user"></i></a>
+           <a class="item" th:if="${session.user != null}" th:href="@{/feed/myPage(userFeedWriter=${session.user.userId})}"><i class="fa-solid fa-user"></i></a>
+           <a class="item" th:if="${session.user ==null}" href="/"><i class="fa-solid fa-user"></i></a>
+           
+        
         </li>     
         <li class="nav-item">
           <a class="item" href="/text/textFeedList"><i class="fa-solid fa-newspaper"></i></a>

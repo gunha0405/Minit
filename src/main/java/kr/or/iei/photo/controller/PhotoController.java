@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.servlet.http.HttpSession;
 import kr.or.iei.photo.model.dto.Photo;
 import kr.or.iei.photo.model.dto.PhotoComment;
 import kr.or.iei.photo.model.service.PhotoService;
@@ -165,8 +167,19 @@ public class PhotoController {
             return -10;
         } else {
             int userNo = user.getUserNo();
-            int result = photoService.contentsDec(photoFeedNo, isDec, userNo);
+            int result = photoService.contentsDec(photoFeedNo, userNo);
             return result;
+        }
+    }
+    @RestController
+    @RequestMapping("/user")
+    public class UserController {
+
+        @GetMapping("/checkLoginStatus")
+        public boolean checkLoginStatus(HttpSession session) {
+            // 로그인 상태를 확인하는 로직을 여기에 구현
+            User user = (User) session.getAttribute("user");
+            return user != null;
         }
     }
 }

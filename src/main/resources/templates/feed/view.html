@@ -22,6 +22,11 @@
 .content-info {
 	margin-top: 150px;
 }
+
+.slides-img img {
+	width: 100%;
+	height: 100%;
+}
 </style>
 </head>
 
@@ -40,18 +45,17 @@
 				<tr class="content-imgs">
 					<td colspan="3">
 						<div class="slider-img">
-					 <th:block th:each="item : ${list}">
-						<div class="slides-img">
-						
-                			 <img class="slide-img" th:src="${item.userFeedFilepath}" alt="photo"/>
-						</div>
-					 </th:block>
+							<div class="slides-img">
+								<th:block th:each="item : ${list}">
+									<img class="slide-img" th:src="${item.userFeedFilepath}" alt="photo" />
+								</th:block>
+							</div>
 							<button class="nav-button-img prev-img" onclick="prevSlide()">❮</button>
 							<button class="nav-button-img next-img" onclick="nextSlide()">❯</button>
 						</div>
 					</td>
 				</tr>
-		
+
 				<tr class="icons-row">
 					<td colspan="2">
 						<div class="left-icons">
@@ -124,17 +128,47 @@
 		<div class="btn-wrap">
 			<ul>
 				<li>
-					<button class="button-style" id="insertBtn">수정</button>
+					<button class="button-style" th:onclick="feedUpdate([[${feed.userFeedNo}]],[[${feed.userFeedWriter}]])">수정</button> 
 				</li>
 				<li>
-					<button class="button-style" th:onclick="feedDelete([[${feed.userFeedNo}]])">삭제</button>
+					<button class="button-style"
+						th:onclick="feedDelete([[${feed.userFeedNo}]])">삭제</button>
 				</li>
 			</ul>
 		</div>
-
 		</section>
-	
+
 		<script>
+		function feedUpdate(userFeedNo, userFeedWriter){
+			swal({
+                title:"게시글 수정",
+                text :"게시글을 수정하시겠습니까?",
+                icon :"info",
+                buttons:{
+                    cancel:{
+                        text:"취소",
+                        value:false,
+                        visible:true,
+                        className:"btn-secondary",
+                        closeModal:true
+                    },
+                    confirm:{
+                        text:"확인",
+                        value:true,
+                        visible:true,
+                        className:"btn-point",
+                        closeModal:true
+                    }
+                }
+            }).then(function(isConfirm){
+                if(isConfirm){
+                	console.log(userFeedNo);
+                	console.log(userFeedWriter);
+                    location.href="/feed/updateFrm?userFeedWriter="+userFeedWriter+"&userFeedNo="+userFeedNo;
+                }   
+            });
+		}
+		
 		function feedDelete(userFeedNo) {
 			swal({
                 title:"게시글 삭제",
