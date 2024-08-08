@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="/css/user/userStyle.css" />
+<link rel="stylesheet" href="/css/style.css" />
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block th:include="common/header"></th:block>
+
+		<div class="wrapper">
+        <div class="findaccount-main">
+          <div class="logo">
+            <div class="logo-img">
+              <img src="/image/minit_logo_2.png">
+            </div>
+          </div>
+          <div class="main">
+            <div class="main-text">
+              <div>
+                <span>계정을 잊어버리셨나요?</span>
+              </div>
+              <div>
+                <span>MINIT이 찾아드릴게요!</span>
+              </div>
+            </div>
+          </div>
+          <div class="link-button">
+
+            <div class="find">
+              <a
+                  class="nav-link"
+                  aria-current="page"
+                  href="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#findidModal"
+                  >ID 찾기</a>
+            </div>
+            <div class="find">
+              <a 
+                class="nav-link"
+                aria-current="page"
+                href="#"
+                data-bs-toggle="modal"
+                data-bs-target="#findpwModal"
+                >PW 찾기</a>
+            </div>
+            <!--
+            <button class="find find-id">
+              <span>ID 찾기</span>
+            </button>
+            <button class="find find-pw">
+              <span>PW 찾기</span>
+            </button>
+            -->
+
+
+
+
+
+
+
+
+            <!--Id 찾기모달창-->
+            <div
+            class="modal fade"
+            id="findidModal"
+            tabindex="-1"
+            aria-labelledby="findidModalLabel"
+            aria-hidden="true"
+            >
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                
+                <div class="modal-header">
+                  <div class="modal-title" id="findidModalLabel">
+                    <img src="/image/minit_logo.png">
+                  </div>
+                  <span>ID 찾기</span>
+                  
+                </div>
+    
+                <div class="modal-body">
+                  <form>
+                    <div class="mb-3">
+                      <label for="name" class="form-label">성명</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="name"
+                        placeholder="가입한 성명을 입력하세요!"
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label for="email" class="form-label">이메일</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="email"
+                        placeholder="가입할 때 사용한 이메일을 입력하세요!"
+                      />
+                    </div>
+                  </form>
+                </div>
+    
+                <div class="modal-footer">
+                  <!--<button type="button" class="btn btn-primary">PW찾기</button>-->
+                  <button type="button" class="btn btn-outline-success">
+                    <a
+                    class="nav-link"
+                    aria-current="page"
+                    href="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#findidpwModal"
+                    >ID 찾기</a>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-success"
+                    data-bs-dismiss="modal"
+                  >닫기
+                  </button>
+
+                </div>
+    
+              </div>
+            </div>
+          </div>
+
+
+          <!--id에서 넘어가는 pw 찾기모달창-->
+          <div
+          class="modal fade"
+          id="findidpwModal"
+          tabindex="-1"
+          aria-labelledby="findidpwModalLabel"
+          aria-hidden="true"
+          >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              
+              <div class="modal-header">
+                <div class="modal-title" id="findidpwModalLabel">
+                  <img src="/image/minit_logo.png">
+                </div>
+                <span>PW 찾기</span>
+                
+              </div>
+  
+              <div class="modal-body">
+                <form>
+                  <div class="mb-3">
+                    <label for="id" class="form-label">찾은 아이디</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="id"
+                      placeholder="앞서 찾은 아이디 나올 예정"
+                      readonly
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="email" class="form-label">이메일</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="email"
+                      placeholder="가입할 때 사용한 이메일을 입력하세요!"
+                    />
+                  </div>
+                </form>
+              </div>
+  
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-success">
+                  <a
+                    class="nav-link"
+                    aria-current="page"
+                    href="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#findrepwModal"
+                    >PW 찾기</a>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-success"
+                  data-bs-dismiss="modal"
+                > 닫기
+                </button>
+
+              </div>
+  
+            </div>
+          </div>
+        </div>
+
+
+
+          <!--pw 찾기모달창-->
+          <div
+          class="modal fade"
+          id="findpwModal"
+          tabindex="-1"
+          aria-labelledby="findpwModalLabel"
+          aria-hidden="true"
+          >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              
+              <div class="modal-header">
+                <div class="modal-title" id="findpwModalLabel">
+                  <img src="/image/minit_logo.png">
+                </div>
+                <span>PW 찾기</span>
+                
+              </div>
+  
+              <div class="modal-body">
+                <form>
+                  <div class="mb-3">
+                    <label for="id" class="form-label">아이디</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="id"
+                      placeholder="가입한 아이디를 입력하세요!"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="email" class="form-label">이메일</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="email"
+                      placeholder="가입할 때 사용한 이메일을 입력하세요!"
+                    />
+                  </div>
+                </form>
+              </div>
+  
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-success">
+                  <a
+                    class="nav-link"
+                    aria-current="page"
+                    href="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#findrepwModal"
+                    >PW 찾기</a>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-success"
+                  data-bs-dismiss="modal"
+                >닫기
+                </button>
+
+              </div>
+  
+            </div>
+          </div>
+        </div>
+
+        
+        <!--pw 재설정 모달창-->
+        <div
+        class="modal fade"
+        id="findrepwModal"
+        tabindex="-1"
+        aria-labelledby="findrepwModalLabel"
+        aria-hidden="true"
+        >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            
+            <div class="modal-header">
+              <div class="modal-title" id="findrepwModalLabel">
+                <img src="/image/minit_logo.png">
+              </div>
+              <span>PW 재설정</span>
+              
+            </div>
+
+            <div class="modal-body">
+              <form>
+                <div class="mb-3">
+                  <label for="password" class="form-label">비밀번호</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    placeholder="사용할 비밀번호를 입력하세요!"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="password" class="form-label">비밀번호 확인</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    placeholder="사용할 비밀번호를 한 번 더 입력하세요!"
+                  />
+                </div>
+              </form>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-success">
+                <a
+                class="nav-link"
+                aria-current="page"
+                href="#"
+                data-bs-toggle="modal"
+                data-bs-target="#loginModal"
+                >PW 재설정</a>
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-success"
+                data-bs-dismiss="modal"
+              >닫기
+              </button>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+        
+            
+          </div>
+
+        </div>
+		</div>
+	<th:block th:include="common/footer"></th:block>
+</body>
+</html>

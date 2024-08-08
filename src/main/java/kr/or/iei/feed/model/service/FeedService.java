@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,8 @@ import kr.or.iei.user.model.dto.UserRowMapper;
 public class FeedService {
 	@Autowired
 	private FeedDao feedDao;
+	@Value("${file.root}")
+	private String root;
 
 //	public List<Feed> feedList(String userId) {
 //		int numPerFeedImg = 8;
@@ -148,6 +151,32 @@ public class FeedService {
         //-> 되돌려주고 싶은 데이터 2개를 저장할 수 있는 객체를 생성해서 객체로 묶어서 하나로 리턴
         feedListData fld = new feedListData(feedList,pageNavi);
         return fld;
+	}
+
+	
+	public Feed selectUserOneFeed(int userFeedNo) {
+		//게시물정보
+		Feed feed = feedDao.searchFeedUser(userFeedNo);
+		//게시물당 사진 게시물 몇개인지
+		int totalImgNo = feedDao.totalImg(userFeedNo);
+		//System.out.println(totalImgNo);
+		//게시물 갯수만큼 배열만큼 사진저장
+		List<FeedFile> feedList = new ArrayList<FeedFile>();
+		for(int i = 0; i < totalImgNo; i++) {
+			String filepath = feedDao.searchFeedImg(userFeedNo, i);
+		    FeedFile fF = new FeedFile();
+		    fF.setUserFeedFilepath(filepath);
+		    feedList.add(fF);
+		    //System.out.println(filepath);
+		}
+		feed.setFeedList(feedList);;
+		return feed;
+	}
+	
+	@Transactional
+	public int deleteFeed(int userFeedNo) {
+		int result = feedDao.deleteFeed(userFeedNo);
+		return result;
 	}
 
 

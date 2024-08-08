@@ -120,7 +120,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-outline-success">로그인</button>
-                  <button type="button" class="btn btn-outline-success">ID/PW찾기</button>
+                  <a href="/user/findaccount" class="findA" style="text-decoration: none;"><button type="button" class="btn btn-outline-success">ID/PW찾기</button></a>
                   <button
                     type="button"
                     class="btn btn-outline-success"
@@ -266,8 +266,8 @@
             </div>
           </div>
         </div>
+        
     <script>
-    	
     	/*이메일인증*/
 	    let mailCode = null;
 		$("#sendBtn").on("click",function(){
@@ -343,9 +343,6 @@
 				$("#authMsg").css("color","red");
 			}
 		});
-    
-	
-    
 		
     	$("#userName").on("change",function(){
     		$("#userName").removeClass("required");
@@ -446,7 +443,7 @@
 			});
 		});
     
-
+		//다 입력했는지 확인
     	$(".join").on("click",function(){
     		const required = $(".required").length;
     		console.log(required);

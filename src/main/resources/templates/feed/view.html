@@ -3,138 +3,197 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-   <script defer src="index.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="/css/feed/feedStyle.css" />
-    <link rel="stylesheet" href="/css/feed/view.css">
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-      crossorigin="anonymous"
-    />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
-      <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
+<script defer src="index.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="/css/feed/feedStyle.css" />
+<link rel="stylesheet" href="/css/feed/view.css">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+	crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+	integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+.content-info {
+	margin-top: 150px;
+}
+</style>
 </head>
 
 <body>
 	<th:block th:include="common/header"></th:block>
+
+	<div class="content-wrap">
+		<!-- 컨텐츠 정보 받아오는 곳 -->
+		<div class="content-info">
+			<table class="content-info-table">
+				<tr class="user-image icon-size">
+					<td><img src="image/profilePhoto.jfif" alt="Profile Photo"></td>
+					<td class="user-nick" th:text="${feed.userFeedWriter}"></td>
+					<td class="date" th:text="${feed.userFeedDate}"></td>
+				</tr>
+				<tr class="content-imgs">
+					<td colspan="3">
+						<div class="slider-img">
+					 <th:block th:each="item : ${list}">
+						<div class="slides-img">
+						
+                			 <img class="slide-img" th:src="${item.userFeedFilepath}" alt="photo"/>
+						</div>
+					 </th:block>
+							<button class="nav-button-img prev-img" onclick="prevSlide()">❮</button>
+							<button class="nav-button-img next-img" onclick="nextSlide()">❯</button>
+						</div>
+					</td>
+				</tr>
+		
+				<tr class="icons-row">
+					<td colspan="2">
+						<div class="left-icons">
+							<span class="material-icons toggle-icon" id="icon">bookmark_border</span>
+							<span class="material-icons toggle-icon" id="icon">favorite_border</span>
+						</div>
+					</td>
+					<td><span class="material-icons toggle-icon" id="icon">report_gmailerrorred</span>
+					</td>
+				</tr>
+				<tr class="peed-content">
+					<td th:utext="${feed.userFeedContent}"></td>
+				</tr>
+				<tr>
+					<td colspan="3" class="chat-icon"><span class="material-icons"
+						id="icon">add_comment</span></td>
+				</tr>
+			</table>
+		</div>
+
+		<!--댓글 창 : chat icon 누르면 열리도록-->
+		<div class="inputCommentBox">
+			<form action="#" method="post">
+				<div class="form-wrap">
+					<ul>
+						<li class="comment-user-container"><img
+							src="image/profilePhoto.jfif" alt="user-image"
+							class="comment-user"></li>
+						<li class="comment-input-container"><input type="hidden"
+							name="feedCommentWriter" value="아이디"> <input
+							type="hidden" name="feedCommentWriterNo" value="회원번호">
+							<div class="input-item">
+								<textarea name="feedCommentContent" class="feedCommentContent"></textarea>
+							</div></li>
+						<li class="comment-button-container">
+							<button type="submit" class="btn-primary">등록</button>
+						</li>
+					</ul>
+				</div>
+			</form>
+		</div>
+
+		<div class="comment-wrap">
+			<table>
+				<tr>
+					<td style="width: 10%;"><a href="#"><img
+							src="image/profilePhoto.jfif" alt="" class="comment-user"></a>
+					</td>
+					<td style="width: 70%;"><span>feed-comment</span></td>
+					<td style="width: 20%;"><span
+						class="material-icons toggle-icon" id="icon-favorite">favorite_border</span>
+						<!--댓글 주인이 아닌 유저에게는 신고하기 버튼--> <!-- <span class="material-icons toggle-icon" id="icon-report">report_gmailerrorred</span> -->
+						<!-- 댓글 주인에게는 수정/삭제 버튼 점세개 누르면 옆으로 나오게 --> <span
+						class="material-icons toggle-icon" id="icon-more">more_vert</span>
+					</td>
+					<td>
+						<div id="icon-container" class="hidden">
+							<span class="material-icons">edit_document</span> <span
+								class="material-icons">folder_delete</span>
+						</div>
+
+					</td>
+					</td>
+				</tr>
+
+			</table>
+		</div>
+
+		<!-- 수정 / 삭제 버튼 : 로그인한 유저의 글에만 보임-->
+		<div class="btn-wrap">
+			<ul>
+				<li>
+					<button class="button-style" id="insertBtn">수정</button>
+				</li>
+				<li>
+					<button class="button-style" th:onclick="feedDelete([[${feed.userFeedNo}]])">삭제</button>
+				</li>
+			</ul>
+		</div>
+
+		</section>
 	
-	  <div class="content-wrap">
-      <!-- 컨텐츠 정보 받아오는 곳 -->
-      <div class="content-info">
-        <table class="content-info-table">
-          <tr class="user-image icon-size">
-              <td><img src="image/profilePhoto.jfif" alt="Profile Photo"></td>
-              <td class="user-nick"><span>user-nick</span></td>
-              <td class="date"><span>YY-MM-DD</span></td>
-          </tr>
-          <tr class="content-imgs">
-              <td colspan="3">
-                <img class="full-width-img" src="/image/profilePhoto.jfif" alt="Full Width Image">
-              </td>
-          </tr>
-          <tr class="icons-row">
-              <td colspan="2">
-                  <div class="left-icons">
-                    <span class="material-icons toggle-icon" id="icon">bookmark_border</span>                      
-                    <span class="material-icons toggle-icon" id="icon">favorite_border</span>
-                  </div>
-              </td>
-              <td>
-                <span class="material-icons toggle-icon" id="icon">report_gmailerrorred</span>              
-              </td>
-          </tr>
-          <tr class="peed-content">
-            <td>
-              <span>
-                content
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="3" class="chat-icon">
-              <span class="material-icons" id="icon">add_comment</span>            
-              </td>
-          </tr>
-        </table>
-      </div>
+		<script>
+		function feedDelete(userFeedNo) {
+			swal({
+                title:"게시글 삭제",
+                text :"게시글을 삭제하시겠습니까?",
+                icon :"warning",
+                buttons:{
+                    cancel:{
+                        text:"취소",
+                        value:false,
+                        visible:true,
+                        className:"btn-secondary",
+                        closeModal:true
+                    },
+                    confirm:{
+                        text:"삭제",
+                        value:true,
+                        visible:true,
+                        className:"btn-point",
+                        closeModal:true
+                    }
+                }
+            }).then(function(isConfirm){
+                if(isConfirm){
+                    location.href="/feed/delete?userFeedNo="+userFeedNo;
+                }   
+            });
+		}
+		
+    document.addEventListener('DOMContentLoaded', () => {
+        const slides = document.querySelector('.slides-img');
+        const slideCount = document.querySelectorAll('.slide-img').length;
+        let index = 0;
 
-      <!--댓글 창 : chat icon 누르면 열리도록-->
-      <div class="inputCommentBox">
-        <form action="#" method="post">
-            <div class="form-wrap">
-                <ul>
-                    <li class="comment-user-container">
-                        <img src="image/profilePhoto.jfif" alt="user-image" class="comment-user">
-                    </li>
-                    <li class="comment-input-container">
-                        <input type="hidden" name="feedCommentWriter" value="아이디">
-                        <input type="hidden" name="feedCommentWriterNo" value="회원번호">
-                        <div class="input-item">
-                            <textarea name="feedCommentContent" class="feedCommentContent"></textarea>
-                        </div>
-                    </li>
-                    <li class="comment-button-container">
-                        <button type="submit" class="btn-primary">등록</button>
-                    </li>
-                </ul>
-            </div>
-        </form>
-    </div>
-    
-    <div class="comment-wrap">
-      <table>
-        <tr>
-            <td style="width: 10%;">
-                <a href="#"><img src="image/profilePhoto.jfif" alt="" class="comment-user"></a>
-            </td>
-            <td style="width: 70%;">
-                <span>feed-comment</span>
-            </td>
-            <td style="width: 20%;">
-                <span class="material-icons toggle-icon" id="icon-favorite">favorite_border</span>
-                <!--댓글 주인이 아닌 유저에게는 신고하기 버튼-->
-                <!-- <span class="material-icons toggle-icon" id="icon-report">report_gmailerrorred</span> -->
-                <!-- 댓글 주인에게는 수정/삭제 버튼 점세개 누르면 옆으로 나오게 -->
-                <span class="material-icons toggle-icon" id="icon-more">more_vert</span>
-              </td>
-              <td>
-                <div id="icon-container" class="hidden">
-                      <span class="material-icons">edit_document</span>
-                      <span class="material-icons">folder_delete</span>
-                  </div>
+        function showSlide(newIndex) {
+            if (newIndex >= slideCount) {
+                index = 0;
+            } else if (newIndex < 0) {
+                index = slideCount - 1;
+            } else {
+                index = newIndex;
+            }
+            slides.style.transform = `translateX(${-index * 100}%)`;
+        }
 
-              </td>
-            </td>
-        </tr>
+        function prevSlide() {
+            showSlide(index - 1);
+        }
 
-    </table>
-    </div>
-    
-    <!-- 수정 / 삭제 버튼 : 로그인한 유저의 글에만 보임-->
-    <div class="btn-wrap">
-      <ul>
-        <li>
-          <button class="button-style">수정</button>
-        </li>
-        <li>
-          <button class="button-style">삭제</button>
-        </li>
-      </ul>
-    </div>
+        function nextSlide() {
+            showSlide(index + 1);
+        }
 
-      </section>
-    
-	
-	
-	<th:block th:include="common/footer"></th:block>
+        // Assign functions to buttons
+        document.querySelector('.prev-img').addEventListener('click', prevSlide);
+        document.querySelector('.next-img').addEventListener('click', nextSlide);
+    });
+    </script>
+
+
+		<th:block th:include="common/footer"></th:block>
 </body>
 </html>

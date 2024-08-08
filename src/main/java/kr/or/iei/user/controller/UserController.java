@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import jakarta.servlet.http.HttpSession;
-import kr.or.iei.util.EmailSender;
+//import kr.or.iei.util.EmailSender;
 import kr.or.iei.user.model.dto.User;
 import kr.or.iei.user.model.service.UserService;
 
@@ -160,7 +160,7 @@ public class UserController {
 					sb.append(randomCode);
 				}
 			}
-			String emailContent = "<h2>순간을 기록하다,MINIT 입니다.</h2>"
+			String emailContent = "<h2>순간을 기록하다, MINIT 입니다.</h2>"
 					+"<h3>귀하의 인증번호는 [ <span style='color:red;'>"
 					+sb.toString()
 					+"</span> ] 입니다.</h3>"
@@ -172,5 +172,9 @@ public class UserController {
 		}
 	}
 	
+	@GetMapping(value="/findaccount")
+	public String findaccount() {
+		return "user/findaccount";
+	}
 	
 }
