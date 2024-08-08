@@ -9,6 +9,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
+.feed-is-report{
+	
+}
 .comment-edit-textarea {
     width: 600px !important;
     padding: 10px;
@@ -16,6 +19,16 @@
     border: 1px solid #ccc;
     margin-bottom: 10px;
     resize: none;
+    
+}
+#comment-like{
+	cursor: pointer;
+}
+#comment-not-like{
+	cursor: pointer;
+}
+.comment-section{
+	margin-top: 10px !important;
 }
 </style>
 <title>텍스트 피드</title>
@@ -32,7 +45,7 @@
                     <!-- form 태그 대신 비동기 방식으로 글 작성 -->
                         <textarea name="text-feed-content" id="text-feed-content" placeholder="오늘 무슨일이 있었나요?(100자)"></textarea>
                         <div class="text-feed-actions">
-                            <button  type="submit" class="text-feed-button write-btn">작성하기</button>
+                            <button type="submit" class="text-feed-button write-btn">작성하기</button>
                         </div>
                     
                 </div>
@@ -42,6 +55,7 @@
 	                <div class="feed" th:each="textFeed : ${textFeedList}">
 	                
 	                	<span class="textFeedNo" th:text="${textFeed.textFeedNo}" style="display:none;"></span>
+	                	<span class="feed-is-report" th:text="${textFeed.isReport}"></span>
 	                    <div class="feed-profile-pic">
 	                        <img src="Profile Picture" alt="Profile Picture">
 	                    </div>
@@ -53,7 +67,7 @@
 								<i th:if="${textFeed.isLike == 0}" id="feed-not-like" class="fa fa-regular fa-heart" th:onclick="likePush(this,[[${textFeed.textFeedNo}]])"></i>	
 	                            <i class="fa fa-paper-plane"></i>
 	                            <i class="fa fa-comment"></i>
-	                            <i class="fa fa-ellipsis-h"></i>
+	                            <i class="fa fa-ellipsis-h"  th:if="${session.user != null}"></i>
 	                            <div class="feed-options">
 	                                <button class="feed-edit-btn" th:if="${session.user != null} and ${session.user.userId} == ${textFeed.textFeedWriter}"><span class="material-icons">edit</span></button>
 	                                <button class="feed-report-btn"><span class="material-icons">report_problem</span></button>
@@ -63,7 +77,7 @@
 	                    </div>
 	                    
 	                    
-	                    <div th:if="${session.user != null}" class="comment-section">
+	                    <div th:if="${session.user != null}" class="comment-section" style="display:none;">
 	                        <textarea  placeholder="댓글을 작성해보세요 !"></textarea>
 	                        <button class="submit-comment">댓글 달기</button>
 	                        <div class="comments-container">
@@ -77,13 +91,13 @@
 							            <p class="comment-text" th:text="${comment.textFeedCommentContent}"></p>
 							            <textarea class="comment-edit-textarea" style="display:none;" th:text="${comment.textFeedCommentContent}"></textarea>
 							            <div class="comment-actions">
-							                <i class="fa fa-heart"></i>
-							                <i class="fa fa-regular fa-heart"></i>
+							                <i th:if="${comment.isLike == 1}" id="comment-like" class="fa fa-heart" th:onclick="commentLikePush(this,[[${comment.textFeedCommentNo}]])"></i>
+							                <i th:if="${comment.isLike == 0}" id="comment-not-like" class="fa fa-regular fa-heart" th:onclick="commentLikePush(this,[[${comment.textFeedCommentNo}]])"></i>
 							            </div>
 							        </div>
 							        <div class="comment-options">
-							        	<button class="comment-edit-btn"><span class="material-icons">edit</span></button>
-							            <button class="comment-report-btn"><span class="material-icons">report_problem</span></button>
+							        	<button class="comment-edit-btn" th:if="${session.user != null} and ${session.user.userId} == ${comment.textFeedCommentWriter}"><span class="material-icons">edit</span></button>
+							            <button class="comment-report-btn" th:if="${session.user != null}"><span class="material-icons">report_problem</span></button>
 							            <button class="comment-delete-btn" th:if="${session.user != null} and ${session.user.userId} == ${comment.textFeedCommentWriter}"><span class="material-icons">delete_forever</span></button>
 							            <button class="comment-save-btn" style="display:none;"><span class="material-icons">done</span></button>
 							        </div>
@@ -171,6 +185,45 @@
         });
     }
     
+    function commentLikePush(obj, textFeedCommentNo){
+    	const currentLike = $(obj).attr('id');
+    	const isLike = (currentLike == "comment-not-like") ? 0 : 1 ;
+    	$.ajax({
+    		url : "/text/textFeedCommentLikePush",
+    		type : "post",
+    		data : {
+    			textFeedCommentNo : textFeedCommentNo,
+    			isLike : isLike
+    		},
+    		success : function(data){
+    			if (data == -10) {
+                    swal({
+                        title: "로그인 필요",
+                        text: "로그인 후 이용해 주세요",
+                        icon: "info"
+                    });
+                } else if (data == -1) {
+                    swal({
+                        title: "데이터 처리 오류",
+                        text: "잠시 후 다시 시도해주세요",
+                        icon: "warning"
+                    });
+                } else {
+                    if (isLike == 0) {
+                        $(obj).attr('id', 'comment-like').removeClass('fa-regular fa-heart').addClass('fa-heart');
+                    } else {
+                        $(obj).attr('id', 'comment-not-like').removeClass('fa-heart').addClass('fa-regular fa-heart');
+                    }
+                }
+    		},
+    		error : function(){
+    			alert("서버 연결 실패");
+    		}
+    	});
+    }
+    
+    
+    
     $(document).ready(function() {
         let feeds = $('#text-feed-feeds .feed');
         let numPerPage = 4;
@@ -215,35 +268,35 @@
             const textFeedElement = $(this).closest(".feed");
             const textFeedNo = textFeedElement.find(".textFeedNo").text();
             
-            $.ajax({
-                url: "/text/deleteTextFeed",
-                type: "post",
-                data: { textFeedNo: textFeedNo },
-                dataType: "json",
-                success : function(result){
-                    if (result === 1) {
-                        swal({
-                            title: "게시물 삭제",
-                            text: "게시물을 삭제하시겠습니까?",
-                            icon: "warning",
-                            buttons: {
-                                cancel: {
-                                    text: "취소",
-                                    value: null,
-                                    visible: true,
-                                    className: "btn-secondary",
-                                    closeModal: true
-                                },
-                                confirm: {
-                                    text: "삭제",
-                                    value: true,
-                                    visible: true,
-                                    className: "btn-point",
-                                    closeModal: true
-                                }
-                            }
-                        }).then(function(isConfirm) {
-                            if (isConfirm) {
+            swal({
+                title: "게시물 삭제",
+                text: "게시물을 삭제하시겠습니까?",
+                icon: "warning",
+                buttons: {
+                    cancel: {
+                        text: "취소",
+                        value: false,
+                        visible: true,
+                        className: "btn-secondary",
+                        closeModal: true
+                    },
+                    confirm: {
+                        text: "삭제",
+                        value: true,
+                        visible: true,
+                        className: "btn-point",
+                        closeModal: true
+                    }
+                }
+            }).then(function(isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        url: "/text/deleteTextFeed",
+                        type: "post",
+                        data: { textFeedNo: textFeedNo },
+                        dataType: "json",
+                        success: function(result) {
+                            if (result === 1) {
                                 swal({
                                     title: "삭제 성공",
                                     text: "피드 삭제 성공",
@@ -252,27 +305,31 @@
                                 textFeedElement.fadeOut("slow", function() {
                                     $(this).remove();
                                 });
+                            } else {
+                                swal({
+                                    title: "삭제 실패",
+                                    text: "피드 삭제 실패",
+                                    icon: "warning"
+                                });
                             }
-                        });
-                    
-                        
-                    } else {
-                        swal({
-                            title: "삭제 실패",
-                            text: "피드 삭제 실패",
-                            icon: "warning"
-                        });
-                    }
-                },
-                error: function() {
+                        },
+                        error: function() {
+                            swal({
+                                title: "삭제 실패",
+                                text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+                                icon: "warning"
+                            });
+                        }
+                    });
+                } else {
                     swal({
-                        title : "삭제 실패",
-                        text : "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
-                        icon : "warning"
+                        title: "취소됨",
+                        text: "피드 삭제가 취소되었습니다.",
+                        icon: "info"
                     });
                 }
             });
-        });
+        }); // 피드 삭제
 
         $(document).on("click", ".feed-edit-btn", function() {
             const textFeedElement = $(this).closest(".feed");
@@ -307,8 +364,7 @@
                                 <p class="text-feed-writer">${newfeed.textFeedWriter}</p>
                                 <p class="text-feed-content">${newfeed.textFeedContent}</p>
                                 <div class="feed-actions">
-                                    <i id="feed-like" class="fa fa-heart"></i>
-                                    <i id="not-feed-like" class="fa fa-regular fa-heart"></i>
+                                    <i id="not-feed-like" class="fa fa-regular fa-heart" onclick="likePush(this, ${newfeed.textFeedNo})"></i>
                                     <i class="fa fa-paper-plane"></i>
                                     <i class="fa fa-comment"></i>
                                     <i class="fa fa-ellipsis-h"></i>
@@ -320,7 +376,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="comment-section">
+                            <div class="comment-section" style="display: none;">
                                 <textarea placeholder="댓글을 작성해보세요 !"></textarea>
                                 <button class="submit-comment">댓글 달기</button>
                                 <div class="comments-container">
@@ -385,8 +441,7 @@
                                 <p class="comment-text">${comment.textFeedCommentContent}</p>
                                 <textarea class="comment-edit-textarea" style="display:none;">${comment.textFeedCommentContent}</textarea>
                                 <div class="comment-actions">
-                                    <i class="fa fa-heart"></i>
-                                    <i class="fa fa-regular fa-heart"></i>
+                                    <i id="not-comment-like" class="fa fa-regular fa-heart" onclick="commentLikePush(this, ${comment.textFeedCommentNo})"></i>
                                 </div>
                             </div>
                             <div class="comment-options">
@@ -409,40 +464,40 @@
         });//댓글 작성
         
         $(document).on("click", ".comment-delete-btn", function() {
-            const textFeedCommentElement = $(this).closest(".comment")
+            const textFeedCommentElement = $(this).closest(".comment");
             const textFeedCommentNo = textFeedCommentElement.find(".textFeedCommentNo").text();
             
-            $.ajax({
-                url : "/text/deleteTextFeedComment",
-                type : "post",
-                data : {
-                    textFeedCommentNo : textFeedCommentNo
-                },
-                dataType : "json",
-                success : function(result){
-                    if (result === 1) {
-                        swal({
-                            title: "댓글 삭제",
-                            text: "댓글을 삭제하시겠습니까?",
-                            icon: "warning",
-                            buttons: {
-                                cancel: {
-                                    text: "취소",
-                                    value: null,
-                                    visible: true,
-                                    className: "btn-secondary",
-                                    closeModal: true
-                                },
-                                confirm: {
-                                    text: "삭제",
-                                    value: true,
-                                    visible: true,
-                                    className: "btn-point",
-                                    closeModal: true
-                                }
-                            }
-                        }).then(function(isConfirm) {
-                            if (isConfirm) {
+            swal({
+                title: "댓글 삭제",
+                text: "댓글을 삭제하시겠습니까?",
+                icon: "warning",
+                buttons: {
+                    cancel: {
+                        text: "취소",
+                        value: false,
+                        visible: true,
+                        className: "btn-secondary",
+                        closeModal: true
+                    },
+                    confirm: {
+                        text: "삭제",
+                        value: true,
+                        visible: true,
+                        className: "btn-point",
+                        closeModal: true
+                    }
+                }
+            }).then(function(isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        url: "/text/deleteTextFeedComment",
+                        type: "post",
+                        data: {
+                            textFeedCommentNo: textFeedCommentNo
+                        },
+                        dataType: "json",
+                        success: function(result) {
+                            if (result === 1) {
                                 swal({
                                     title: "삭제 성공",
                                     text: "댓글 삭제 성공",
@@ -451,23 +506,27 @@
                                 textFeedCommentElement.fadeOut("slow", function() {
                                     $(this).remove();
                                 });
+                            } else {
+                                swal({
+                                    title: "삭제 실패",
+                                    text: "댓글 삭제 실패",
+                                    icon: "warning"
+                                });
                             }
-                        });
-                    
-                        
-                    } else {
-                        swal({
-                            title: "삭제 실패",
-                            text: "댓글 삭제 실패",
-                            icon: "warning"
-                        });
-                    }
-                },
-                error : function(){
+                        },
+                        error: function() {
+                            swal({
+                                title: "삭제 실패",
+                                text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+                                icon: "warning"
+                            });
+                        }
+                    });
+                } else {
                     swal({
-                        title : "삭제 실패",
-                        text : "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
-                        icon : "warning"
+                        title: "취소됨",
+                        text: "댓글 삭제가 취소되었습니다.",
+                        icon: "info"
                     });
                 }
             });
@@ -518,39 +577,44 @@
             });
         });//피드 수정
         
+        
+        
         $(document).on("click",".comment-edit-btn",function(){
-        	const textFeedCommentElement = $(this).closest(".comment");
-        	textFeedCommentElement.find(".comment-text").hide();
-        	textFeedCommentElement.find(".comment-edit-textarea").show();
-        	textFeedCommentElement.find(".comment-save-btn").show();
+            const textFeedCommentElement = $(this).closest(".comment");
+            textFeedCommentElement.find(".comment-text").hide();
+            textFeedCommentElement.find(".comment-edit-textarea").show();
+            textFeedCommentElement.find(".comment-save-btn").show();
             $(this).hide();
-    		
+            
             const textFeedCommentNo = textFeedCommentElement.find(".textFeedCommentNo").text();
-            $(".comment-save-btn").data("textFeedCommentNo", textFeedCommentNo);
+            textFeedCommentElement.find(".comment-save-btn").data("textFeedCommentNo", textFeedCommentNo);
         });
         
+        
+        
         $(document).on("click", ".comment-save-btn",function(){
-        	const textFeedCommentEditContent = $(".comment-edit-textarea").val();
-        	const textFeedCommentEditNo = $(this).data("textFeedCommentNo");
-	
-        	$.ajax({
-        		url : "/text/editTextFeedComment",
-        		type : "post",
-        		data : {
-        			textFeedCommentEditContent : textFeedCommentEditContent,
-        			textFeedCommentEditNo : textFeedCommentEditNo
-        		},
-        		success : function(result){
-        			if(result === 1){
+            const textFeedCommentElement = $(this).closest(".comment");
+            const textFeedCommentEditContent = textFeedCommentElement.find(".comment-edit-textarea").val();
+            const textFeedCommentEditNo = $(this).data("textFeedCommentNo");
+
+            $.ajax({
+                url : "/text/editTextFeedComment",
+                type : "post",
+                data : {
+                    textFeedCommentEditContent : textFeedCommentEditContent,
+                    textFeedCommentEditNo : textFeedCommentEditNo
+                },
+                success : function(result){
+                    if(result === 1){
                         swal({
                             title: "수정 성공",
                             text: "댓글 수정 성공",
                             icon: "success"
                         });
-                         const textFeedCommentElement = $(".textFeedCommentNo:contains('" + textFeedCommentEditNo + "')").closest(".comment");
-                         textFeedCommentElement.find(".comment-text").text(textFeedCommentEditContent);
-                         textFeedCommentElement.find(".comment-text").show();
-                     	textFeedCommentElement.find(".comment-edit-textarea").hide();
+                        textFeedCommentElement.find(".comment-text").text(textFeedCommentEditContent).show();
+                        textFeedCommentElement.find(".comment-edit-textarea").hide();
+                        textFeedCommentElement.find(".comment-save-btn").hide();
+                        textFeedCommentElement.find(".comment-edit-btn").show();
                     } else {
                         swal({
                             title: "수정 실패",
@@ -558,21 +622,117 @@
                             icon: "warning"
                         });
                     }
-        		},
-        		error : function(){
-        			swal({
+                },
+                error : function(){
+                    swal({
                         title: "수정 실패",
                         text: "댓글 수정 실패",
                         icon: "warning"
                     });
-        		}
-        	})
+                }
+            });
         });
         
         
+        $(document).on("click",".feed-report-btn", function(){
+        	const textFeedElement = $(this).closest(".feed");
+        	const textFeedNo = textFeedElement.find(".textFeedNo").text();
+        	const isReport = textFeedElement.find(".feed-is-report").text();
+        	console.log(isReport);
+        	console.log(textFeedNo);
+        	swal({
+        		title : "게시물 신고",
+        		text : "이 게시물을 신고 하시겠습니까?",
+        		icon : "warning",
+        		buttons: {
+                    cancel: {
+                        text: "취소",
+                        value: false,
+                        visible: true,
+                        className: "btn-secondary",
+                        closeModal: true
+                    },
+                    confirm: {
+                        text: "신고",
+                        value: true,
+                        visible: true,
+                        className: "btn-point",
+                        closeModal: true
+                    }
+                }
+        	}).then(function(isConfirm){
+        		if(isConfirm){
+        			$.ajax({
+                		url : "/text/reportTextFeed",
+                		type : "post",
+                		data : {
+                			textFeedNo : textFeedNo,
+                			isReport : isReport
+                		},
+                		success : function(data){
+                			if(data == -10){
+                				swal({
+                                    title: "로그인 필요",
+                                    text: "로그인 후 이용해 주세요",
+                                    icon: "info"
+                                });                				
+                			}else if(data == -100){
+                				swal({
+                                    title: "",
+                                    text: "이미 신고한 게시물 입니다 !",
+                                    icon: "info"
+                                });  
+                			}else if(data == -1000){
+                				swal({
+                                    title: "",
+                                    text: "지속적인 신고로 게시물이 삭제되었습니다 !",
+                                    icon: "info"
+                                });
+                				textFeedElement.fadeOut("slow", function() {
+                                    $(this).remove();
+                                });
+                			}else if(data == 1){
+                				swal({
+                                    title: "신고 성공",
+                                    text: "피드 신고가 접수되었습니다.",
+                                    icon: "success"
+                                });
+                			}else{
+                				swal({
+                                    title: "신고 실패",
+                                    text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+                                    icon: "warning"
+                                });
+                			}
+                		},
+                		error : function(){
+                			swal({
+                                title: "서버 연결 실패",
+                                text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+                                icon: "warning"
+                            });
+                		}
+                	});
+        		}else{
+        			swal({
+                        title: "신고 실패",
+                        text: "피드 신고 실패",
+                        icon: "warning"
+                    });
+        		}
+        	})
+        	
+        	
+        });//신고
         
         
-    });
+        
+        
+        
+        
+        
+        
+    });//ready
     
 	
 </script>
