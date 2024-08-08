@@ -16,5 +16,6 @@ public class TextFeed {
 	private String textFeedWriter;
 	private List<TextFeedComment> textFeedCommentList;
 	private int isLike;
+	private int isReport;
 	
 }

@@ -115,4 +115,28 @@ public class TextController {
     	}
     }
     
+    @ResponseBody
+    @PostMapping(value="/textFeedCommentLikePush")
+    public int textFeedCommentLikePush(int textFeedCommentNo, int isLike, @SessionAttribute(required =  false) User user) {
+    	if(user == null) {
+    		return -10;
+    	}else {
+    		int userNo = user.getUserNo();
+    		int result = textService.textFeedCommentLikePush(textFeedCommentNo, isLike, userNo);
+    		return result;
+    	}    	
+    }
+    
+    @ResponseBody
+    @PostMapping(value="reportTextFeed")
+    public int reportTextFeed(int textFeedNo,int isReport ,@SessionAttribute(required = false) User user) {
+    	if(user == null) {
+    		return -10;
+    	}else {
+    		int userNo = user.getUserNo();
+    		int result = textService.textFeedReport(textFeedNo, userNo, isReport);
+    		return result;
+    	}
+    }
+    
 }
