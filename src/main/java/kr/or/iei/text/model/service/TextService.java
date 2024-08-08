@@ -26,15 +26,16 @@ public class TextService {
         	}
             textFeed.setTextFeedCommentList(comments);
         	int isLike = textDao.selectTextFeedLikeStatus(textFeed.getTextFeedNo(), userNo);
+        	int isReport = textDao.selectTextFeedReportStatus(textFeed.getTextFeedNo(), userNo);
             textFeed.setIsLike(isLike);
+            textFeed.setIsReport(isReport);
         }
         return textFeedList;
     }
+	
 	@Transactional
     public int textFeedWrite(String textFeedContent, User user) {
-        
         int result = textDao.textFeedWrite(textFeedContent, user);
-        
         return result;
     }
 	
@@ -113,10 +114,28 @@ public class TextService {
 		}
 		return result;
 	}
-	public int textFeedReport(int textFeedNo, int userNo) {
-		int result = 0;
-		
-		return 0;
+	
+	@Transactional
+	public int textFeedReport(int textFeedNo, int userNo, int isReport) {
+	    int result = 0;
+	    if (isReport == 0) {
+	        if (!textDao.isReportFeedExists(textFeedNo, userNo)) {
+	            result = textDao.insertTextFeedReport(textFeedNo, userNo);
+	        }
+	    } else if (isReport == 1) {
+	        result = -100;
+	    }
+	    if (result > 0) {
+	        int reportCount = textDao.selectTextFeedReportCount(textFeedNo);
+	        if (reportCount >= 2) {
+	            int hideTextFeedResult = textDao.hideTextFeed(textFeedNo);
+
+	            if (hideTextFeedResult>0) {
+	                result = -1000;
+	            }
+	        }
+	    }
+	    return result;
 	}
 	
 }

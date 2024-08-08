@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpSession;
 //import kr.or.iei.util.EmailSender;
 import kr.or.iei.user.model.dto.User;
 import kr.or.iei.user.model.service.UserService;
+import kr.or.iei.util.EmailSender;
 
 @Controller
 @RequestMapping(value="/user")

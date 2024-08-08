@@ -9,6 +9,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
+.feed-is-report{
+	
+}
 .comment-edit-textarea {
     width: 600px !important;
     padding: 10px;
@@ -52,7 +55,7 @@
 	                <div class="feed" th:each="textFeed : ${textFeedList}">
 	                
 	                	<span class="textFeedNo" th:text="${textFeed.textFeedNo}" style="display:none;"></span>
-	                	<span class="textIsReport" th:text="${textFeed.isReport}" style="dispaly:none;"></span>
+	                	<span class="feed-is-report" th:text="${textFeed.isReport}"></span>
 	                    <div class="feed-profile-pic">
 	                        <img src="Profile Picture" alt="Profile Picture">
 	                    </div>
@@ -634,7 +637,9 @@
         $(document).on("click",".feed-report-btn", function(){
         	const textFeedElement = $(this).closest(".feed");
         	const textFeedNo = textFeedElement.find(".textFeedNo").text();
-        	
+        	const isReport = textFeedElement.find(".feed-is-report").text();
+        	console.log(isReport);
+        	console.log(textFeedNo);
         	swal({
         		title : "게시물 신고",
         		text : "이 게시물을 신고 하시겠습니까?",
@@ -648,7 +653,7 @@
                         closeModal: true
                     },
                     confirm: {
-                        text: "삭제",
+                        text: "신고",
                         value: true,
                         visible: true,
                         className: "btn-point",
@@ -661,7 +666,8 @@
                 		url : "/text/reportTextFeed",
                 		type : "post",
                 		data : {
-                			textFeedNo : textFeedNo
+                			textFeedNo : textFeedNo,
+                			isReport : isReport
                 		},
                 		success : function(data){
                 			if(data == -10){
@@ -670,7 +676,22 @@
                                     text: "로그인 후 이용해 주세요",
                                     icon: "info"
                                 });                				
-                			}if(data == 1){
+                			}else if(data == -100){
+                				swal({
+                                    title: "",
+                                    text: "이미 신고한 게시물 입니다 !",
+                                    icon: "info"
+                                });  
+                			}else if(data == -1000){
+                				swal({
+                                    title: "",
+                                    text: "지속적인 신고로 게시물이 삭제되었습니다 !",
+                                    icon: "info"
+                                });
+                				textFeedElement.fadeOut("slow", function() {
+                                    $(this).remove();
+                                });
+                			}else if(data == 1){
                 				swal({
                                     title: "신고 성공",
                                     text: "피드 신고가 접수되었습니다.",

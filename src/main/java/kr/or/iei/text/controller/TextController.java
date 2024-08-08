@@ -128,7 +128,7 @@ public class TextController {
     }
     
     @ResponseBody
-    @PostMapping(value="reportTextFeed")
+    @PostMapping(value="/reportTextFeed")
     public int reportTextFeed(int textFeedNo,int isReport ,@SessionAttribute(required = false) User user) {
     	if(user == null) {
     		return -10;

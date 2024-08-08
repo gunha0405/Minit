@@ -17,5 +17,5 @@ public class TextFeed {
 	private List<TextFeedComment> textFeedCommentList;
 	private int isLike;
 	private int isReport;
-	
+	private int reportCount;
 }
