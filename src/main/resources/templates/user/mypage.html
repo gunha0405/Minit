@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/css/user/userStyle.css" />
 <head>
 <meta charset="UTF-8">
-<title>MINIT 마이페이지</title>
+<title>MINIT_mypage</title>
 
 </head>
 <body>
@@ -104,7 +104,7 @@
                         <div class="mypage-btn">
                           <button type="submit" class="btn-point1">정보수정</button>
                           <button type="button" class="btn-point2 delBtn">회원탈퇴</button>
-                          <a th:if="${session.user.userLevel == 1}" href="/admin/warning" class="btn-point3">관리자 페이지로</a>
+                          <a th:if="${session.user.userLevel == 1}" href="/admin/warningMain" class="btn-point3">관리자 페이지로</a>
                         </div>
                     </form>
                 </div>

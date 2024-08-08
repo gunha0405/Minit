@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import kr.or.iei.photo.model.dto.Photo;
 import kr.or.iei.photo.model.dto.PhotoComment;
+import kr.or.iei.photo.model.dto.PhotoCommentRowMapper;
 import kr.or.iei.photo.model.dto.PhotoRowMapper;
+import kr.or.iei.text.model.dto.TextFeedComment;
 import kr.or.iei.user.model.dto.User;
 
 @Repository
@@ -17,16 +19,20 @@ public class PhotoDao {
 	private JdbcTemplate jdbc;
 	@Autowired
 	private PhotoRowMapper photoRowMapper;
+	@Autowired
+	private PhotoCommentRowMapper photoCommentRowMapper;
+	
+	
+	
 	public int insertPhoto(Photo p,User user) {
 		String query = "insert into photo_feed values(photo_feed_seq.nextval,?,?,0,to_char(sysdate,'yyyy-mm-dd'))";
 		Object[] params = {p.getPhotoFeedImg(),user.getUserId()};
 		int result = jdbc.update(query,params);
 		return result;
 	}
-	public static int insertComment(PhotoComment pc) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+
+	
+	
 	public List selectPhotoList() {
 		String query = "select * from photo_feed order by 1";
 		List list = jdbc.query(query, photoRowMapper);
@@ -67,5 +73,61 @@ public class PhotoDao {
 		Object[] params = { photoFeedNo, userNo };
 	    int count = jdbc.queryForObject(query,Integer.class ,params);
 	    return count > 0;
+	    
 	}
+	
+	public int insertComment(PhotoComment pc, User user,int photoFeedNo) {
+		String query = "insert into photo_comment_feed values(photo_comment_feed_seq.nextval,?,?,to_char(sysdate,'yyyy-mm-dd'),?)";
+		Object[] params = {user.getUserId(),pc.getPhotoFeedCommentContent(), photoFeedNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+
+	public List<PhotoComment> getCommentList(int photoFeedNo) {
+		String query = "select * from photo_comment_feed where photo_ref = ?";
+		Object[] params = {photoFeedNo};
+		List list = jdbc.query(query, photoCommentRowMapper, params);
+		return list;
+	}
+
+
+
+
+	public int updateComment(PhotoComment photoFeedCommentContent) {
+		String query = "update photo_comment_feed set photo_feed_comment_content=? where photo_feed_comment_no=?";
+		Object [] params = {photoFeedCommentContent.getPhotoFeedCommentContent(),photoFeedCommentContent.getPhotoFeedCommentNo()};
+		System.out.println(photoFeedCommentContent);
+		int result = jdbc.update(query,params);
+		return result;
+	}
+
+
+
+	public int deleteComment(PhotoComment pc) {
+		String query = "delete from photo_comment_feed where photo_feed_comment_no=?";
+		Object[]params = {pc.getPhotoFeedCommentNo()};
+		int result = jdbc.update(query,params);
+		return result;
+	}
+
+
+
+	public boolean contentsDec(int photoFeedNo, int userNo) {
+		String query = "SELECT COUNT(*) FROM photo_feed_dec WHERE photo_feed_dec_no = ? AND photo_feed_dec_writer = ?";
+		Object[] params = { photoFeedNo, userNo };
+	    int count = jdbc.queryForObject(query,Integer.class ,params);
+	    return count > 0;
+	}
+
+
+
+	public int insertDec(int photoFeedNo, int userNo) {
+		String query = "insert into photo_feed_dec values(?,?)";
+		Object[] params = {photoFeedNo, userNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+	
+	
 }

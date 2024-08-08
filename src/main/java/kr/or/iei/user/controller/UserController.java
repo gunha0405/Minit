@@ -227,4 +227,6 @@ public class UserController {
 		return "common/msg";
 	}
 	
+	
+	
 }
