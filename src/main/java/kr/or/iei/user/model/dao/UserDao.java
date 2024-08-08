@@ -125,7 +125,27 @@ public class UserDao {
 		int result = jdbc.update(query, params);
 		return result;
 	}
+	
+//	update user_tbl set user_level=3 where warning_count=3;
 
+	public int warningCount(User u) {
+		String query ="select warning_count from user_tbl where user_no=?";
+		Object[] params = {u.getUserNo()};
+		int warningCount = jdbc.queryForObject(query, Integer.class,params);
+		System.out.println(warningCount);
+		return warningCount;
+	}
+
+	public int updateLevel(User u) {
+		String query = "update user_tbl set user_level=3 where warning_count=5 and user_no=?";
+		Object[] params = {u.getUserNo()};
+		int result = jdbc.update(query,params);
+		System.out.println("처리값 :" +result);
+		return result;
+	}
+	
+	
+	
 	
 	
 	

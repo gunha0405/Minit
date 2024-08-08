@@ -44,9 +44,10 @@ public class FeedService {
 	@Transactional
 	public int insertfile(Feed f, List<FeedFile> fileList) {
 		 int result = feedDao.insertFeed(f);
+		 int feedNo = -1;
 	        if(result >0) {
 	            //1번작업으로 insert할때 생성된 번호를 조회
-	            int feedNo = feedDao.selectFeedNo();
+	            feedNo = feedDao.selectFeedNo();
 	            //3. 반복문으로 feed_file 테이블 insert
 	            for(FeedFile feedFile : fileList) {
 	                //1번작업으로 insert될때 생성된 공지사항번호를 저장한 후 feed_file insert 요청
@@ -55,10 +56,12 @@ public class FeedService {
 	                result += feedDao.insertFeedFile(feedFile);
 	            }
 	        }
-	        return result;
+	        return feedNo;
 	}
 
 	public feedListData selectUserAllFeed(int reqPage, User u) {
+		//System.out.println(u); 
+		
 		//reqPage : 사용자가 요청한 페이지 번호
         //한 페이지당 보여줄 게시물의 수(지정)   -> 8개
         int numPerPage = 8;
@@ -70,18 +73,19 @@ public class FeedService {
         int end = reqPage * numPerPage; 
         int start = end -numPerPage + 1;
         
-        String userId = u.getUserId();
-        //요청페이지에 필요한 공지사항 목록을 조회
+        //String userId = u.getUserId();
+        //요청페이지에 필요한 공지사항 목록을 조회(파일 패스랑 , 파일 번호 저장)
         List<Feed> feedList = new ArrayList<Feed>();
         
         //해당 페이지에 있는 글의 갯수 
-        int num = feedDao.searchUserFeedNum(userId);
+        //int num = feedDao.searchUserFeedNum(userId);
         
         //피드 갯수 만큼 for문 돌게 
         int feedNum = feedDao.selectFeedList(start, end, u);
         for(int i = 0; i < feedNum; i++) {
         	//리스트에 담을 번호 
         	int feedNo = feedDao.searhFeedNo(start, end, u , i+1);
+        	//리스트 번호로 파일 가져오기
         	String filefath = feedDao.feedFilepath(start, end, u, feedNo);
         	Feed f = new Feed();
         	f.setUserFeedFilepath(filefath);
@@ -116,7 +120,7 @@ public class FeedService {
         //이전버턴(1페이지로 시작하지 않으면)
         if(pageNo != 1) {
             pageNavi += "<li>";
-            pageNavi += "<a class ='page-item ' href='/feed/list?reqPage="+(pageNo-1)+"'>";
+            pageNavi += "<a class ='page-item' href='/feed/myPage?userFeedWriter="+u.getUserId()+"&reqPage="+(pageNo-1)+"'>";
             pageNavi += "<span class = 'material-icons'>chevron_left</span>";
             pageNavi += "</a></li>";
         }
@@ -124,10 +128,10 @@ public class FeedService {
         for(int i =0;i<pageNaviSize;i++) {
             pageNavi += "<li>";
             if(pageNo==reqPage) {
-                pageNavi += "<a class ='page-item active-page' href='/feed/myPage?reqPage="+pageNo+"'>";
+                pageNavi += "<a class ='page-item active-page' href='/feed/myPage?userFeedWriter="+u.getUserId()+"&reqPage="+pageNo+"'>";
                 
             }else {
-                pageNavi += "<a class ='page-item' href='/feed/list?myPage="+pageNo+"'>";
+                pageNavi += "<a class ='page-item' href='/feed/myPage?userFeedWriter="+u.getUserId()+"&reqPage="+pageNo+"'>";
                 
             }
             pageNavi += pageNo;
@@ -141,7 +145,7 @@ public class FeedService {
         //다음버튼 생성(최종 페이지를 출력하지 않았으면)
         if(pageNo <= totalPage) {
             pageNavi += "<li>";
-            pageNavi += "<a class ='page-item ' href='/feed/list?reqPage="+pageNo+"'>";
+            pageNavi += "<a class ='page-item' href='/feed/myPage?userFeedWriter="+u.getUserId()+"$reqPage="+pageNo+"'>";
             pageNavi += "<span class = 'material-icons'>chevron_right</span>";
             pageNavi += "</a></li>";
         }
@@ -176,6 +180,54 @@ public class FeedService {
 	@Transactional
 	public int deleteFeed(int userFeedNo) {
 		int result = feedDao.deleteFeed(userFeedNo);
+		return result;
+	}
+	@Transactional
+	public int updatefile(Feed f, List<FeedFile> newFileList, List fileList) {
+		int result = -1;
+		result = feedDao.updateFeed(f);
+		if(result > 0) {
+			if(newFileList.size() == fileList.size()) {
+				for(int i = 0; i < newFileList.size(); i++) {
+					//새로운 파일 
+					FeedFile feed = new FeedFile();
+					feed.setUserFeedFilepath(newFileList.get(i).getUserFeedFilepath());
+					//기존 파일
+					String path = (String)fileList.get(i);
+					result = feedDao.updateFilePathSame(feed.getUserFeedFilepath(), f.getUserFeedNo(), path);					
+				}//for문 끝
+			}else if(newFileList.size() > fileList.size()) {   // (0 1 2) 3 > (0) 1
+				int num = newFileList.size() - fileList.size();//새로 업데이트 사진이 많으면    //3 - 1 =  2
+				//기존 파일만큼 돌림
+				for(int i = 0; i < fileList.size(); i++) { // 1 번 돌림
+					//새로운 파일
+					FeedFile feed = newFileList.get(i); // 0     , (1,2) 남음
+					//기존 파일
+					String path = (String)fileList.get(i);
+					result = feedDao.updateFilePathSame(feed.getUserFeedFilepath(), f.getUserFeedNo(), path);
+				}
+				//새로운 파일 인설트
+				for(int i = 0; i < num; i++) { // num == 2
+					int j = fileList.size();  // 사이즈 1 
+					FeedFile feed = newFileList.get(j++); // 1, 2 
+					result = feedDao.updateFeedInsert(feed.getUserFeedFilepath(), f.getUserFeedNo());
+				}//for()
+			}else if( fileList.size() > newFileList.size()) {   // (0 1 2) 3 > (0) 1
+				int num = fileList.size() - newFileList.size();// 새로 업데이트 할 사진이 더 적다  
+				//적은 파일 만큼 먼저 수정
+				for(int i = 0; i < newFileList.size(); i++) { 
+					FeedFile feed = newFileList.get(i); 
+					String path = (String)fileList.get(i);
+					result = feedDao.updateFilePathSame(feed.getUserFeedFilepath(), f.getUserFeedNo(), path);
+				}
+				//기존 사진 null 로 수정
+				for(int i = 0; i < num; i++) { // num == 2
+					int j = newFileList.size();  // 사이즈 1 
+					 String path = (String)fileList.get(j++);
+					result = feedDao.updateFeedAnotherNo(path, f.getUserFeedNo());
+				}
+			}//if()
+		}
 		return result;
 	}
 

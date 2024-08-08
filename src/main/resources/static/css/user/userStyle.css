@@ -10,7 +10,15 @@
 .warn-btn{
   background-color: #75daa4;
   border: none;
-  border-radius: 10px;
+  border-radius: 15px;
+}
+
+.checked-warn-btn{
+  background-color: #75daa4;
+  border: none;
+  border-radius: 15px;
+  width: 80%;
+  height: 30px;
 }
 
 .page-title{
@@ -98,21 +106,21 @@
   width: 20%;
   height: 50px;
   border: none;
-  border-radius: 30px;
+  border-radius: 15px;
 }
 .btn-point2{
   background-color: #6fcc9a;
   width: 20%;
   height: 50px;
   border: none;
-  border-radius: 30px;
+  border-radius: 15px;
 }
 .btn-point3{
   background-color: #a4a4a4;
   width: 20%;
   height: 50px;
   border: none;
-  border-radius: 30px;
+  border-radius: 15px;
   text-align: center;
   text-decoration: none;
   line-height: 50px;
@@ -208,3 +216,24 @@
 	font-size: 13px;
 }
 
+
+
+
+/*관리페이지*/
+.link-button{
+	margin: 0 auto;
+}
+.btn-basic{
+    background-color: #75daa4;
+    width: 120px;
+    height: 40px;
+    border: none;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-block;
+	margin: 0 30px;
+}
+.btn-basic a{
+	line-height: 40px;
+	color: black;
+}

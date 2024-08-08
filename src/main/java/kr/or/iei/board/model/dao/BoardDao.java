@@ -6,30 +6,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import kr.or.iei.board.model.dto.Board;
 import kr.or.iei.board.model.dto.BoardRowMapper;
-import kr.or.iei.text.model.dto.TextFeed;
+import kr.or.iei.photo.model.dto.Photo;
+import kr.or.iei.photo.model.dto.PhotoRowMapper;
+
 
 @Repository
 public class BoardDao {
-	@Autowired
-	JdbcTemplate jdbc = new JdbcTemplate();
-	@Autowired
-	BoardRowMapper boardRowMapper = new BoardRowMapper();
-	public List AllTextFeeds() {
-		String query = "select * from text_feed";
+    @Autowired
+    private JdbcTemplate jdbc;
+    @Autowired
+    private BoardRowMapper boardRowMapper;
+
+	public List<Photo> PhotoList() {
+		String query = "select * from photo_feed";
 		List list = jdbc.query(query, boardRowMapper);
 		return list;
 	}
-	/*
-	public List allTextfeed() {
-		String query = "select * from text_feed";
-		List list = jdbc.query(query, boardRowMapper);
-		return list;
+
+    public List<Board> getAllBoards() {
+        String query = "select*from photo_feed order by reg_date desc"; // 전체 게시판 데이터 조회
+        return jdbc.query(query, boardRowMapper);
+    }
+
+	public List<Board> getbestFeedBoards() {
+		String query = "select * from photo_feed ";
+		return null;
 	}
-	*/
-	
+
+    
+    
+
 
 }
+
 
 
 

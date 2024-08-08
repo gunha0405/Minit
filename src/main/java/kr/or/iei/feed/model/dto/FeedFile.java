@@ -14,4 +14,5 @@ public class FeedFile {
 	private int userFeedNo; //유저 넘버
 	private String userFeedFilepath;
 	private List<FeedFile> fils;
+
 }
