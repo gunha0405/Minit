@@ -163,7 +163,7 @@ public class FeedDao {
 	}
 
 	public int updateFeed(Feed f) {
-		String query = "update from user_feed_tbl set user_feed_content=? where user_feed_writer=?";
+		String query = "update user_feed_tbl set user_feed_content=? where user_feed_writer=?";
 		Object[] params = {f.getUserFeedContent(),f.getUserFeedWriter()};
 		int result = jdbc.update(query, params);
 		return result;

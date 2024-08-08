@@ -226,8 +226,8 @@ public class FeedService {
 					 String path = (String)fileList.get(j++);
 					result = feedDao.updateFeedAnotherNo(path, f.getUserFeedNo());
 				}
-			}//if()
-		}
+			}//else if()
+		}//if()
 		return result;
 	}
 

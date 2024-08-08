@@ -166,9 +166,11 @@ public class FeedController {
 
 	@PostMapping(value = "/feedUpdate")
 	public String feedUpdate(Feed f, MultipartFile upfile1, MultipartFile upfile2, MultipartFile upfile3, Model model) {
-		List<MultipartFile> files = Arrays.asList(upfile1, upfile2, upfile3);
-		boolean allFilesEmpty = files.stream().allMatch(file -> file == null || file.isEmpty());
+		System.out.println(upfile1);
+		System.out.println(upfile2);
+		System.out.println(upfile3);
 
+		//System.out.println(f);
 		if (f.getUserFeedContent().equals("")) {
 			model.addAttribute("title", "게시글을 작성해주세요");
 			model.addAttribute("msg", "게시글과 사진을 함께 작성해주세요");
@@ -176,13 +178,14 @@ public class FeedController {
 			model.addAttribute("loc", "/feed/view?userFeedNo="+f.getUserFeedNo());
 			
 			return "common/msg";
-		} else if (allFilesEmpty) {
+		} else if (upfile1 ==null && upfile2 == null && upfile3 == null) {
 			model.addAttribute("title", "사진첨부 필요");
 			model.addAttribute("msg", "사진을 첨부해야 서비스 이용이 가능합니다.");
 			model.addAttribute("icon", "warning");
 			model.addAttribute("loc", "/feed/view?userFeedNo="+f.getUserFeedNo());
 			return "common/msg";
 		} else {
+			MultipartFile[] files = {upfile1, upfile2, upfile3};
 			String savepath = root + "/feed/";
 			List<FeedFile> newFileList = new ArrayList<FeedFile>();//새로운 파일 경로 저장 
 			for (MultipartFile file : files) {
@@ -195,6 +198,7 @@ public class FeedController {
 				}
 			}//for()
 			// fileList 첨부파일갯수
+			
 			List fileList = Arrays.asList(f.getFile1(),f.getFile2(),f.getFile3());
 			int result = feedService.updatefile(f, newFileList, fileList);
 			if (result > 0) {
