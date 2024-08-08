@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import kr.or.iei.photo.model.dto.Photo;
 import kr.or.iei.photo.model.dto.PhotoComment;
 import kr.or.iei.photo.model.dto.PhotoRowMapper;
+import kr.or.iei.user.model.dto.User;
 
 @Repository
 public class PhotoDao {
@@ -16,9 +17,9 @@ public class PhotoDao {
 	private JdbcTemplate jdbc;
 	@Autowired
 	private PhotoRowMapper photoRowMapper;
-	public int insertPhoto(Photo p) {
+	public int insertPhoto(Photo p,User user) {
 		String query = "insert into photo_feed values(photo_feed_seq.nextval,?,?,0,to_char(sysdate,'yyyy-mm-dd'))";
-		Object[] params = {p.getPhotoFeedImg(),p.getPhotoFeedWriter()};
+		Object[] params = {p.getPhotoFeedImg(),user.getUserId()};
 		int result = jdbc.update(query,params);
 		return result;
 	}
@@ -43,4 +44,28 @@ public class PhotoDao {
         int result = jdbc.update(query, params);
         return result;
     }
+	public int insertPhotoLike(int photoFeedNo, int userNo) {
+		String query = "insert into photo_feed_like values(?,?)";
+		Object[] params = {photoFeedNo, userNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+	public int deletePhotoLike(int photoFeedNo, int userNo) {
+		String query = "delete from photo_feed_like where photo_feed_like_no=? and photo_feed_like_writer=?";
+		Object[] params = {photoFeedNo, userNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+	public int selectPhotoLike(int photoFeedNo,int userNo) {
+		String query = "SELECT COUNT(*) FROM photo_feed_like WHERE photo_feed_like_no = ? AND photo_feed_like_writer = ?";
+		Object[] params = {photoFeedNo, userNo};
+        int isLike = jdbc.queryForObject(query,Integer.class ,params);
+        return isLike;
+	}
+	public boolean isLikecheck(int photoFeedNo, int userNo) {
+		String query = "SELECT COUNT(*) FROM photo_feed_like WHERE photo_feed_like_no = ? AND photo_feed_like_writer = ?";
+		Object[] params = { photoFeedNo, userNo };
+	    int count = jdbc.queryForObject(query,Integer.class ,params);
+	    return count > 0;
+	}
 }

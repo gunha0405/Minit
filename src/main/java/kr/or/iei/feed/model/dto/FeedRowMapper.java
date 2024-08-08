@@ -14,10 +14,10 @@ public class FeedRowMapper implements RowMapper<Feed>{
 		Feed feed = new Feed();
 		feed.setUserFeedNo(rs.getInt("user_feed_no"));
 		feed.setUserFeedWriter(rs.getString("user_feed_writer"));
-		feed.setUserFeedContnet(rs.getString("user_feed_content"));
+		feed.setUserFeedContent(rs.getString("user_feed_content"));
 		feed.setUserFeedDate(rs.getString("user_feed_date"));
 		feed.setUserFeedCount(rs.getInt("user_feed_count"));
-		feed.setUserFeedFilepath(rs.getNString("user_feed_filepath"));
+		//feed.setUserFeedFilepath(rs.getNString("user_feed_filepath"));
 		return feed;
 	}
 
