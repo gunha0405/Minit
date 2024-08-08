@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Minit 프로젝트</title>
-<link rel="stylesheet" href="/css/user/style.css">
+<link rel="stylesheet" href="/css/style.css">
 <style>
 
 </style>
@@ -68,8 +68,8 @@
       <!--메인 컨텐츠 시작 -->
       <div class="sub1-contents">
         <a href ="http://192.168.10.40" id="board">전체게시판</a>
-        <a href="#">인기게시판</a>
-        <a href="#">친구게시판</a>
+        <a href="http://192.168.10.40">인기게시판</a>
+        <a href="http://192.168.10.40">친구게시판</a>
       </div>
     <section>
         <div class="contents">
@@ -78,106 +78,19 @@
             <div class="main-contents-box" id="postContainer">
               <article class="post">
                 <div class="post-header">     
-                  <p class="post-meta">작성자 User1 · 10분 전</p>
+                  <p class="post-meta"></p>
                 </div>
                 <img src="" alt="게시글 이미지" class="post-image">
-                <p class="post-content">내용입니다.</p>
+                <p class="post-content"></p>
                 <div class="post-footer">
-                  <span class="post-comment">댓글</span>
-                  <span class="post-stat">조회수</span>
+                  <span class="post-comment"></span>
+                  <span class="post-stat"></span>
                 </div>
               </article>
-              
-               <article class="post">
-                <div class="post-header">             
-                  <p class="post-meta">작성자 User1 · 10분 전</p>
-                </div>
-                <img src="" alt="게시글 이미지" class="post-image">
-                <p class="post-content">내용입니다.</p>
-                <div class="post-footer">
-                  <span class="post-comment">댓글</span>
-                  <span class="post-stat">조회수</span>
-                </div>
-              </article>
-              <article class="post">
-                <div class="post-header">
-                  
-                  <p class="post-meta">작성자 User1 · 10분 전</p>
-                </div>
-                <img src="" alt="게시글 이미지" class="post-image">
-                <p class="post-content">내용입니다.</p>
-                <div class="post-footer">
-                  <span class="post-comment">댓글</span>
-                  <span class="post-stat">조회수</span>
-                </div>
-              </article>
-              <article class="post">
-                <div class="post-header">
-                  
-                  <p class="post-meta">작성자 user1 · 10분 </p>
-                </div>
-                <img src="" alt="게시글 이미지" class="post-image">
-                <p class="post-content">내용입니다.</p>
-                <div class="post-footer">
-                  <span class="post-comment">댓글</span>
-                  <span class="post-stat">조회수</span>
-                </div>
-              </article>
+              </div>
+             </div>
             </div>
-          </div> 
-          <div class="main-contents2">
-            <div class="main-contents-box2 " id="postContainer">
-              <article class="post">
-                <div class="post-header">
-                  
-                  <p class="post-meta">작성자 user1 10분 전 </p>
-                </div>
-                <img src="" alt="게시글 이미지" class="post-image">
-                <p class="post-content">게시글내용</p>
-                <div class="post-footer">
-                  <span class="post-comment">댓글</span>
-                  <span class="post-stat">조회수</span>
-                </div>
-              </article>
-              <article class="post">
-                <div class="post-header">
-                  <p class="post-meta">작성자 user1 10분 전</p>
-                </div>
-                <img src="" alt="게시글 이미지" class="post-image">
-                <p class="post-content">내용</p>
-                <div class="post-footer">
-                  <span class="post-comment">댓글</span>
-                  <span class="post-stat">조회수</span>
-                </div>
-              </article>
-              <article class="post">
-                <div class="post-header">
-                  
-                  <p class="post-meta">작성자 user1 10분 전</p>
-                </div>
-                <img src="" alt="게시글 이미지" class="post-image">
-                <p class="post-content">내용입니다</p>
-                <div class="post-footer">
-                  <span class="post-comment">댓글</span>
-                  <span class="post-stat">조회수</span>
-                </div>
-              </article>
-              <article class="post">
-                <div class="post-header">  
-                  <p class="post-meta">작성자 user1 · 10분 전</p>
-                </div>
-                <img src="" alt="게시글 이미지" class="post-image">
-                <p class="post-content">내용입니다</p>
-                <div class="post-footer">
-                  <span class="post-comment">댓글</span>
-                  <span class="post-stat">조회수</span>
-                </div>
-              </article>
-            </div>
-          </div>
-        </div>
         
-        <button id="loadPosts">Load Posts</button>
       </section>
       <div class="sub2-contents">
         <a href="#">이자리는 광고가 들어올예정입니다.</a>
@@ -216,43 +129,54 @@
 	
 	<th:block th:include="common/footer"></th:block>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
  
-  
+
+ <script th:inline="javascript">
+ $(document).ready(function() {
+	    $.ajax({
+	        url: '/index', // 실제 API 엔드포인트
+	        method: 'GET',
+	        dataType: 'json',
+	        success: function(data) {
+	            $('#postContainer').empty(); // 기존 콘텐츠를 비움
+
+	            // for 루프를 사용하여 데이터 처리
+	            for (let i = 0; i < data.length; i++) {
+	                const b = data[i]; // 현재 게시물 데이터
+
+	                // 데이터와 HTML 요소 확인
+	                console.log('이미지파일', b);
+
+	                // HTML 문자열 생성
+	                let postHtml = `
+					    <article class="post">
+					        <div class="post-header">
+					            <p class="post-meta">${b.photoFeedWriter} ${b.regDate}</p>
+					        </div>
+					        <div class="post-image-container">
+					            <img src="/photo/${b.photoFeedImg}" alt="이미지" class="post-image">
+					        </div>
+					        <div class="post-footer">
+					            <span class="post-comment">조회수 ${b.readCount}</span>
+					        </div>
+					    </article>
+					`;
+
+	                // 생성한 HTML을 DOM에 추가
+	                $('#postContainer').append(postHtml);
+	            }
+	        },
+	        error: function(xhr, status, error) {
+	            console.error('AJAX 요청 오류:', status, error);
+	        }
+	    });
+	});
  
  
- <script>
-    $(document).ready(function() {
-        $('#loadPosts').ready(function() {
-            $.ajax({
-                url: '/api/boards', // 수정된 API 엔드포인트
-                method: 'Get',
-                dataType: 'json',
-                success: function(data) {
-                    $('#postContainer').empty(); // 기존 콘텐츠를 비움
-                    data.forEach(function(b) {
-                        console.log('Processing item:', b);
-                        var postHtml = `
-                            <article class="post">
-                                <div class="post-header">
-                                    <p class="post-meta">${b.photoFeedWriter} ${b.regDate}</p>
-                                </div>
-                                <img src= "" alt="이미지" class="post-image">
-                                <div class="post-footer">
-                                    <span class="post-comment">${b.readCount} 조회수</span>                                        
-                                </div>
-                            </article>
-                        `;
-                        $('#postContainer').append(postHtml);
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.error('AJAX 요청 오류:', status, error);
-                }
-            });
-        });
-    });
 
     </script>
+ 
   
     </body>
 </html>

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import kr.or.iei.board.model.dao.BoardDao;
 import kr.or.iei.board.model.dto.Board;
+import kr.or.iei.photo.model.dto.Photo;
 import kr.or.iei.text.model.dto.TextFeed;
 
 @Service
@@ -15,10 +16,27 @@ public class BoardService {
     @Autowired
     private BoardDao boardDao;
 
-    public List<Board> getAllBoards() {
-        return boardDao.getAllBoards();
-    }
+	public List<Board> getAllBoards() {
+		return boardDao.getAllBoards();
+	}
+
+	public List<Board> getbestFeedBoards() {
+	
+		return boardDao.getbestFeedBoards();
+	}
+
+
+
 }
+
+    
+    
+    
+
+
+
+
+
 
 
 
