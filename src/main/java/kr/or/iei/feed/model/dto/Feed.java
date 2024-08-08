@@ -19,4 +19,7 @@ public class Feed {
 	private User user;
 	private List<FeedFile> feedList;
 	private String userFeedFilepath;
+	private String file1;
+	private String file2;
+	private String file3;
 }
