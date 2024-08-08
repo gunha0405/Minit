@@ -55,9 +55,9 @@ public class FeedDao {
 		return user;
 	}
 
-	public User searchUser(String userFeedNo) {
+	public User searchUser(String userId) {
 		String query = "select * from user_tbl where user_id = ?";
-		Object[] params = {userFeedNo};
+		Object[] params = {userId};
 		List list = jdbc.query(query, userRowMapper, params);
 		return (User)list.get(0);
 	}
@@ -118,7 +118,7 @@ public class FeedDao {
 				"(select rownum as rnum, \r\n" + 
 				"n.*from(select user_feed_no from (select rownum as rnum, \r\n" + 
 				"n.*from(select user_feed_no from user_feed_tbl join user_feed_file using(user_feed_no) \r\n" + 
-				"where USER_FEED_WRITER = ? group by user_feed_no order by 1)n)\r\n" + 
+				"where USER_FEED_WRITER = ? and user_feed_filepath is not null group by user_feed_no order by 1)n)\r\n" + 
 				"where rnum between ? and ?)n) where rnum=?";
 		Object[] params = {u.getUserId(),start,end, i};
 		int feedNo = jdbc.queryForObject(query, Integer.class, params);
@@ -126,7 +126,7 @@ public class FeedDao {
 	}
 
 	public String feedFilepath(int start, int end, User u, int feedNo) {
-		String query = "select user_feed_filepath from (select rownum as rnum, n.*from(select * from user_feed_tbl join user_feed_file using(user_feed_no) where user_feed_no=?)n) where rownum=1";
+		String query = "select user_feed_filepath from (select rownum as rnum, n.*from(select * from user_feed_tbl join user_feed_file using(user_feed_no) where user_feed_no=? and user_feed_filepath is not null)n) where rownum=1";
 		Object[] params = {feedNo};
 		String file = jdbc.queryForObject(query, String.class, params);
 		return file;
@@ -150,7 +150,7 @@ public class FeedDao {
 		String query = "select user_feed_filepath from (select rownum rnum, n.*from(select user_feed_filepath from user_feed_file where user_feed_no = ? )n) where rnum = ?";
 		Object[] params = {userFeedNo,i+1};
 		String file = jdbc.queryForObject(query, String.class, params);
-		String fath = root +"/photo/";
+		String fath = "/feed/";
 		String filefath = fath+file;
 		return filefath;
 	}
@@ -161,5 +161,37 @@ public class FeedDao {
 		int result = jdbc.update(query, params);
 		return result;
 	}
+
+	public int updateFeed(Feed f) {
+		String query = "update from user_feed_tbl set user_feed_content=? where user_feed_writer=?";
+		Object[] params = {f.getUserFeedContent(),f.getUserFeedWriter()};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+
+	public int updateFilePathSame(String userFeedFilepath, int userFeedNo, String path) {
+		String query = "update user_feed_file set USER_FEED_FILEPATH = ? where user_feed_no =? and user_feed_filepath=?";
+		Object[] params = {userFeedFilepath, userFeedNo,path};
+		int result = jdbc.update(query, params);
+		return result;
+		
+	}
+
+
+	public int updateFeedInsert(String userFeedFilepath, int userFeedNo) {
+		String query = "insert into user_feed_file values(user_feed_file_seq.nextval,?,?)";
+		Object[] params = {userFeedNo, userFeedFilepath};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+	public int updateFeedAnotherNo(String path, int userFeedNo) {
+		String query ="update user_feed_file set user_feed_filepath=null where user_feed_no=? and user_feed_filepath =?";
+		Object[] params = {userFeedNo, path};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
 
 }
