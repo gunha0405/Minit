@@ -35,6 +35,7 @@ $(document).ready(function () {
     $("#modalImage").attr("photoFeedNo",imgSrc);
     $("#modalImage").attr("src", imgSrc);
     $("#imageModal").modal("show");
+    loadImages();
   });
 
   // fa-comment 클릭 이벤트
@@ -47,29 +48,10 @@ $(document).ready(function () {
     $("#updateModal").modal("show");
   });
 
-  // 댓글 추가 버튼 클릭 이벤트
-  $("#addCommentBtn").click(function () {
-    const comment = $("#commentInput").val();
-    const commenterImage = "path/to/default-avatar.jpg"; // 기본 아바타 이미지 경로
-    const commenterName = "작성자 이름"; // 작성자 이름
-    if (comment) {
-      const commentHtml = `
-        <div class="comment">
-          <img src="${commenterImage}" alt="Avatar" class="comment-avatar">
-          <div class="comment-content">
-            <p class="commenter-name">${commenterName}</p>
-            <p class="comment-text">${comment}</p>
-          </div>
-          <div class="comment-actions">
-            <span class="edit-comment">수정</span>
-            <span class="delete-comment">삭제</span>
-          </div>
-        </div>
-      `;
-      $(".comments-list").append(commentHtml);
-      $("#commentInput").val(""); // 입력 필드 초기화
-    }
-  });
+
+
+
+
 
   // 댓글 수정 버튼 클릭 이벤트
   $(document).on("click", ".edit-comment", function () {
@@ -80,6 +62,7 @@ $(document).ready(function () {
       commentText.text(newText);
     }
   });
+
 
   // 댓글 삭제 버튼 클릭 이벤트
   $(document).on("click", ".delete-comment", function () {
