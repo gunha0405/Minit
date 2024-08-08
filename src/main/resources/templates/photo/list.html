@@ -282,6 +282,26 @@
 	            $('.comment-section').toggle();
 	            loadComments(photoFeedNo);
 	          });
+
+	          // 신고 아이콘 클릭 이벤트 추가
+	          $('.fa-exclamation').off('click').on('click', function() {
+	            Swal.fire({
+	              title: "신고하시겠습니까?",
+	              text: "이 이미지를 신고하시겠습니까?",
+	              icon: "warning",
+	              showCancelButton: true,
+	              confirmButtonColor: "#3085d6",
+	              cancelButtonColor: "#d33",
+	              confirmButtonText: "신고",
+	              cancelButtonText: "취소"
+	            }).then((result) => {
+	              if (result.isConfirmed) {
+	                // 신고 여부 값 설정 (예시: 1)
+	                const isDec = 1; // 또는 필요한 값으로 설정
+	                reportImage(photoFeedNo, isDec);
+	              }
+	            });
+	          });
 	        });
 	      },
 	      error: function(xhr, status, error) {
@@ -289,6 +309,41 @@
 	        Swal.fire({
 	          title: "로드 실패",
 	          text: "이미지를 로드하는 중 오류가 발생했습니다.",
+	          icon: "error"
+	        });
+	      }
+	    });
+	  }
+
+	  function reportImage(photoFeedNo, isDec) {
+	    console.log(photoFeedNo);
+	    $.ajax({
+	      url: "/photo/report",
+	      type: "post",
+	      data: { 
+	        photoFeedNo: photoFeedNo,
+	        isDec: isDec
+	      },
+	      success: function(data) {
+	        if (data) {
+	          Swal.fire({
+	            title: "신고 성공",
+	            text: "이미지가 성공적으로 신고되었습니다.",
+	            icon: "success"
+	          });
+	        } else {
+	          Swal.fire({
+	            title: "신고 실패",
+	            text: "이미지 신고에 실패했습니다. 다시 시도해주세요.",
+	            icon: "error"
+	          });
+	        }
+	      },
+	      error: function(xhr, status, error) {
+	        console.log("신고 오류: " + error);
+	        Swal.fire({
+	          title: "서버 전송 실패",
+	          text: "서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.",
 	          icon: "error"
 	        });
 	      }
@@ -447,7 +502,7 @@
 	            // 삭제 버튼 클릭 이벤트 핸들러 추가
 	            commentActions.find(".delete-comment").on("click", function() {
 	              const photoFeedCommentNo = commentItem.data("commentId");
-	              console.log(photoFeedCommentNo)
+	              console.log(photoFeedCommentNo);
 	              Swal.fire({
 	                title: "댓글 삭제",
 	                text: "댓글을 삭제하시겠습니까?",
@@ -510,6 +565,7 @@
 	  // 페이지 로드 시 모든 데이터 로드
 	  loadImages();
 	});
+
 	</script>
 	<th:block th:include="common/footer"></th:block>
 	</body>

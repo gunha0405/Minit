@@ -68,7 +68,16 @@ public class PhotoService {
 	}
 	public int deleteComment(PhotoComment pc) {
 		int result = photoDao.deleteComment(pc);
-		System.out.println(pc);
+		return result;
+	}
+	public int contentsDec(int photoFeedNo, int isDec, int userNo) {
+		int result = 0;
+		System.out.println(isDec);
+		if(isDec == 1) {
+				//result = photoDao.contentsDec(photoFeedNo,userNo);
+				result = photoDao.insertDec(photoFeedNo,userNo);
+			
+		}
 		return result;
 	}
 	

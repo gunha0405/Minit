@@ -158,5 +158,15 @@ public class PhotoController {
     	model.addAttribute("loc","/photo/list");
     	return "common/msg";
     }
-
+    @ResponseBody
+    @PostMapping(value="/report")
+    public int contentsDec(int photoFeedNo, int isDec, @SessionAttribute(required = false) User user) {
+    	if (user == null) {
+            return -10;
+        } else {
+            int userNo = user.getUserNo();
+            int result = photoService.contentsDec(photoFeedNo, isDec, userNo);
+            return result;
+        }
+    }
 }

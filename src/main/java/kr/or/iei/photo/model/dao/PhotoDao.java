@@ -110,7 +110,24 @@ public class PhotoDao {
 		int result = jdbc.update(query,params);
 		return result;
 	}
-	
+
+
+
+	public boolean contentsDec(int photoFeedNo, int userNo) {
+		String query = "SELECT COUNT(*) FROM photo_feed_dec WHERE photo_feed_dec_no = ? AND photo_feed_dec_writer = ?";
+		Object[] params = { photoFeedNo, userNo };
+	    int count = jdbc.queryForObject(query,Integer.class ,params);
+	    return count > 0;
+	}
+
+
+
+	public int insertDec(int photoFeedNo, int userNo) {
+		String query = "insert into photo_feed_dec values(?,?)";
+		Object[] params = {photoFeedNo, userNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
 	
 	
 }
