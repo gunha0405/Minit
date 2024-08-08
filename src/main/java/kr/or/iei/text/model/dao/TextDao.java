@@ -24,13 +24,13 @@ public class TextDao {
 	private TextFeedCommentRowMapper textFeedCommentRowMapper;
 
 	public List selectTextFeed() {
-		String query = "select * from text_feed order by 1 desc";
+		String query = "select * from text_feed where text_feed_status = 0 order by 1 desc";
 		List textFeedList = jdbc.query(query, textFeedRowMapper);
 		return textFeedList;
 	}
 
 	public int textFeedWrite(String textFeedContent, User user) {
-		String query = "insert into text_feed values(text_feed_seq.nextval,?,to_char(sysdate,'yyyy-mm-dd'),?)";
+		String query = "insert into text_feed values(text_feed_seq.nextval,?,to_char(sysdate,'yyyy-mm-dd'),?,0)";
 		Object[] params = {textFeedContent, user.getUserId()};
 		int result = jdbc.update(query, params);
 		return result;
@@ -122,17 +122,85 @@ public class TextDao {
 		return result;
 	}
 	
-	public boolean isLikeExists(int textFeedNo, int userNo) {
-	    String query = "SELECT COUNT(*) FROM text_feed_like WHERE text_feed_no = ? AND user_no = ?";
+	public boolean isLikeFeedExists(int textFeedNo, int userNo) {
+	    String query = "select count(*) from text_feed_like where text_feed_no = ? and user_no = ?";
 	    Object[] params = { textFeedNo, userNo };
 	    int count = jdbc.queryForObject(query,Integer.class ,params);
 	    return count > 0;
 	}
 	
-	 public int selectTextFeedLikeStatus(int textFeedNo, int userNo) {
-	        String query = "SELECT COUNT(*) FROM text_feed_like WHERE text_feed_no = ? AND user_no = ?";
-	        Object[] params = {textFeedNo, userNo};
-	        int isLike = jdbc.queryForObject(query,Integer.class ,params);
-	        return isLike;
-	    }
+	public int selectTextFeedLikeStatus(int textFeedNo, int userNo) {
+	    String query = "select count(*) from text_feed_like where text_feed_no = ? and user_no = ?";
+	    Object[] params = {textFeedNo, userNo};
+	    int isLike = jdbc.queryForObject(query,Integer.class ,params);
+	    return isLike;
+	}
+	
+	public int insertTextFeedCommentLike(int textFeedCommentNo, int userNo) {
+		String query = "insert into text_feed_comment_like values(?,?)";
+		Object[] params = {textFeedCommentNo, userNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+	
+	public int deleteTextFeedCommentLike(int textFeedCommentNo, int userNo) {
+		String query = "delete from text_feed_comment_like where text_feed_comment_no = ? and user_no = ?";
+		Object[] params = {textFeedCommentNo, userNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+	public boolean isLikeCommentExists(int textFeedCommentNo, int userNo) {
+		String query = "select count(*) from text_feed_comment_like where text_feed_comment_no = ? and user_no = ?";
+		Object[] params = {textFeedCommentNo, userNo};
+		int count = jdbc.queryForObject(query, Integer.class, params);
+		return count>0;
+	}
+
+	public int selectTextFeedCommentLikeStatus(int textFeedCommentNo, int userNo) {
+		String query = "select count(*) from text_feed_comment_like where text_feed_comment_no = ? and user_no = ?";
+	    Object[] params = {textFeedCommentNo, userNo};
+	    int isLike = jdbc.queryForObject(query,Integer.class ,params);
+	    return isLike;
+	}
+	
+	public boolean isReportFeedExists(int textFeedNo, int userNo) {
+		String query = "select count(*) from text_feed_report where text_feed_no = ? and user_no = ?";
+		Object[] params = {textFeedNo, userNo};
+		int count = jdbc.queryForObject(query,Integer.class, params);
+		return count>0;
+	}
+	
+	public int insertTextFeedReport(int textFeedNo, int userNo) {
+		String query = "insert into text_feed_report values(?,?)";
+		Object[] params = {textFeedNo, userNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+	public int selectTextFeedReportStatus(int textFeedNo, int userNo) {
+		String query = "select count(*) from text_feed_report where text_feed_no = ? and user_no = ?";
+		Object[] params = {textFeedNo, userNo};
+		int isReport = jdbc.queryForObject(query, Integer.class, params);
+		return isReport;
+	}
+
+	public int selectTextFeedReportCount(int textFeedNo) {
+		String query = "select count(*) from text_feed_report where text_feed_no = ?";
+		Object[] params = {textFeedNo};
+		int reportCount = jdbc.queryForObject(query, Integer.class, params);
+		return reportCount;
+	}
+
+	
+
+	public int hideTextFeed(int textFeedNo) {
+		String query = "update text_feed set text_feed_status = 1 where text_feed_no = ?";
+		Object[] params = {textFeedNo};
+		int hideTextFeedResult = jdbc.update(query, params);
+		return hideTextFeedResult;
+	}
+	
+
+	
 }

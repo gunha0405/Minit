@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <link rel="stylesheet" href="/css/user/userStyle.css" />
-<link rel="stylesheet" href="/css/style.css" />
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>MINIT_findAccount</title>
 </head>
 <body>
 	<th:block th:include="common/header"></th:block>
@@ -13,7 +12,7 @@
         <div class="findaccount-main">
           <div class="logo">
             <div class="logo-img">
-              <img src="/image/minit_logo_2.png">
+              <img src="/image/logo/minit_logo_2.png">
             </div>
           </div>
           <div class="main">
@@ -46,20 +45,6 @@
                 data-bs-target="#findpwModal"
                 >PW 찾기</a>
             </div>
-            <!--
-            <button class="find find-id">
-              <span>ID 찾기</span>
-            </button>
-            <button class="find find-pw">
-              <span>PW 찾기</span>
-            </button>
-            -->
-
-
-
-
-
-
 
 
             <!--Id 찾기모달창-->
@@ -75,45 +60,39 @@
                 
                 <div class="modal-header">
                   <div class="modal-title" id="findidModalLabel">
-                    <img src="/image/minit_logo.png">
+                    <img src="/image/logo/minit_logo.png">
                   </div>
                   <span>ID 찾기</span>
                   
                 </div>
     
                 <div class="modal-body">
-                  <form>
+                  <form action="/user/searchId" method="post" autocomplete="off">
                     <div class="mb-3">
-                      <label for="name" class="form-label">성명</label>
+                      <label for="userName" class="form-label">성명</label>
                       <input
                         type="text"
                         class="form-control"
-                        id="name"
-                        placeholder="가입한 성명을 입력하세요!"
+                        name="userName"
+                        id="userName"
+                        placeholder="가입할 때 입력한 성명을 입력하세요!"
                       />
                     </div>
                     <div class="mb-3">
-                      <label for="email" class="form-label">이메일</label>
+                      <label for="userEmail" class="form-label">이메일</label>
                       <input
                         type="text"
                         class="form-control"
-                        id="email"
-                        placeholder="가입할 때 사용한 이메일을 입력하세요!"
+                        name="userEmail"
+                        id="userEmail"
+                        placeholder="가입할 때 입력한 이메일을 입력하세요!"
                       />
                     </div>
-                  </form>
                 </div>
-    
                 <div class="modal-footer">
                   <!--<button type="button" class="btn btn-primary">PW찾기</button>-->
-                  <button type="button" class="btn btn-outline-success">
-                    <a
-                    class="nav-link"
-                    aria-current="page"
-                    href="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#findidpwModal"
-                    >ID 찾기</a>
+                  <button type="submit" class="btn btn-outline-success">
+                    ID찾기
                   </button>
                   <button
                     type="button"
@@ -121,83 +100,13 @@
                     data-bs-dismiss="modal"
                   >닫기
                   </button>
-
                 </div>
-    
+    		   </form>
               </div>
             </div>
           </div>
 
-
-          <!--id에서 넘어가는 pw 찾기모달창-->
-          <div
-          class="modal fade"
-          id="findidpwModal"
-          tabindex="-1"
-          aria-labelledby="findidpwModalLabel"
-          aria-hidden="true"
-          >
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              
-              <div class="modal-header">
-                <div class="modal-title" id="findidpwModalLabel">
-                  <img src="/image/minit_logo.png">
-                </div>
-                <span>PW 찾기</span>
-                
-              </div>
-  
-              <div class="modal-body">
-                <form>
-                  <div class="mb-3">
-                    <label for="id" class="form-label">찾은 아이디</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="id"
-                      placeholder="앞서 찾은 아이디 나올 예정"
-                      readonly
-                    />
-                  </div>
-                  <div class="mb-3">
-                    <label for="email" class="form-label">이메일</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="email"
-                      placeholder="가입할 때 사용한 이메일을 입력하세요!"
-                    />
-                  </div>
-                </form>
-              </div>
-  
-              <div class="modal-footer">
-                <button type="button" class="btn btn-outline-success">
-                  <a
-                    class="nav-link"
-                    aria-current="page"
-                    href="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#findrepwModal"
-                    >PW 찾기</a>
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-success"
-                  data-bs-dismiss="modal"
-                > 닫기
-                </button>
-
-              </div>
-  
-            </div>
-          </div>
-        </div>
-
-
-
-          <!--pw 찾기모달창-->
+        <!--pw 찾기모달창-->
           <div
           class="modal fade"
           id="findpwModal"
@@ -210,29 +119,29 @@
               
               <div class="modal-header">
                 <div class="modal-title" id="findpwModalLabel">
-                  <img src="/image/minit_logo.png">
+                  <img src="/image/logo/minit_logo.png">
                 </div>
                 <span>PW 찾기</span>
                 
               </div>
   
               <div class="modal-body">
-                <form>
+                <form name="findPwForm" action="/user/searchPw" method="post" autocomplete="off">
                   <div class="mb-3">
-                    <label for="id" class="form-label">아이디</label>
+                    <label for="findUserId" class="form-label">아이디</label>
                     <input
                       type="text"
                       class="form-control"
-                      id="id"
+                      id="findUserId"
                       placeholder="가입한 아이디를 입력하세요!"
                     />
                   </div>
                   <div class="mb-3">
-                    <label for="email" class="form-label">이메일</label>
+                    <label for="findUserEmail" class="form-label">이메일</label>
                     <input
                       type="text"
                       class="form-control"
-                      id="email"
+                      id="findUserEmail"
                       placeholder="가입할 때 사용한 이메일을 입력하세요!"
                     />
                   </div>
@@ -240,24 +149,27 @@
               </div>
   
               <div class="modal-footer">
-                <button type="button" class="btn btn-outline-success">
-                  <a
+                  <button
+                  	style="display:none;"
+                  	id="rePwAtag"
                     class="nav-link"
                     aria-current="page"
-                    href="#"
                     data-bs-toggle="modal"
                     data-bs-target="#findrepwModal"
-                    >PW 찾기</a>
+                    ></button>
+                <button type="button" class="btn btn-outline-success" id="findPw">
+                  PW 찾기
                 </button>
                 <button
                   type="button"
+                  
                   class="btn btn-outline-success"
                   data-bs-dismiss="modal"
                 >닫기
                 </button>
 
               </div>
-  
+  			 
             </div>
           </div>
         </div>
@@ -276,44 +188,42 @@
             
             <div class="modal-header">
               <div class="modal-title" id="findrepwModalLabel">
-                <img src="/image/minit_logo.png">
+                <img src="/image/logo/minit_logo.png">
               </div>
               <span>PW 재설정</span>
               
             </div>
-
+			
             <div class="modal-body">
-              <form>
+              <form action="/user/updatePw" method="post" autocomplete="off">
                 <div class="mb-3">
-                  <label for="password" class="form-label">비밀번호</label>
+                 <input type="text" name="userId">
+                  <label for="updateUserPw" class="form-label">비밀번호</label>
                   <input
                     type="password"
                     class="form-control"
-                    id="password"
+                    name="userPw"
+                    id="updateUserPw"
                     placeholder="사용할 비밀번호를 입력하세요!"
                   />
+                  <p class="input-msg update-pw-check-msg none"></p>
                 </div>
                 <div class="mb-3">
-                  <label for="password" class="form-label">비밀번호 확인</label>
+                  <label for="updateUserRePw" class="form-label">비밀번호 확인</label>
                   <input
                     type="password"
                     class="form-control"
-                    id="password"
+                    name="userRePw"
+                    id="updateUserRePw"
                     placeholder="사용할 비밀번호를 한 번 더 입력하세요!"
                   />
+                  <p class="input-msg update-repw-check-msg none"></p>
                 </div>
-              </form>
             </div>
 
             <div class="modal-footer">
-              <button type="button" class="btn btn-outline-success">
-                <a
-                class="nav-link"
-                aria-current="page"
-                href="#"
-                data-bs-toggle="modal"
-                data-bs-target="#loginModal"
-                >PW 재설정</a>
+              <button type="submit" class="btn btn-outline-success updatePw">
+                PW 재설정
               </button>
               <button
                 type="button"
@@ -321,7 +231,7 @@
                 data-bs-dismiss="modal"
               >닫기
               </button>
-
+              </form>
             </div>
 
           </div>
@@ -334,6 +244,99 @@
 
         </div>
 		</div>
+	<script>
+		$("#updateUserPw").on("keyup",function(){
+			$("#updateUserPw").removeClass("required");
+			$(".update-pw-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
+			const userPw = $("#updateUserPw").val();
+			console.log(userPw);
+			const pwReg = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/;
+			if(!pwReg.test(userPw)){
+				$(".update-pw-check-msg").text("영문자+숫자+특수문자 조합으로 8~16글자 이내 작성해주세요.");
+				$(".update-pw-check-msg").addClass("invalid");
+			}else{
+				$(".update-pw-check-msg").text("유효한 비밀번호 입니다.");
+				$(".update-pw-check-msg").addClass("valid");
+				$("#updateUserPw").addClass("required");
+			}
+		})
+	
+	    $("#updateUserRePw").on("change",function(){
+			$("#updateUserRePw").removeClass("required");
+			$(".update-repw-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
+			const pwValue = $("#updateUserPw").val();
+			const pwReValue = $("#updateUserRePw").val();
+			console.log(pwValue);
+			console.log(pwReValue);
+			if(pwValue === pwReValue){
+				$(".update-repw-check-msg").text("비밀번호가 일치합니다.");
+				$(".update-repw-check-msg").addClass("valid");
+				$("#updateUserRePw").addClass("required");
+			}else{
+				$(".update-repw-check-msg").text("비밀번호가 일치하지 않습니다.");
+				$(".update-repw-check-msg").addClass("invalid");				
+			}
+		});
+		
+		//제대로 입력했는지 확인
+    	$(".updatePw").on("click",function(){
+    		const required = $(".required").length;
+    		console.log(required);
+    		if(required != 2){
+    			alert("입력값을 제대로 작성해주세요"); 			
+    			event.preventDefault(); //이벤트 방지 submit 안 넘어가고
+    		}else {    			
+    			location.href = "/user/updatePw";
+    		}
+    	})
+		
+		$("#findPw").on("click",function(){
+			//document.getElementById('findPwForm').submit();
+			const findUserId = $("#findUserId").val();
+			const findUserEmail = $("#findUserEmail").val();
+			console.log(userId);
+			console.log(userEmail);
+			$.ajax({
+				url : "/user/ajaxFindUser",
+				type : "get",
+				data : {userId : findUserId,
+						userEmail : findUserEmail
+						},
+				success : function(data){
+					if(data == 1){
+						console.log(1);
+						$("[name=userId]").val(findUserId); //input으로 넘겨주기
+						const rePw = $("#rePwAtag");
+						
+						swal({
+							title : "정보 조회 성공",
+							text : "비밀번호를 재설정해주세요.",
+							icon : "success",
+							closeOnClickOutside : false
+						})
+						.then(function(result){
+							console.log(result);
+							//창 꺼질 때 실행할 함수
+							if(result == true){
+								rePw.click();
+							}
+						});
+					}else{
+						swal({
+							title : "정보 조회 실패",
+							text : "아이디와 이메일이 일치하지 않습니다.",
+							icon : "warning"
+						});
+					}
+				},
+				error : function(){
+					console.log("에러 발생");
+				}
+			});
+		});
+		
+		$
+	</script>
 	<th:block th:include="common/footer"></th:block>
 </body>
 </html>

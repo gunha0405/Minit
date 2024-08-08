@@ -31,14 +31,14 @@ public class UserController {
 		System.out.println(user);
 		if(user == null) {
 			model.addAttribute("title", "로그인 실패");
-			model.addAttribute("msg", "아이디 또는 비밀번호를 확인하세요");
+			model.addAttribute("msg", "아이디 또는 비밀번호를 확인하세요.");
 			model.addAttribute("icon","error");
 			model.addAttribute("loc", "/");
 			return "common/msg";
 		}else {
 			if(user.getUserLevel() == 3) {
 				model.addAttribute("title", "로그인 권한 없음");
-				model.addAttribute("msg", "관리자에게 문의하세요");
+				model.addAttribute("msg", "정지된 회원입니다. 관리자에게 문의하세요.");
 				model.addAttribute("icon","warning");
 				model.addAttribute("loc", "/");
 				return "common/msg";
@@ -142,7 +142,7 @@ public class UserController {
 	public String sendCode(String receiver) {
 		System.out.println(receiver);
 		User user = userService.selectUserEmail(receiver);
-		if(user == null) {
+		if(user == null && !receiver.equals("")) {
 			//인증메일 제목
 			String emailTitle = "MINIT 회원가입 이메일 인증 메일";
 			//인증메일 인증코드
@@ -177,5 +177,56 @@ public class UserController {
 	public String findaccount() {
 		return "user/findaccount";
 	}
+	
+	//아이디 찾기
+	@PostMapping(value="/searchId")
+	public String searchId(User u, Model model) {		
+		System.out.println(u);
+		User user = userService.searchUserId(u);
+		System.out.println(user);
+		if(user == null) {
+			model.addAttribute("title", "정보 조회 실패");
+			model.addAttribute("msg", "해당 정보로 가입된 회원을 조회할 수 없습니다.");
+			model.addAttribute("icon","error");
+		}else {
+			model.addAttribute("title", "아이디 조회 성공");
+			model.addAttribute("msg", "귀하의 아이디는 ["+user.getUserId()+"]입니다.");
+			model.addAttribute("icon","success");
+		}
+		model.addAttribute("loc", "/user/findaccount");
+		return "common/msg";
+	}
+	
+	//비밀번호 찾기-회원찾기
+	@ResponseBody
+	@GetMapping(value="/ajaxFindUser")
+	public int ajaxFindUser(String userId, String userEmail) {
+		User user = userService.ajaxFindUser(userId, userEmail);
+		if(user != null) {
+			return 1;
+		}else {
+			return 0;
+		}
+	}
+	
+	@PostMapping(value="/updatePw")
+	public String updatePw(User u, Model model) {
+	System.out.println(u);
+		int result = userService.updatePw(u);
+		if(result>0) {
+			model.addAttribute("title", "비밀번호 변경 성공");
+			model.addAttribute("msg", "변경된 비밀번호로 로그인 해주세요!");
+			model.addAttribute("icon","success");
+			model.addAttribute("loc", "/");
+		}else {
+			model.addAttribute("title", "비밀번호 변경 실패");
+			model.addAttribute("msg", "처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+			model.addAttribute("icon","error");
+			model.addAttribute("loc", "/user/findaccount");
+		}
+		return "common/msg";
+	}
+	
+	
 	
 }

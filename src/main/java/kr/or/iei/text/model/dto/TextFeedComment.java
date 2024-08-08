@@ -13,4 +13,5 @@ public class TextFeedComment {
 	private String textFeedCommentWriter;
 	private String textFeedCommentRegDate;
 	private int textFeedCommentRef;
+	private int isLike;
 }

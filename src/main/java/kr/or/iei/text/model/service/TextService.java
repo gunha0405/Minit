@@ -19,16 +19,23 @@ public class TextService {
 	public List<TextFeed> selectTextFeed(int userNo) {
         List<TextFeed> textFeedList = textDao.selectTextFeed();
         for (TextFeed textFeed : textFeedList) {
-            int isLike = textDao.selectTextFeedLikeStatus(textFeed.getTextFeedNo(), userNo);
+        	List<TextFeedComment> comments = textDao.selectTextFeedComment(textFeed.getTextFeedNo());
+        	for(TextFeedComment textFeedComment : comments) {
+        		int isLike = textDao.selectTextFeedCommentLikeStatus(textFeedComment.getTextFeedCommentNo(), userNo);
+        		textFeedComment.setIsLike(isLike);
+        	}
+            textFeed.setTextFeedCommentList(comments);
+        	int isLike = textDao.selectTextFeedLikeStatus(textFeed.getTextFeedNo(), userNo);
+        	int isReport = textDao.selectTextFeedReportStatus(textFeed.getTextFeedNo(), userNo);
             textFeed.setIsLike(isLike);
+            textFeed.setIsReport(isReport);
         }
         return textFeedList;
     }
+	
 	@Transactional
     public int textFeedWrite(String textFeedContent, User user) {
-        
         int result = textDao.textFeedWrite(textFeedContent, user);
-        
         return result;
     }
 	
@@ -86,12 +93,47 @@ public class TextService {
 	    int result = 0;
 	    if (isLike == 0) {
 	        // 좋아요를 누르지 않은 상태
-	        if (!textDao.isLikeExists(textFeedNo, userNo)) {
+	        if (!textDao.isLikeFeedExists(textFeedNo, userNo)) {
 	            result = textDao.insertTextFeedLike(textFeedNo, userNo);
 	        }
 	    } else if (isLike == 1) {
 	        // 좋아요가 눌러진 상태
 	        result = textDao.deleteTextFeedLike(textFeedNo, userNo);
+	    }
+	    return result;
+	}
+	@Transactional
+	public int textFeedCommentLikePush(int textFeedCommentNo, int isLike, int userNo) {
+		int result = 0;
+		if(isLike == 0) {
+			if(!textDao.isLikeCommentExists(textFeedCommentNo, userNo)) {
+				result = textDao.insertTextFeedCommentLike(textFeedCommentNo, userNo);
+			}
+		} else if(isLike == 1) {
+			result = textDao.deleteTextFeedCommentLike(textFeedCommentNo,userNo);
+		}
+		return result;
+	}
+	
+	@Transactional
+	public int textFeedReport(int textFeedNo, int userNo, int isReport) {
+	    int result = 0;
+	    if (isReport == 0) {
+	        if (!textDao.isReportFeedExists(textFeedNo, userNo)) {
+	            result = textDao.insertTextFeedReport(textFeedNo, userNo);
+	        }
+	    } else if (isReport == 1) {
+	        result = -100;
+	    }
+	    if (result > 0) {
+	        int reportCount = textDao.selectTextFeedReportCount(textFeedNo);
+	        if (reportCount >= 2) {
+	            int hideTextFeedResult = textDao.hideTextFeed(textFeedNo);
+
+	            if (hideTextFeedResult>0) {
+	                result = -1000;
+	            }
+	        }
 	    }
 	    return result;
 	}

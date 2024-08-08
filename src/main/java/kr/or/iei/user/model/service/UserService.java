@@ -49,7 +49,8 @@ public class UserService {
 		int result = userDao.updateUser(u);
 		return result;
 	}
-
+	
+	@Transactional
 	public int deleteUser(User user) {
 		int result = userDao.deleteUser(user);
 		/*
@@ -57,6 +58,33 @@ public class UserService {
 		userImgParam.setUserId(user.getUserId());
 		userImgDao.deleteUserImg(userImgParam);
 		*/
+		return result;
+	}
+
+	public User searchUserId(User u) {
+		User user = userDao.searchUserId(u);
+		return user;
+	}
+
+	public User ajaxFindUser(String userId, String userEmail) {
+		User user = userDao.ajaxFindUser(userId, userEmail);
+		return user;
+	}
+
+	@Transactional
+	public int updatePw(User u) {
+		int result = userDao.updatePw(u);
+		return result;
+	}
+
+	public List selectAllUser() {
+		List list = userDao.selectAllUser();
+		return list;
+	}
+
+	@Transactional
+	public int changeCount(User u) {
+		int result = userDao.changeCount(u);
 		return result;
 	}
 

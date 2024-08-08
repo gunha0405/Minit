@@ -423,10 +423,7 @@ footer div {
     color: #657786;
 }
 
-.comment-section {
-    display: none;
-    margin-top: 15px;
-}
+
 
 .comment-section textarea {
     width: 100%;
@@ -454,6 +451,9 @@ footer div {
     padding: 10px;
     margin-top: 10px;
     position: relative; /* 신고 및 삭제 버튼 배치를 위해 추가 */
+}
+.comment-actions i {
+	cursor: pointer;
 }
 .comment-options {
     position: absolute;
