@@ -151,5 +151,10 @@ public class TextService {
 		}
 		return result;
 	}
+
+	public List<TextFeed> selectReportFeed() {
+		List<TextFeed> reportList = textDao.selectReportFeed();
+		return reportList;
+	}
 	
 }

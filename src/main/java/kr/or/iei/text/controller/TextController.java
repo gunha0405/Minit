@@ -151,4 +151,12 @@ public class TextController {
     	}
     }
     
+    @GetMapping(value="/selectReportFeed")
+    public String selectReportFeed(Model model) {
+    	List<TextFeed> reportList = textService.selectReportFeed();
+    	
+    	model.addAttribute("reportList", reportList);
+    	return "/admin/warningText";
+    }
+    
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import kr.or.iei.text.model.dto.TextFeed;
 import kr.or.iei.text.model.dto.TextFeedComment;
 import kr.or.iei.text.model.dto.TextFeedCommentRowMapper;
+import kr.or.iei.text.model.dto.TextFeedReportRowMapper;
 import kr.or.iei.text.model.dto.TextFeedRowMapper;
 import kr.or.iei.user.model.dto.User;
 
@@ -22,6 +23,9 @@ public class TextDao {
 	
 	@Autowired
 	private TextFeedCommentRowMapper textFeedCommentRowMapper;
+	
+	@Autowired
+	private TextFeedReportRowMapper textFeedReportRowMapper;
 
 	public List selectTextFeed() {
 		String query = "select * from text_feed where text_feed_status = 0 order by 1 desc";
@@ -227,6 +231,12 @@ public class TextDao {
 		Object[] params = {textFeedNo, userNo};
 		int isSave = jdbc.queryForObject(query, Integer.class, params);
 		return isSave;
+	}
+
+	public List<TextFeed> selectReportFeed() {
+		String query = "select text_feed_content, text_feed_no, user_no, text_feed_writer, warning_count,text_feed_reg_date from text_feed join user_tbl on text_feed_writer = user_id where text_feed_status = 1";
+		List<TextFeed> reportList = jdbc.query(query, textFeedReportRowMapper);
+		return reportList;
 	}
 	
 

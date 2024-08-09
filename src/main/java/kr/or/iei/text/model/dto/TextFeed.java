@@ -19,4 +19,6 @@ public class TextFeed {
 	private int isReport;
 	private int reportCount;
 	private int isSave;
+	private int userNo;
+	private int warningCount;
 }
