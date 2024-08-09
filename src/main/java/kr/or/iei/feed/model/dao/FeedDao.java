@@ -163,16 +163,16 @@ public class FeedDao {
 	}
 
 	public int updateFeed(Feed f) {
-		String query = "update user_feed_tbl set user_feed_content=? where user_feed_writer=?";
-		Object[] params = {f.getUserFeedContent(),f.getUserFeedWriter()};
+		String query = "update user_feed_tbl set user_feed_content=? where user_feed_no=?";
+		Object[] params = {f.getUserFeedContent(),f.getUserFeedNo()};
 		int result = jdbc.update(query, params);
 		return result;
 	}
 
 
-	public int updateFilePathSame(String newFilepath, String originFilepath) {
-		String query = "update user_feed_file set USER_FEED_FILEPATH = ? where user_feed_filepath=?";
-		Object[] params = {newFilepath, originFilepath};
+	public int updateFilePathSame(String string, int fileNo) {
+		String query = "update user_feed_file set user_feed_filepath=? where user_feed_file_no=?";
+		Object[] params = {string, fileNo};
 		int result = jdbc.update(query, params);
 		return result;
 		
@@ -186,18 +186,25 @@ public class FeedDao {
 		return result;
 	}
 
-	public int updateFeedAnotherNo(String path, int userFeedNo) {
-		String query ="update user_feed_file set user_feed_filepath=null where user_feed_no=? and user_feed_filepath =?";
-		Object[] params = {userFeedNo, path};
+	public int updateFileNull(int userFeedNo) {
+		String query ="update user_feed_file set user_feed_filepath=null where user_feed_no=?";
+		Object[] params = {userFeedNo};
 		int result = jdbc.update(query, params);
 		return result;
 	}
 
-	public int getExistinFilepathNum(int userFeedNum) {
-	    String query ="select count(*) from (select * from user_feed_tbl join user_feed_file using (user_feed_no) where user_feed_no=?)"; 
-		Object[] params = {userFeedNum};
-		int existinFilepathNum = jdbc.queryForObject(query, Integer.class, params);
-	    return existinFilepathNum;
+	public int inserFeedNull(int feedNo) {
+		String query ="insert into user_feed_file values(user_feed_file_seq.nextval,?,null)";
+		Object[] params = {feedNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+	public int getFileNo(int userFeedNo, int i) {
+		String query="select user_feed_file_no  from (select rownum as rnum , n. * from ((select user_feed_file_no, user_feed_filepath from  user_feed_file where user_feed_no=?)n)) where rnum=?";
+		Object[] params = {userFeedNo, i+1};
+		int fileNo = jdbc.queryForObject(query, Integer.class, params);
+		return fileNo;
 	}
 
 
