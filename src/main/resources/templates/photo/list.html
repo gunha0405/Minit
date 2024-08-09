@@ -659,6 +659,33 @@
 
     loadImages();
   });
+  
+  $(document).ready(function() {
+	    const photoUploadButton = $(".uploadItem i");
+	    const photoUploadContainer = $(".photoUpload");
+
+	    const observer = new IntersectionObserver((entries) => {
+	      entries.forEach((entry) => {
+	        if (entry.isIntersecting) {
+	          // 스크롤이 끝에 도달했을 때 아이콘 변경
+	          photoUploadButton.removeClass("fa-plus").addClass("fa-up-long");
+	        } else {
+	          // 스크롤이 끝에서 벗어났을 때 아이콘 복원
+	          photoUploadButton.removeClass("fa-up-long").addClass("fa-plus");
+	        }
+	      });
+	    });
+
+	    observer.observe(document.querySelector(".bottom-navBar"));
+
+	    // 스크롤이 마지막에 닿았을 때 버튼을 페이지 맨 위로 이동하게 하는 기능 추가
+	    photoUploadButton.on("click", function() {
+	      if (photoUploadButton.hasClass("fa-up-long")) {
+	        $("html, body").animate({ scrollTop: 0 }, "slow");
+	      }
+	    });
+	  });
+  
   </script>
   <th:block th:include="common/footer"></th:block>
 </body>
