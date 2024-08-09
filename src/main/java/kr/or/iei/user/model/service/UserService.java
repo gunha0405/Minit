@@ -45,6 +45,7 @@ public class UserService {
 		return result;
 	}
 
+	/*
 	public int selectUserNo(String userId) {
 		int userNo = userDao.selectUserNo(userId);
 		return userNo;
@@ -55,6 +56,7 @@ public class UserService {
 		int result = userImgDao.insertUserImg(userNo);
 		return result;
 	}
+	*/
 
 	@Transactional
 	public int updateUser(User u) {

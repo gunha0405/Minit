@@ -62,9 +62,9 @@ public class UserDao {
 	
 	public int insertUser(User u) {
 		String query = "insert into user_tbl "
-				+ "(user_no, user_id, user_pw, user_name, user_nick, user_email, create_date) "
+				+ "(user_no, user_id, user_pw, user_name, user_nick, user_email, create_date, user_img) "
 				+ "values "
-				+ "(user_tbl_seq.nextval,?,?,?,?,?,to_char(sysdate,'yyyy-mm-dd'))";
+				+ "(user_tbl_seq.nextval,?,?,?,?,?,to_char(sysdate,'yyyy-mm-dd'),'minit_logo.png')";
 		Object[] params = {u.getUserId(), u.getUserPw(), u.getUserName(), u.getUserNick(), u.getUserEmail()};
 		int result = jdbc.update(query, params);
 		return result;
