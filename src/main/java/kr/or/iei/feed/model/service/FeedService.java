@@ -159,7 +159,7 @@ public class FeedService {
 
 	
 	public Feed selectUserOneFeed(int userFeedNo) {
-		//게시물정보
+		//게시물정보 입력받기 
 		Feed feed = feedDao.searchFeedUser(userFeedNo);
 		//게시물당 사진 게시물 몇개인지
 		int totalImgNo = feedDao.totalImg(userFeedNo);
@@ -183,52 +183,58 @@ public class FeedService {
 		return result;
 	}
 	@Transactional
-	public int updatefile(Feed f, List<FeedFile> newFileList, List fileList) {
-		int result = -1;
-		result = feedDao.updateFeed(f);
+	public int updatefile(Feed f, List<FeedFile> newFileList, List<FeedFile> fileList) {
+		int result = 0;
+		//int result = feedDao.updateFeed(f);
 		if(result > 0) {
 			if(newFileList.size() == fileList.size()) {
 				for(int i = 0; i < newFileList.size(); i++) {
 					//새로운 파일 
-					FeedFile feed = new FeedFile();
-					feed.setUserFeedFilepath(newFileList.get(i).getUserFeedFilepath());
+					String newFilepath = newFileList.get(i).getUserFeedFilepath();
 					//기존 파일
-					String path = (String)fileList.get(i);
-					result = feedDao.updateFilePathSame(feed.getUserFeedFilepath(), f.getUserFeedNo(), path);					
+					String originFilepath = fileList.get(i).getUserFeedFilepath();
+					result = feedDao.updateFilePathSame(newFilepath, originFilepath);					
 				}//for문 끝
 			}else if(newFileList.size() > fileList.size()) {   // (0 1 2) 3 > (0) 1
 				int num = newFileList.size() - fileList.size();//새로 업데이트 사진이 많으면    //3 - 1 =  2
 				//기존 파일만큼 돌림
 				for(int i = 0; i < fileList.size(); i++) { // 1 번 돌림
 					//새로운 파일
-					FeedFile feed = newFileList.get(i); // 0     , (1,2) 남음
+					String newFilepath = newFileList.get(i).getUserFeedFilepath(); // 0     , (1,2) 남음
 					//기존 파일
-					String path = (String)fileList.get(i);
-					result = feedDao.updateFilePathSame(feed.getUserFeedFilepath(), f.getUserFeedNo(), path);
+					String originFilepath = fileList.get(i).getUserFeedFilepath();
+					result = feedDao.updateFilePathSame(newFilepath, originFilepath);
 				}
 				//새로운 파일 인설트
 				for(int i = 0; i < num; i++) { // num == 2
 					int j = fileList.size();  // 사이즈 1 
-					FeedFile feed = newFileList.get(j++); // 1, 2 
-					result = feedDao.updateFeedInsert(feed.getUserFeedFilepath(), f.getUserFeedNo());
+					String newFilepath = newFileList.get(j++).getUserFeedFilepath(); // 1, 2 
+					result = feedDao.updateFeedInsert(newFilepath, f.getUserFeedNo());
 				}//for()
 			}else if( fileList.size() > newFileList.size()) {   // (0 1 2) 3 > (0) 1
 				int num = fileList.size() - newFileList.size();// 새로 업데이트 할 사진이 더 적다  
 				//적은 파일 만큼 먼저 수정
 				for(int i = 0; i < newFileList.size(); i++) { 
-					FeedFile feed = newFileList.get(i); 
-					String path = (String)fileList.get(i);
-					result = feedDao.updateFilePathSame(feed.getUserFeedFilepath(), f.getUserFeedNo(), path);
+					//새로운 파일
+					String newFilepath = newFileList.get(i).getUserFeedFilepath(); 
+					//기존 파일
+					String originFilepath = fileList.get(i).getUserFeedFilepath();
+					result = feedDao.updateFilePathSame(newFilepath, originFilepath);
 				}
 				//기존 사진 null 로 수정
 				for(int i = 0; i < num; i++) { // num == 2
 					int j = newFileList.size();  // 사이즈 1 
-					 String path = (String)fileList.get(j++);
-					result = feedDao.updateFeedAnotherNo(path, f.getUserFeedNo());
+					String originFilepath = fileList.get(j++).getUserFeedFilepath();
+					result = feedDao.updateFeedAnotherNo(originFilepath, f.getUserFeedNo());
 				}
 			}//else if()
 		}//if()
 		return result;
+	}
+
+	public int getExistinFilepathNum(int userFeedNum) {
+		int existinFilepathNum = feedDao.getExistinFilepathNum(userFeedNum);
+		return existinFilepathNum;
 	}
 
 

@@ -170,9 +170,9 @@ public class FeedDao {
 	}
 
 
-	public int updateFilePathSame(String userFeedFilepath, int userFeedNo, String path) {
-		String query = "update user_feed_file set USER_FEED_FILEPATH = ? where user_feed_no =? and user_feed_filepath=?";
-		Object[] params = {userFeedFilepath, userFeedNo,path};
+	public int updateFilePathSame(String newFilepath, String originFilepath) {
+		String query = "update user_feed_file set USER_FEED_FILEPATH = ? where user_feed_filepath=?";
+		Object[] params = {newFilepath, originFilepath};
 		int result = jdbc.update(query, params);
 		return result;
 		
@@ -191,6 +191,13 @@ public class FeedDao {
 		Object[] params = {userFeedNo, path};
 		int result = jdbc.update(query, params);
 		return result;
+	}
+
+	public int getExistinFilepathNum(int userFeedNum) {
+	    String query ="select count(*) from (select * from user_feed_tbl join user_feed_file using (user_feed_no) where user_feed_no=?)"; 
+		Object[] params = {userFeedNum};
+		int existinFilepathNum = jdbc.queryForObject(query, Integer.class, params);
+	    return existinFilepathNum;
 	}
 
 

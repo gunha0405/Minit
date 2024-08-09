@@ -114,26 +114,29 @@ public class FeedController {
 	// feed-list-writeBtn
 	@PostMapping(value = "/feedWrite")
 	public String feedWirte(Feed f, MultipartFile upfile1, MultipartFile upfile2, MultipartFile upfile3, Model model) {
-		List<MultipartFile> files = Arrays.asList(upfile1, upfile2, upfile3);
-		boolean allFilesEmpty = files.stream().allMatch(file -> file == null || file.isEmpty());
-
+//	 System.out.println("upfile1"+upfile1);
+//if(upfile1.isEmpty()) {
+//	System.out.println("비어잇");
+//}else {
+//	System.out.println("안비어");
+//}
 		if (f.getUserFeedContent().equals("")) {
 			model.addAttribute("title", "게시글을 작성해주세요");
 			model.addAttribute("msg", "게시글과 사진을 함께 작성해주세요");
 			model.addAttribute("icon", "warning");
 			model.addAttribute("loc", "/feed/view?");
 			return "common/msg";
-		} else if (allFilesEmpty) {
+		} else if (upfile1.isEmpty() || upfile2.isEmpty() || upfile3.isEmpty()) {
 			model.addAttribute("title", "사진첨부 필요");
-			model.addAttribute("msg", "사진을 첨부해야 서비스 이용이 가능합니다.");
+			model.addAttribute("msg", "사진 첨부를 해주세요.");
 			model.addAttribute("icon", "warning");
 			model.addAttribute("loc", "/feed/writeForm");
 			return "common/msg";
 		} else {
-			//////////////////////////////////////////정리해야함
+
 			String savepath = root + "/feed/";
-			MultipartFile[] upfile = { upfile1, upfile2, upfile3 };
 			List<FeedFile> fileList = new ArrayList<FeedFile>();
+			MultipartFile[] upfile = { upfile1, upfile2, upfile3 };
 			for (MultipartFile file : upfile) {
 				if (!file.isEmpty()) {
 					// 파일경로 복사, 중복된 이름 있으면 인덱스 작업
@@ -144,9 +147,9 @@ public class FeedController {
 					//System.out.println(filepath);
 				}
 			}//for()
-			// fileList 
 			//System.out.println(f); 
 			
+			//결과값 -1 or feedNo  
 			int result = feedService.insertfile(f, fileList);
 			if (result > 0) {
 				model.addAttribute("title", "작성성공!");
@@ -166,31 +169,27 @@ public class FeedController {
 
 	@PostMapping(value = "/feedUpdate")
 	public String feedUpdate(Feed f, MultipartFile upfile1, MultipartFile upfile2, MultipartFile upfile3, Model model) {
-		System.out.println(upfile1);
-		System.out.println(upfile2);
-		System.out.println(upfile3);
-
 		//System.out.println(f);
 		if (f.getUserFeedContent().equals("")) {
 			model.addAttribute("title", "게시글을 작성해주세요");
 			model.addAttribute("msg", "게시글과 사진을 함께 작성해주세요");
 			model.addAttribute("icon", "warning");
 			model.addAttribute("loc", "/feed/view?userFeedNo="+f.getUserFeedNo());
-			
 			return "common/msg";
-		} else if (upfile1 ==null && upfile2 == null && upfile3 == null) {
+		} else if (upfile1.isEmpty() || upfile2.isEmpty() || upfile3.isEmpty()) {
 			model.addAttribute("title", "사진첨부 필요");
 			model.addAttribute("msg", "사진을 첨부해야 서비스 이용이 가능합니다.");
 			model.addAttribute("icon", "warning");
 			model.addAttribute("loc", "/feed/view?userFeedNo="+f.getUserFeedNo());
 			return "common/msg";
 		} else {
-			MultipartFile[] files = {upfile1, upfile2, upfile3};
+			//새로운 파일 경로 인덱스 작업 
+			MultipartFile[] newFiles = {upfile1, upfile2, upfile3};
 			String savepath = root + "/feed/";
-			List<FeedFile> newFileList = new ArrayList<FeedFile>();//새로운 파일 경로 저장 
-			for (MultipartFile file : files) {
+			List<FeedFile> newFileList = new ArrayList<FeedFile>();
+			for (MultipartFile file : newFiles) {
 				if (!file.isEmpty()) {
-					// 파일경로 복사, 중복된 이름 있으면 인덱스 작업
+					// 파일경로 복사, 중복된 이름 검사 
 					String filepath = fileUtils.upload(savepath, file); // ice5_2.png
 					FeedFile feedFile = new FeedFile();
 					feedFile.setUserFeedFilepath(filepath);
@@ -198,9 +197,24 @@ public class FeedController {
 				}
 			}//for()
 			// fileList 첨부파일갯수
-			
-			List fileList = Arrays.asList(f.getFile1(),f.getFile2(),f.getFile3());
-			int result = feedService.updatefile(f, newFileList, fileList);
+			List<FeedFile> files = new ArrayList<FeedFile>();
+			//int existinFilepathNo = feedService.getExistinFilepathNum(f.getUserFeedNo());
+			if(f.getFile1()!=null) {
+				FeedFile file = new FeedFile();
+				file.setUserFeedFilepath(f.getFile1());
+				files.add(file);
+			}
+			if(f.getFile2()!=null) {
+				FeedFile file = new FeedFile();
+				file.setUserFeedFilepath(f.getFile2());
+				files.add(file);
+			}
+			if(f.getFile3()!=null) {
+				FeedFile file = new FeedFile();
+				file.setUserFeedFilepath(f.getFile3());
+				files.add(file);
+			}
+			int result = feedService.updatefile(f, newFileList, files);
 			if (result > 0) {
 				model.addAttribute("title", "수정 성공!");
 				model.addAttribute("msg", "게시글이 수정 되었습니다.");
@@ -242,9 +256,9 @@ public class FeedController {
 		Feed feed = feedService.selectUserOneFeed(userFeedNo);
 		model.addAttribute("feed", feed);
 		model.addAttribute("list", feed.getFeedList());
-		for (FeedFile file : feed.getFeedList()) {
-			System.out.println(file);
-		}
+		//for (FeedFile file : feed.getFeedList()) {
+			//System.out.println(file);
+		//}
 		return "/feed/updateFrm";
 	}
 
