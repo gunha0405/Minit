@@ -72,7 +72,8 @@
 	                            <div class="feed-options">
 	                                <button class="feed-edit-btn" th:if="${session.user != null} and ${session.user.userId} == ${textFeed.textFeedWriter}"><span class="material-icons">edit</span></button>
 	                                <button class="feed-report-btn"><span class="material-icons">report_problem</span></button>
-	                                <button class="feed-bookmark-btn"><span class="material-icons">bookmark_border</span></button>
+	                                <button th:if="${textFeed.isSave == 1}" class="feed-bookmark-saved-btn" th:onclick="savePush(this,[[${textFeed.textFeedNo}]])"><span class="material-icons">bookmark</span></button>
+	                                <button th:if="${textFeed.isSave == 0}" class="feed-bookmark-btn" th:onclick="savePush(this,[[${textFeed.textFeedNo}]])"><span class="material-icons">bookmark_border</span></button>
 	                                <button class="feed-delete-btn" th:if="${session.user != null} and ${session.user.userId} == ${textFeed.textFeedWriter}"><span class="material-icons">delete_forever</span></button>
 	                        </div>
 	                    </div>
@@ -226,6 +227,47 @@
     	});
     }
     
+    function savePush(obj, textFeedNo){
+    	const currentSave = $(obj).attr('class');
+    	const isSave = (currentSave == "feed-bookmark-btn") ? 0 : 1;
+		$.ajax({
+			url : "/text/textFeedSave",
+			type : "get",
+			data : {
+				textFeedNo : textFeedNo,
+				isSave : isSave
+			},
+			success : function(data){
+				if(data == -10){
+					swal({
+                        title: "로그인 필요",
+                        text: "로그인 후 이용해 주세요",
+                        icon: "info"
+                    });
+				}else if(data == -1){
+					swal({
+                        title: "데이터 처리 오류",
+                        text: "잠시 후 다시 시도해주세요",
+                        icon: "warning"
+                    });
+				}else{
+					if(isSave == 0){
+						// 차있는 북마크로 바꾸기
+						$(obj).removeClass('feed-bookmark-btn').addClass('feed-bookmark-saved-btn');
+					    $(obj).find('span.material-icons').text('bookmark');
+					}else{
+						// 비어있는 북마크로 바꾸기
+						$(obj).removeClass('feed-bookmark-saved-btn').addClass('feed-bookmark-btn');
+					    $(obj).find('span.material-icons').text('bookmark_border');
+					}
+				}
+			},
+			error : function(){
+				alert("서버 연결 실패");
+			}
+		});
+    	
+    }
     
     
     $(document).ready(function() {

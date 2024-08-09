@@ -18,4 +18,5 @@ public class TextFeed {
 	private int isLike;
 	private int isReport;
 	private int reportCount;
+	private int isSave;
 }

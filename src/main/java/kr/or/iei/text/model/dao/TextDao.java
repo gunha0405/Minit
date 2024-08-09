@@ -200,6 +200,34 @@ public class TextDao {
 		int hideTextFeedResult = jdbc.update(query, params);
 		return hideTextFeedResult;
 	}
+
+	public boolean isSaveFeedExists(int textFeedNo, int userNo) {
+		String query = "select count(*) from text_feed_save where text_feed_no = ? and user_no = ?";
+		Object[] params = {textFeedNo, userNo};
+		int count = jdbc.queryForObject(query,Integer.class ,params);
+		return count>0;
+	}
+
+	public int insertTextFeedSave(int textFeedNo, int userNo) {
+		String query = "insert into text_feed_save values(?,?)";
+		Object[] params = {textFeedNo, userNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+	public int deleteTextFeedSave(int textFeedNo, int userNo) {
+		String query = "delete from text_feed_save where text_feed_no = ? and user_no = ?";
+		Object[] params = {textFeedNo, userNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+	public int selectTextFeedSaveStatus(int textFeedNo, int userNo) {
+		String query = "select count(*) from text_feed_save where text_feed_no = ? and user_no = ?";
+		Object[] params = {textFeedNo, userNo};
+		int isSave = jdbc.queryForObject(query, Integer.class, params);
+		return isSave;
+	}
 	
 
 	

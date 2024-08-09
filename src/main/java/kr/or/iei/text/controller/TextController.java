@@ -139,4 +139,16 @@ public class TextController {
     	}
     }
     
+    @ResponseBody
+    @GetMapping(value="/textFeedSave")
+    public int textFeedSave(int textFeedNo, int isSave, @SessionAttribute(required = false) User user) {
+    	if(user == null) {
+    		return -10;
+    	}else {
+    		int userNo = user.getUserNo();
+    		int result = textService.textFeedSave(textFeedNo, userNo, isSave);
+    		return result;
+    	}
+    }
+    
 }

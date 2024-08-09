@@ -27,8 +27,10 @@ public class TextService {
             textFeed.setTextFeedCommentList(comments);
         	int isLike = textDao.selectTextFeedLikeStatus(textFeed.getTextFeedNo(), userNo);
         	int isReport = textDao.selectTextFeedReportStatus(textFeed.getTextFeedNo(), userNo);
+        	int isSave = textDao.selectTextFeedSaveStatus(textFeed.getTextFeedNo(), userNo);
             textFeed.setIsLike(isLike);
             textFeed.setIsReport(isReport);
+            textFeed.setIsSave(isSave);
         }
         return textFeedList;
     }
@@ -136,6 +138,18 @@ public class TextService {
 	        }
 	    }
 	    return result;
+	}
+
+	@Transactional
+	public int textFeedSave(int textFeedNo, int userNo, int isSave) {
+		int result = 0;
+		if(isSave == 0) {
+			if(!textDao.isSaveFeedExists(textFeedNo, userNo))
+				result = textDao.insertTextFeedSave(textFeedNo, userNo);
+		} else if(isSave == 1) {
+			result = textDao.deleteTextFeedSave(textFeedNo, userNo);
+		}
+		return result;
 	}
 	
 }
