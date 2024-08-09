@@ -28,7 +28,9 @@ import kr.or.iei.photo.model.dto.Photo;
 import kr.or.iei.photo.model.dto.PhotoComment;
 import kr.or.iei.photo.model.etc.dto.Foodad;
 import kr.or.iei.photo.model.service.PhotoService;
+import kr.or.iei.text.model.dto.TextFeedComment;
 import kr.or.iei.user.model.dto.User;
+import kr.or.iei.user.model.service.UserService;
 import kr.or.iei.util.FileUtils;
 
 @Controller
@@ -42,6 +44,8 @@ public class PhotoController {
 
     @Autowired
     private FileUtils fileUtils;
+    @Autowired
+    private UserService userService;
 
     @GetMapping(value = "/list")
     public String list(Model model, @SessionAttribute(required = false) User user) {
@@ -165,9 +169,12 @@ public class PhotoController {
      */
     @GetMapping(value = "/comments")
     @ResponseBody
-    public List<PhotoComment> getComment(int photoFeedNo) {
+    public List<PhotoComment> getComment(@SessionAttribute(required =false) User user,int photoFeedNo) {
         List<PhotoComment> cl = photoService.getCommentList(photoFeedNo);
-        PhotoComment.setTextFeedCommentWriterImg(commentWriterUser.getUserImg());
+        //int photoFeedCommentNo = photoService.getPhotoCommentNo();
+       // PhotoComment photoComment = photoService.selectOnetTextFeedComment(photoFeedCommentNo);
+        User commentWriterUser = userService.selectOneUser(user);
+       // photoComment.setPhotoCemmentWriterImg(commentWriterUser.getUserImg());
         return cl;
     }
 

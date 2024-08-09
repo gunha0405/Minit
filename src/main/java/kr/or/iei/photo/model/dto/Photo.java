@@ -20,5 +20,5 @@ public class Photo {
 	private int isLike;
 	private int isDec;
 	private int isSave;
-	
+	private String photoFeedCommentWriterImg;
 }
