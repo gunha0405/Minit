@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class UserImg {
 	private int imgNo;
-	private String userId;
+	private int userNo;
 	private String imgOrg;
 	private String imgStorage;
 	private int imgType;
