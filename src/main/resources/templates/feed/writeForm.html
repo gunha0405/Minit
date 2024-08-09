@@ -71,7 +71,7 @@
 
 					<tr class="button-tr">
 						<td colspan="4">
-							<button type="submit" class="button-style">글 올리기</button>
+							<button type="submit" class="button-style" onclick="return func()";>글 올리기</button>
 						</td>
 					</tr>
 				</table>
@@ -99,6 +99,25 @@
 		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
 		crossorigin="anonymous"></script>
 	<script>
+		function func(){
+				const mainImage = document.querySelector("#mainImage");
+	            const src1 = mainImage.getAttribute("src");
+				const topRightImage = document.querySelector("#topRightImage");
+	            const src2 = topRightImage.getAttribute("src");
+	            const bottomRightImage = document.querySelector("#bottomRightImage");
+	            const src3 = bottomRightImage.getAttribute("src");
+	            const text = document.querySelector("#userFeedContent");
+	            const textContent = text.value;
+				if(src1 === ''  && src2 === '' && src3 === ''){
+					alert("사진을 첨부해주세요.");
+					return false;
+				}
+	            if(textContent === ''){
+	                alert("글을 입력해주세요.");
+	                return false;
+	            }
+		}
+	
 		$('#userFeedContent').summernote(
 				{
 					// 에디터 높이
