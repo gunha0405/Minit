@@ -144,4 +144,27 @@ public class PhotoDao {
 	    Object[] params = {photoFeedNo};
 	    return jdbc.queryForObject(query, photoRowMapper, params);
 	}
+
+	public boolean saveCheck(int photoFeedNo, int userNo) {
+		String query = "SELECT COUNT(*) FROM photo_feed_save WHERE photo_feed_save_no=? AND photo_feed_save_writer=?";
+        Object[] params = {photoFeedNo, userNo};
+        int count = jdbc.queryForObject(query, Integer.class, params);
+        return count > 0;
+	}
+
+	public int insertSave(int photoFeedNo, int userNo) {
+		String query = "INSERT INTO photo_feed_save VALUES(?,?)";
+        Object[] params = {photoFeedNo, userNo};
+        int result = jdbc.update(query, params);
+        return result;
+	}
+
+	public int deleteSave(int photoFeedNo, int userNo) {
+		String query = "DELETE FROM photo_feed_save WHERE photo_feed_save_no=? AND photo_feed_save_writer=?";
+        Object[] params = {photoFeedNo, userNo};
+        int result = jdbc.update(query, params);
+        return result;
+	}
+
+	
 }
