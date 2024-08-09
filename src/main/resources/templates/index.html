@@ -5,7 +5,30 @@
 <title>Minit 프로젝트</title>
 <link rel="stylesheet" href="/css/style.css">
 <style>
+.post {
+    width: 400px; 
+    margin: 20px auto; 
+    border: 1px solid #ddd; 
+    border-radius: 8px; 
+   	overflow : hidden; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    background-color: #fff; 
+}
+.post-image-container {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    overflow: hidden;
+    position: relative;
+}
 
+.post-image {
+    width: 65%;
+    height: auto;
+    max-height: 300px;
+    object-fit: none;
+    display: block;
+}
 </style>
 </head>
 <body>
@@ -67,9 +90,9 @@
       </div>
       <!--메인 컨텐츠 시작 -->
       <div class="sub1-contents">
-        <a href ="http://192.168.10.40" id="board">전체게시판</a>
-        <a href="http://192.168.10.40">인기게시판</a>
-        <a href="http://192.168.10.40">친구게시판</a>
+        <a href ="javascript:void(0)" id="board">전체게시판</a>
+        <a href="javascript:void(0)" id="best">인기게시판</a>
+        <a href="http://192.168.10.40" id="following">친구게시판</a>
       </div>
     <section>
         <div class="contents">
@@ -134,46 +157,97 @@
 
  <script th:inline="javascript">
  $(document).ready(function() {
-	    $.ajax({
-	        url: '/index', // 실제 API 엔드포인트
-	        method: 'GET',
-	        dataType: 'json',
-	        success: function(data) {
-	            $('#postContainer').empty(); // 기존 콘텐츠를 비움
+	    $("#board").click(function() {
+	        $.ajax({
+	            url: '/index', // 실제 API 엔드포인트
+	            method: 'GET',
+	            dataType: 'json',
+	            success: function(data) {
+	                $('#postContainer').empty(); // 기존 콘텐츠를 비움
 
-	            // for 루프를 사용하여 데이터 처리
-	            for (let i = 0; i < data.length; i++) {
-	                const b = data[i]; // 현재 게시물 데이터
+	                // for 루프를 사용하여 데이터 처리
+	                for (let i = 0; i < data.length; i++) {
+	                    const b = data[i]; // 현재 게시물 데이터
 
-	                // 데이터와 HTML 요소 확인
-	                console.log('이미지파일', b);
+	                    // 데이터와 HTML 요소 확인
+	                    console.log('게시물 데이터', b);
 
-	                // HTML 문자열 생성
-	                let postHtml = `
-					    <article class="post">
-					        <div class="post-header">
-					            <p class="post-meta">${b.photoFeedWriter} ${b.regDate}</p>
-					        </div>
-					        <div class="post-image-container">
-					            <img src="/photo/${b.photoFeedImg}" alt="이미지" class="post-image">
-					        </div>
-					        <div class="post-footer">
-					            <span class="post-comment">조회수 ${b.readCount}</span>
-					        </div>
-					    </article>
-					`;
+	                    // HTML 문자열 생성
+	                    let postHtml = `
+	                        <article class="post">
+	                            <div class="post-header">
+	                                <p class="post-meta">${b.photoFeedWriter} ${b.regDate}</p>
+	                            </div>
+	                            <div class="post-image-container">
+	                                <img src="/photo/${b.photoFeedImg}" alt="이미지" class="post-image">
+	                            </div>
+	                            <div class="post-footer">
+	                                <span class="post-comment">좋아요 ${b.photoFeedLikeNo}</span>
+	                            </div>
+	                        </article>
+	                    `;
 
-	                // 생성한 HTML을 DOM에 추가
-	                $('#postContainer').append(postHtml);
+	                    // 생성한 HTML을 DOM에 추가
+	                    $('#postContainer').append(postHtml);
+	                    $(".board-write").text("전체게시판");
+	                }
+	            },
+	            error: function(xhr, status, error) {
+	                console.error('AJAX 요청 오류:', status, error);
+	                console.log(xhr.responseText); // 오류 응답 내용 확인
 	            }
-	        },
-	        error: function(xhr, status, error) {
-	            console.error('AJAX 요청 오류:', status, error);
-	        }
+	        });
 	    });
+        $("#board").click();
+ });
+
+
+ 
+ $(document).ready(function() {
+	    $("#best").click(function() {
+	        $.ajax({
+	            url: '/best', // 실제 API 엔드포인트
+	            method: 'GET',
+	            dataType: 'json',
+	            success: function(list) {
+	            	console.log(list);
+	                $('#postContainer').empty(); // 기존 콘텐츠를 비움
+
+	                // for 루프를 사용하여 데이터 처리
+	                for (let i = 0; i < list.length; i++) {
+	                    const b = list[i]; // 현재 게시물 데이터
+
+	                    // 데이터와 HTML 요소 확인
+	                    console.log('게시물 데이터', b);
+
+	                    // HTML 문자열 생성
+	                    let postHtml = `
+	                    	 
+	                        <article class="post">
+	                            <div class="post-header">
+	                                <p class="post-meta">${b.photoFeedWriter} ${b.regDate}</p>
+	                            </div>
+	                            <div class="post-image-container">
+	                                <img src="/photo/${b.photoFeedImg}" alt="이미지" class="post-image">
+	                            </div>
+	                            <div class="post-footer">
+	                                <span class="post-comment">좋아요 ${b.totalLikes}</span>
+	                            </div>
+	                        </article>
+	                    `;
+
+	                    // 생성한 HTML을 DOM에 추가
+	                    $('#postContainer').append(postHtml);
+	                    $(".board-write").text("인기게시판");
+	                }
+	            },
+	            error: function() {
+					console.log("서버실패");
+	            }
+	        });
+	    });
+
 	});
- 
- 
 
     </script>
  

@@ -5,10 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import kr.or.iei.board.model.dao.BoardDao;
 import kr.or.iei.board.model.dto.Board;
-import kr.or.iei.photo.model.dto.Photo;
-import kr.or.iei.text.model.dto.TextFeed;
 
 @Service
 public class BoardService {
@@ -20,13 +19,24 @@ public class BoardService {
 		return boardDao.getAllBoards();
 	}
 
-	public List<Board> getbestFeedBoards() {
-	
-		return boardDao.getbestFeedBoards();
+	public List<Board> BestBoards() {
+		
+		return boardDao.BestBoards();
+	}
+
+	public List<Board> followingBoards() {
+		
+		return boardDao.followingBoards();
+	}
+
+	public List<Board> searchIdBoards() {
+		
+		return boardDao.searchIdBoards();
 	}
 
 
 
+	
 }
 
     

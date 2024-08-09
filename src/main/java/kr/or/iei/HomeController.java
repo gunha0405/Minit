@@ -38,16 +38,28 @@ public class HomeController {
     @GetMapping("/index")
     @ResponseBody
     public List<Board> getAllBoards() {
-        return boardService.getAllBoards(); // 단순히 게시판 리스트를 반환
-    }
-    public List<Board> bestFeedBoards(){
-    	
+        return boardService.getAllBoards(); // 단순히 게시판 리스트를 반환할거에여
     }
     
-    
-    
-
-    
+    @GetMapping("/best")
+    @ResponseBody
+    public List<Board> BestBoards(){
+    	List<Board> list = boardService.BestBoards();
+    	return list;
+    }
+    @GetMapping("/following")
+    @ResponseBody
+    public List<Board> followingBoards(){
+    	List<Board> list = boardService.followingBoards();
+    	return list;
+    }
+    @GetMapping("/search")
+    @ResponseBody
+    public List<Board> searchIdBoards(){
+    	List<Board> list = boardService.searchIdBoards();
+    	return list;
+    }
+   
     
     
 }
