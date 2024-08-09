@@ -162,7 +162,60 @@
             console.log("Photo Feed No: " + photoFeedNo);
             $("#modalImage").attr("src", imgSrc);
             $("#imageModal").modal("show");
-
+			
+         // 댓글 추가 버튼 클릭 이벤트 핸들러
+            $("#addCommentBtn").on("click", function() {
+              checkLoginStatus(function() {
+                const commentText = $("#commentInput").val();
+                console.log(commentText)
+                if (commentText.trim() === "") {
+                  Swal.fire({
+                    title: "댓글 입력 오류",
+                    text: "댓글을 입력해주세요.",
+                    icon: "warning"
+                  });
+                  return;
+                }
+                
+                
+                $.ajax({
+                  url: "/photo/insertComment",
+                  type: "POST",
+                  data: {
+                    photoFeedNo: photoFeedNo,
+                    photoFeedCommentContent: commentText
+                  },
+                  success: function(data) {
+                    if (data) {
+                      Swal.fire({
+                        title: "댓글 추가",
+                        text: "댓글이 성공적으로 추가되었습니다.",
+                        icon: "success"
+                      });
+                      // 댓글 목록 다시 불러오기
+                      loadComments(photoFeedNo);
+                      $("#commentInput").val(""); // 입력 필드 초기화
+                    } else {
+                      Swal.fire({
+                        title: "댓글 추가 실패",
+                        text: "댓글 추가에 실패했습니다. 다시 시도해주세요.",
+                        icon: "error"
+                      });
+                    }
+                  },
+                  error: function(xhr, status, error) {
+                    console.error("댓글 추가 오류: " + error);
+                    Swal.fire({
+                      title: "서버 전송 실패",
+                      text: "서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.",
+                      icon: "error"
+                    });
+                  }
+                });
+              });
+            });
+            
+            
             $.ajax({
               url: "/user/checkLoginStatus",
               type: "GET",
