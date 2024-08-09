@@ -19,5 +19,6 @@ public class Photo {
 	private List<PhotoComment> photoCommentList;
 	private int isLike;
 	private int isDec;
+	private int isSave;
 	
 }
