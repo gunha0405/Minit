@@ -3,6 +3,7 @@ package kr.or.iei.user.controller;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,10 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 import jakarta.servlet.http.HttpSession;
-//import kr.or.iei.util.EmailSender;
+import kr.or.iei.util.FileUtils;
 import kr.or.iei.user.model.dto.User;
 import kr.or.iei.user.model.service.UserService;
 import kr.or.iei.util.EmailSender;
@@ -23,6 +23,12 @@ import kr.or.iei.util.EmailSender;
 public class UserController {
 	@Autowired
 	private UserService userService;
+	
+	@Value("${file.root}")
+	private String root;//application.properties에 설정되어있는 file.root값을 가지고 와서 문자열로 저장
+	
+	@Autowired
+	private FileUtils fileUtils;//파일업로드를 처리해줄 객체
 	
 	//로그인
 	@PostMapping(value="/login")
@@ -101,6 +107,21 @@ public class UserController {
 	}
 	
 	//회원가입
+		@PostMapping(value = "/join")
+		public String join(User u, Model model) {
+			int result = userService.insertUser(u);
+			if(result > 0) {
+				model.addAttribute("title", "회원가입 성공");
+				model.addAttribute("msg", "MINIT의 회원이 되셨습니다!");
+				model.addAttribute("icon", "success");
+				model.addAttribute("loc", "/");
+				return "common/msg";				
+			}else {
+				return "redirect:/";			
+			}
+		}
+	/*
+	//회원가입
 	@PostMapping(value = "/join")
 	public String join(User u, Model model) {
 		int result = userService.insertUser(u);
@@ -120,6 +141,7 @@ public class UserController {
 			return "redirect:/";			
 		}
 	}
+	*/
 	
 	//회원탈퇴
 	@GetMapping(value="/delete")
