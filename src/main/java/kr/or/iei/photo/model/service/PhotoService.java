@@ -111,6 +111,22 @@ public class PhotoService {
     	Photo p = photoDao.getPhotoById(photoFeedNo);
         return p;
     }
+
+	public int save(int photoFeedNo, int isSave, int userNo) {
+		int result = 0;
+        if (isSave == 0) {
+            if (!photoDao.saveCheck(photoFeedNo, userNo)) {
+                result = photoDao.insertSave(photoFeedNo, userNo);
+            }
+        } else if (isSave == 1) {
+            result = photoDao.deleteSave(photoFeedNo, userNo);
+        }
+        return result;
+	}
+
+	public boolean saveCheck(int photoFeedNo, int userNo) {
+		return photoDao.saveCheck(photoFeedNo, userNo);
+	}
     
 }
 

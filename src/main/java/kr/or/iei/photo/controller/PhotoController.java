@@ -194,4 +194,30 @@ public class PhotoController {
             return user != null;
         }
     }
+    
+    @ResponseBody
+    @PostMapping(value="/save")
+    public int save(int photoFeedNo, int isSave, @SessionAttribute(required = false) User user) {
+        if (user == null) {
+            return -10;
+        } else {
+            int userNo = user.getUserNo();
+            int result = photoService.save(photoFeedNo, isSave, userNo);
+            return result;
+        }
+    }
+
+    @ResponseBody
+    @GetMapping(value="/saveStatus")
+    public int saveStatus(int photoFeedNo, @SessionAttribute(required = false) User user) {
+        if (user == null) {
+            return -10; // 로그인 필요
+        } else {
+            int userNo = user.getUserNo();
+            boolean isSave = photoService.saveCheck(photoFeedNo, userNo);
+            return isSave ? 1 : 0;
+        }
+    }
+    
+    
 }
