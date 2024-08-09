@@ -59,8 +59,21 @@ public class UserService {
 	*/
 
 	@Transactional
-	public int updateUser(User u) {
-		int result = userDao.updateUser(u);
+	public int updateUserAll(User u) {
+		int result = userDao.updateUserAll(u);
+		System.out.println(u);
+		return result;
+	}
+	@Transactional
+	public int updateUserBasic(User u) {
+		int result = userDao.updateUserBasic(u);
+		System.out.println(u);
+		return result;
+	}
+	@Transactional
+	public int updateUserReturn(User u) {
+		int result = userDao.updateUserReturn(u);
+		System.out.println(u);
 		return result;
 	}
 	

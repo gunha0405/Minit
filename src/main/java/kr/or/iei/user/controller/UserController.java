@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpSession;
 import kr.or.iei.util.FileUtils;
@@ -70,12 +71,39 @@ public class UserController {
 	
 	//마이페이지 회원정보 수정
 	@PostMapping(value="/update")
-	public String update(User u, @SessionAttribute User user) {
-		int result = userService.updateUser(u);
+	public String update(User u, @SessionAttribute User user, MultipartFile[] upfile, int imgtype) {
+		//System.out.println(upfile.length);
+		System.out.println(u.getUserImg());
+		System.out.println(u);
+		System.out.println(upfile);
+		int result = 0;
+		String savePath = root+"/user/";
+		if(upfile[0].isEmpty()) {
+			if(imgtype == 1) {
+				//기본이미지 설정 -> 기본이미지로 업데이트
+				u.setUserImg("minit_logo.png"); //DB에 있는 애니까 이 이름 보내주면 됨
+				//System.out.println("기본이미지");
+				result += userService.updateUserBasic(u);
+				
+			}else {
+				//변경하려다 안 하고 그대로 -> 이미지는 업데이트 x
+				result += userService.updateUserReturn(u);
+			}
+		}else {
+			for(MultipartFile profile : upfile) {
+				String filename = profile.getOriginalFilename();
+				//System.out.println(filename);
+				String filepath = fileUtils.upload(savePath, profile);
+				//System.out.println(filepath);
+				u.setUserImg(filepath);
+			}
+			result += userService.updateUserAll(u);
+		}
 		if (result>0) {
 			user.setUserNick(u.getUserNick());
 			user.setUserInfo(u.getUserInfo());
 			user.setUserPw(u.getUserPw());
+			user.setUserImg(u.getUserImg());
 			return "redirect:/user/mypage";
 		}else {
 			return "redirect:/";

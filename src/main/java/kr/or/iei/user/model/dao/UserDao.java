@@ -23,7 +23,7 @@ public class UserDao {
 		if(list.isEmpty()) {
 			return null;
 		}else {
-			return (User)list.get(0);			
+			return (User)list.get(0);
 		}
 	}
 
@@ -77,10 +77,25 @@ public class UserDao {
 		return userNo;
 	}
 
-	public int updateUser(User u) {
+	public int updateUserAll(User u) {
+		String query = "update user_tbl set user_nick=?, user_info=?, user_pw=?, update_date=to_char(sysdate,'yyyy-mm-dd'), user_img=? where user_no=?";
+		Object[] params = {u.getUserNick(),u.getUserInfo(),u.getUserPw(),u.getUserImg(),u.getUserNo()};
+		int result = jdbc.update(query, params);
+		System.out.println("이미지 변경");
+		return result;
+	}
+	public int updateUserBasic(User u) { //기본이미지 사용
+		String query = "update user_tbl set user_nick=?, user_info=?, user_pw=?, update_date=to_char(sysdate,'yyyy-mm-dd'), user_img='minit_logo.png' where user_no=?";
+		Object[] params = {u.getUserNick(),u.getUserInfo(),u.getUserPw(),u.getUserNo()};
+		int result = jdbc.update(query, params);
+		System.out.println("기본이미지로");
+		return result;
+	}
+	public int updateUserReturn(User u) { //이미지 업데이트 x
 		String query = "update user_tbl set user_nick=?, user_info=?, user_pw=?, update_date=to_char(sysdate,'yyyy-mm-dd') where user_no=?";
 		Object[] params = {u.getUserNick(),u.getUserInfo(),u.getUserPw(),u.getUserNo()};
 		int result = jdbc.update(query, params);
+		System.out.println("이미지 업데이트x");
 		return result;
 	}
 
