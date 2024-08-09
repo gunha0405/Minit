@@ -8,7 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import kr.or.iei.text.model.dto.TextFeed;
 import kr.or.iei.text.model.dto.TextFeedComment;
+import kr.or.iei.text.model.dto.TextFeedCommentPhotoRowMapper;
 import kr.or.iei.text.model.dto.TextFeedCommentRowMapper;
+import kr.or.iei.text.model.dto.TextFeedPhotoRowMapper;
+import kr.or.iei.text.model.dto.TextFeedReportRowMapper;
 import kr.or.iei.text.model.dto.TextFeedRowMapper;
 import kr.or.iei.user.model.dto.User;
 
@@ -22,10 +25,20 @@ public class TextDao {
 	
 	@Autowired
 	private TextFeedCommentRowMapper textFeedCommentRowMapper;
+	
+	@Autowired
+	private TextFeedReportRowMapper textFeedReportRowMapper;
+	
+	@Autowired
+	private TextFeedPhotoRowMapper textFeedPhotoRowMapper;
+	
+	@Autowired
+	private TextFeedCommentPhotoRowMapper textFeedCommentPhotoRowMapper;
+	
 
 	public List selectTextFeed() {
-		String query = "select * from text_feed where text_feed_status = 0 order by 1 desc";
-		List textFeedList = jdbc.query(query, textFeedRowMapper);
+		String query = "select * from text_feed join user_tbl on text_feed_writer = user_id order by 1 desc";
+		List textFeedList = jdbc.query(query, textFeedPhotoRowMapper);
 		return textFeedList;
 	}
 
@@ -48,6 +61,7 @@ public class TextDao {
 		String query = "select * from text_feed where text_feed_no = ?";
 		Object[] params = {textFeedNo};
 		List list = jdbc.query(query,textFeedRowMapper ,params);
+		System.out.println(list);
 		return (TextFeed)list.get(0);
 	}
 
@@ -81,9 +95,9 @@ public class TextDao {
 	
 
 	public List<TextFeedComment> selectTextFeedComment(int textFeedNo) {
-	    String query = "select * from text_feed_comment where text_feed_comment_ref = ? order by 1 desc";
+	    String query = "select * from text_feed_comment join user_tbl on text_feed_comment_writer = user_id where text_feed_comment_ref = ?";
 	    Object[] params = {textFeedNo};
-	    List<TextFeedComment> list= jdbc.query(query, textFeedCommentRowMapper, params);
+	    List<TextFeedComment> list= jdbc.query(query, textFeedCommentPhotoRowMapper, params);
 	    return list;
 	}
 
@@ -199,6 +213,40 @@ public class TextDao {
 		Object[] params = {textFeedNo};
 		int hideTextFeedResult = jdbc.update(query, params);
 		return hideTextFeedResult;
+	}
+
+	public boolean isSaveFeedExists(int textFeedNo, int userNo) {
+		String query = "select count(*) from text_feed_save where text_feed_no = ? and user_no = ?";
+		Object[] params = {textFeedNo, userNo};
+		int count = jdbc.queryForObject(query,Integer.class ,params);
+		return count>0;
+	}
+
+	public int insertTextFeedSave(int textFeedNo, int userNo) {
+		String query = "insert into text_feed_save values(?,?)";
+		Object[] params = {textFeedNo, userNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+	public int deleteTextFeedSave(int textFeedNo, int userNo) {
+		String query = "delete from text_feed_save where text_feed_no = ? and user_no = ?";
+		Object[] params = {textFeedNo, userNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+	public int selectTextFeedSaveStatus(int textFeedNo, int userNo) {
+		String query = "select count(*) from text_feed_save where text_feed_no = ? and user_no = ?";
+		Object[] params = {textFeedNo, userNo};
+		int isSave = jdbc.queryForObject(query, Integer.class, params);
+		return isSave;
+	}
+
+	public List<TextFeed> selectReportFeed() {
+		String query = "select text_feed_content, text_feed_no, user_no, text_feed_writer, warning_count,text_feed_reg_date from text_feed join user_tbl on text_feed_writer = user_id where text_feed_status = 1";
+		List<TextFeed> reportList = jdbc.query(query, textFeedReportRowMapper);
+		return reportList;
 	}
 	
 

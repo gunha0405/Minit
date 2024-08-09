@@ -14,4 +14,5 @@ public class TextFeedComment {
 	private String textFeedCommentRegDate;
 	private int textFeedCommentRef;
 	private int isLike;
+	private String textFeedCommentWriterImg;
 }

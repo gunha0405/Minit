@@ -40,5 +40,6 @@ public class HomeController {
     public List<Board> getAllBoards() {
         return boardService.getAllBoards(); // 단순히 게시판 리스트를 반환
     }
+
     
 }

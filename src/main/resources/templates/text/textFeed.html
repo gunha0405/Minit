@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
 .feed-is-report{
-	
+	display: none;
 }
 .comment-edit-textarea {
     width: 600px !important;
@@ -44,6 +44,7 @@
                 <div class="text-feed-write-area">
                     <!-- form 태그 대신 비동기 방식으로 글 작성 -->
                         <textarea name="text-feed-content" id="text-feed-content" placeholder="오늘 무슨일이 있었나요?(100자)"></textarea>
+                        <div id="text-feed-content-count" class="char-count">0/100</div>
                         <div class="text-feed-actions">
                             <button type="submit" class="text-feed-button write-btn">작성하기</button>
                         </div>
@@ -57,7 +58,9 @@
 	                	<span class="textFeedNo" th:text="${textFeed.textFeedNo}" style="display:none;"></span>
 	                	<span class="feed-is-report" th:text="${textFeed.isReport}"></span>
 	                    <div class="feed-profile-pic">
-	                        <img src="Profile Picture" alt="Profile Picture">
+	                    	
+	                        <img th:if="${textFeed.textFeedWriterImg != null}" th:src="${'/user/'+textFeed.textFeedWriterImg}">
+	                        <img th:if="${textFeed.textFeedWriterImg == null}" src="/user/minit_logo.png">
 	                    </div>
 	                    <div class="feed-content">
 	                        <p class="text-feed-writer" th:text="${textFeed.textFeedWriter}"></p>
@@ -71,25 +74,29 @@
 	                            <div class="feed-options">
 	                                <button class="feed-edit-btn" th:if="${session.user != null} and ${session.user.userId} == ${textFeed.textFeedWriter}"><span class="material-icons">edit</span></button>
 	                                <button class="feed-report-btn"><span class="material-icons">report_problem</span></button>
-	                                <button class="feed-bookmark-btn"><span class="material-icons">bookmark_border</span></button>
+	                                <button th:if="${textFeed.isSave == 1}" class="feed-bookmark-saved-btn" th:onclick="savePush(this,[[${textFeed.textFeedNo}]])"><span class="material-icons">bookmark</span></button>
+	                                <button th:if="${textFeed.isSave == 0}" class="feed-bookmark-btn" th:onclick="savePush(this,[[${textFeed.textFeedNo}]])"><span class="material-icons">bookmark_border</span></button>
 	                                <button class="feed-delete-btn" th:if="${session.user != null} and ${session.user.userId} == ${textFeed.textFeedWriter}"><span class="material-icons">delete_forever</span></button>
 	                        </div>
 	                    </div>
 	                    
 	                    
 	                    <div th:if="${session.user != null}" class="comment-section" style="display:none;">
-	                        <textarea  placeholder="댓글을 작성해보세요 !"></textarea>
+	                        <textarea id="text-feed-comment"  placeholder="댓글을 작성해보세요 !"></textarea>
+	                        <div id="text-feed-comment-count" class="char-count">글자 수: 0/50</div>
 	                        <button class="submit-comment">댓글 달기</button>
 	                        <div class="comments-container">
 							    <div class="comment" th:each="comment : ${textFeed.textFeedCommentList}">
 							    	<span class="textFeedCommentNo" th:text="${comment.textFeedCommentNo}" style="display:none;"></span>
 							        <div class="comment-profile-pic">
-							            <img src="Profile Picture" alt="Profile Picture">
+							            <img th:if="${comment.textFeedCommentWriterImg != null}" th:src="${'/user/'+comment.textFeedCommentWriterImg}">
+	                        			<img th:if="${comment.textFeedCommentWriterImg == null}" src="/user/minit_logo.png">
 							        </div>
 							        <div class="comment-content">
 							            <p class="comment-author" th:text="${comment.textFeedCommentWriter}"></p>
 							            <p class="comment-text" th:text="${comment.textFeedCommentContent}"></p>
 							            <textarea class="comment-edit-textarea" style="display:none;" th:text="${comment.textFeedCommentContent}"></textarea>
+							            <div id="text-feed-comment-count" class="char-count" style="display:none;">글자 수: 0/50</div>
 							            <div class="comment-actions">
 							                <i th:if="${comment.isLike == 1}" id="comment-like" class="fa fa-heart" th:onclick="commentLikePush(this,[[${comment.textFeedCommentNo}]])"></i>
 							                <i th:if="${comment.isLike == 0}" id="comment-not-like" class="fa fa-regular fa-heart" th:onclick="commentLikePush(this,[[${comment.textFeedCommentNo}]])"></i>
@@ -136,6 +143,7 @@
 	      <div class="modal-body">
 	        <div class="text-feed-write-area">
 	          <textarea name="text-feed-content" id="modal-text-feed-content" placeholder="글 내용 수정하기(100자)"></textarea>
+	          <div id="name-text-feed-content-count" class="char-count">글자 수: 0/100</div>
 	          <div class="text-feed-actions">
 	            <button type="submit" class="text-feed-button modal-write-btn">수정하기</button>
 	          </div>
@@ -222,9 +230,68 @@
     	});
     }
     
+    function savePush(obj, textFeedNo){
+    	const currentSave = $(obj).attr('class');
+    	const isSave = (currentSave == "feed-bookmark-btn") ? 0 : 1;
+		$.ajax({
+			url : "/text/textFeedSave",
+			type : "get",
+			data : {
+				textFeedNo : textFeedNo,
+				isSave : isSave
+			},
+			success : function(data){
+				if(data == -10){
+					swal({
+                        title: "로그인 필요",
+                        text: "로그인 후 이용해 주세요",
+                        icon: "info"
+                    });
+				}else if(data == -1){
+					swal({
+                        title: "데이터 처리 오류",
+                        text: "잠시 후 다시 시도해주세요",
+                        icon: "warning"
+                    });
+				}else{
+					if(isSave == 0){
+						// 차있는 북마크로 바꾸기
+						$(obj).removeClass('feed-bookmark-btn').addClass('feed-bookmark-saved-btn');
+					    $(obj).find('span.material-icons').text('bookmark');
+					}else{
+						// 비어있는 북마크로 바꾸기
+						$(obj).removeClass('feed-bookmark-saved-btn').addClass('feed-bookmark-btn');
+					    $(obj).find('span.material-icons').text('bookmark_border');
+					}
+				}
+			},
+			error : function(){
+				alert("서버 연결 실패");
+			}
+		});
+    	
+    }
     
     
     $(document).ready(function() {
+    	function limitTextWithoutSpaces(input, maxLength, counterId) {
+            $(input).on('input', function() {
+                let content = $(this).val();
+                let contentLength = content.replace(/\s/g, '').length; // 공백을 제외한 길이 계산
+
+                if (contentLength > maxLength) {
+                    content = content.substring(0, maxLength + (content.length - content.replace(/\s/g, '').length));
+                    $(this).val(content);
+                    contentLength = maxLength;
+                }
+                $(counterId).text(`글자 수: ${contentLength}/${maxLength}`);
+            });
+        }
+
+        limitTextWithoutSpaces('#text-feed-content', 100, '#text-feed-content-count');
+        limitTextWithoutSpaces('#text-feed-comment', 50, '#text-feed-comment-count');
+        limitTextWithoutSpaces('textarea[name="text-feed-content"]', 100, '#name-text-feed-content-count');
+    	
         let feeds = $('#text-feed-feeds .feed');
         let numPerPage = 4;
         let currentPage = 1;
@@ -354,11 +421,13 @@
                     console.log(data);
                     const newfeed = data.textFeed;
                     const user = data.user;
+                    const userImg = newfeed.textFeedWriterImg;
+                    console.log(userImg);
                     const feedHtml = `
                         <div class="feed" style="display:none;">
                             <span class="textFeedNo" style="display:none;">${newfeed.textFeedNo}</span>
                             <div class="feed-profile-pic">
-                                <img src="Profile Picture" alt="Profile Picture">
+                                <img src="/user/${userImg}" alt="Profile Picture">
                             </div>
                             <div class="feed-content">
                                 <p class="text-feed-writer">${newfeed.textFeedWriter}</p>
@@ -377,7 +446,7 @@
                                 </div>
                             </div>
                             <div class="comment-section" style="display: none;">
-                                <textarea placeholder="댓글을 작성해보세요 !"></textarea>
+                                <textarea id="text-feed-comment" placeholder="댓글을 작성해보세요 !"></textarea>
                                 <button class="submit-comment">댓글 달기</button>
                                 <div class="comments-container">
                                 
@@ -430,11 +499,12 @@
                 success: function(data){
                     const comment = data.textFeedComment;
                     const user = data.commentWriterUser;
+                    const userImg = comment.textFeedCommentWriterImg;
                     const commentHtml = `
                         <div class="comment" style="display:none;">
                             <span class="textFeedCommentNo" style="display:none;">${comment.textFeedCommentNo}</span>
                             <div class="comment-profile-pic">
-                                <img src="userprofilePic" alt="Profile Picture">
+                                <img src="/user/${userImg}" alt="Profile Picture">
                             </div>
                             <div class="comment-content">
                                 <p class="comment-author">${comment.textFeedCommentWriter}</p>
@@ -583,7 +653,9 @@
             const textFeedCommentElement = $(this).closest(".comment");
             textFeedCommentElement.find(".comment-text").hide();
             textFeedCommentElement.find(".comment-edit-textarea").show();
+            textFeedCommentElement.find("#text-feed-comment-count").show();
             textFeedCommentElement.find(".comment-save-btn").show();
+            
             $(this).hide();
             
             const textFeedCommentNo = textFeedCommentElement.find(".textFeedCommentNo").text();
@@ -612,6 +684,7 @@
                             icon: "success"
                         });
                         textFeedCommentElement.find(".comment-text").text(textFeedCommentEditContent).show();
+                        
                         textFeedCommentElement.find(".comment-edit-textarea").hide();
                         textFeedCommentElement.find(".comment-save-btn").hide();
                         textFeedCommentElement.find(".comment-edit-btn").show();
