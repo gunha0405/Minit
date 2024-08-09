@@ -3,6 +3,7 @@ package kr.or.iei.user.controller;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,10 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpSession;
-//import kr.or.iei.util.EmailSender;
+import kr.or.iei.util.FileUtils;
 import kr.or.iei.user.model.dto.User;
 import kr.or.iei.user.model.service.UserService;
 import kr.or.iei.util.EmailSender;
@@ -23,6 +24,12 @@ import kr.or.iei.util.EmailSender;
 public class UserController {
 	@Autowired
 	private UserService userService;
+	
+	@Value("${file.root}")
+	private String root;//application.properties에 설정되어있는 file.root값을 가지고 와서 문자열로 저장
+	
+	@Autowired
+	private FileUtils fileUtils;//파일업로드를 처리해줄 객체
 	
 	//로그인
 	@PostMapping(value="/login")
@@ -64,12 +71,39 @@ public class UserController {
 	
 	//마이페이지 회원정보 수정
 	@PostMapping(value="/update")
-	public String update(User u, @SessionAttribute User user) {
-		int result = userService.updateUser(u);
+	public String update(User u, @SessionAttribute User user, MultipartFile[] upfile, int imgtype) {
+		//System.out.println(upfile.length);
+		System.out.println(u.getUserImg());
+		System.out.println(u);
+		System.out.println(upfile);
+		int result = 0;
+		String savePath = root+"/user/";
+		if(upfile[0].isEmpty()) {
+			if(imgtype == 1) {
+				//기본이미지 설정 -> 기본이미지로 업데이트
+				u.setUserImg("minit_logo.png"); //DB에 있는 애니까 이 이름 보내주면 됨
+				//System.out.println("기본이미지");
+				result += userService.updateUserBasic(u);
+				
+			}else {
+				//변경하려다 안 하고 그대로 -> 이미지는 업데이트 x
+				result += userService.updateUserReturn(u);
+			}
+		}else {
+			for(MultipartFile profile : upfile) {
+				String filename = profile.getOriginalFilename();
+				//System.out.println(filename);
+				String filepath = fileUtils.upload(savePath, profile);
+				//System.out.println(filepath);
+				u.setUserImg(filepath);
+			}
+			result += userService.updateUserAll(u);
+		}
 		if (result>0) {
 			user.setUserNick(u.getUserNick());
 			user.setUserInfo(u.getUserInfo());
 			user.setUserPw(u.getUserPw());
+			user.setUserImg(u.getUserImg());
 			return "redirect:/user/mypage";
 		}else {
 			return "redirect:/";
@@ -101,19 +135,41 @@ public class UserController {
 	}
 	
 	//회원가입
+		@PostMapping(value = "/join")
+		public String join(User u, Model model) {
+			int result = userService.insertUser(u);
+			if(result > 0) {
+				model.addAttribute("title", "회원가입 성공");
+				model.addAttribute("msg", "MINIT의 회원이 되셨습니다!");
+				model.addAttribute("icon", "success");
+				model.addAttribute("loc", "/");
+				return "common/msg";				
+			}else {
+				return "redirect:/";			
+			}
+		}
+	/*
+	//회원가입
 	@PostMapping(value = "/join")
 	public String join(User u, Model model) {
 		int result = userService.insertUser(u);
 		if(result > 0) {
-			model.addAttribute("title", "회원가입 성공");
-			model.addAttribute("msg", "MINIT의 회원이 되셨습니다!");
-			model.addAttribute("icon", "success");
-			model.addAttribute("loc", "/");
-			return "common/msg";
+			int userNo = userService.selectUserNo(u.getUserId());
+			int result2 = userService.insertUserImg(userNo);
+			if(result2 > 0) {
+				model.addAttribute("title", "회원가입 성공");
+				model.addAttribute("msg", "MINIT의 회원이 되셨습니다!");
+				model.addAttribute("icon", "success");
+				model.addAttribute("loc", "/");
+				return "common/msg";				
+			}else {
+				return "redirect:/";							
+			}
 		}else {
 			return "redirect:/";			
 		}
 	}
+	*/
 	
 	//회원탈퇴
 	@GetMapping(value="/delete")

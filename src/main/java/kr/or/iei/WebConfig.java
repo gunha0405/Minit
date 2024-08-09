@@ -33,6 +33,13 @@ public class WebConfig implements WebMvcConfigurer {
 		registry
 		.addResourceHandler("/feed/**")
 		.addResourceLocations("file:///"+root+"/feed/");
+		
+
+
+		registry
+		.addResourceHandler("/user/**")
+		.addResourceLocations("file:///"+root+"/user/");
+
 			
 	}
 

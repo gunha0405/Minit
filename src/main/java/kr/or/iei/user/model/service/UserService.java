@@ -1,6 +1,7 @@
 package kr.or.iei.user.model.service;
 
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,9 +45,35 @@ public class UserService {
 		return result;
 	}
 
+	/*
+	public int selectUserNo(String userId) {
+		int userNo = userDao.selectUserNo(userId);
+		return userNo;
+	}
+	
 	@Transactional
-	public int updateUser(User u) {
-		int result = userDao.updateUser(u);
+	public int insertUserImg(int userNo) {
+		int result = userImgDao.insertUserImg(userNo);
+		return result;
+	}
+	*/
+
+	@Transactional
+	public int updateUserAll(User u) {
+		int result = userDao.updateUserAll(u);
+		System.out.println(u);
+		return result;
+	}
+	@Transactional
+	public int updateUserBasic(User u) {
+		int result = userDao.updateUserBasic(u);
+		System.out.println(u);
+		return result;
+	}
+	@Transactional
+	public int updateUserReturn(User u) {
+		int result = userDao.updateUserReturn(u);
+		System.out.println(u);
 		return result;
 	}
 	
@@ -84,9 +111,68 @@ public class UserService {
 
 	@Transactional
 	public int changeCount(User u) {
-		int result = userDao.changeCount(u);
+		int result = userDao.changeCount(u); //경고 횟수 누적
+		int warningCount = userDao.warningCount(u); //해당 회원의 경고횟수 받아오기
+		if(warningCount == 5) {
+			result += userDao.updateLevel(u);
+		}
 		return result;
 	}
+
+	@Transactional
+	public int checkedChangeCount(String no, String count) {
+		StringTokenizer sTno = new StringTokenizer(no, "/");
+		StringTokenizer sTcount = new StringTokenizer(count, "/");
+		int result = 0;
+		int result1 = 0;
+		int result2 = 0;
+		while(sTno.hasMoreTokens()) {
+			int userNo = Integer.parseInt(sTno.nextToken());
+			int warnCount = Integer.parseInt(sTcount.nextToken());
+			User u = new User();
+			u.setUserNo(userNo);
+			u.setWarningCount(warnCount);
+			result1 += userDao.changeCount(u);
+			int warningCount = userDao.warningCount(u);
+			if(warningCount == 5) {
+				result2 += userDao.updateLevel(u);
+			}
+		}if(result1 != 0 && result2 !=0) {
+			result += 2;
+		}else if(result1 != 0 && result2 == 0) {
+			result += 1;
+		}else {
+			result = 0;
+		}
+		return result;
+	}
+	/*
+	@Transactional
+	public boolean checkedChangeCount(String no, String count) {
+		StringTokenizer sTno = new StringTokenizer(no, "/");
+		StringTokenizer sTcount = new StringTokenizer(count, "/");
+		boolean result = true;
+		while(sTno.hasMoreTokens()) {
+			int userNo = Integer.parseInt(sTno.nextToken());
+			int warnCount = Integer.parseInt(sTcount.nextToken());
+			User u = new User();
+			u.setUserNo(userNo);
+			u.setWarningCount(warnCount);
+			int intResult = userDao.changeCount(u);
+			int warningCount = userDao.warningCount(u);
+			if(warningCount == 5) {
+				intResult += userDao.updateLevel(u);
+			}
+			if(intResult == 0) {
+				result = false;
+				break;
+			}
+		}
+		return result;
+	}
+	*/
+
+
 
 	
 	

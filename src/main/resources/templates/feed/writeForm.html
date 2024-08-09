@@ -31,39 +31,40 @@
 			<div class="page-title">
 				<p>새 게시물</p>
 			</div>
-			<form action="/feed/feedWrite" method="post"
-				enctype="multipart/form-data">
-				<div class="image-container">
-					<div class="image-box">
-						<input class="input-image-box" type="file" id="mainImageInput"
-							name="upfile"> <label for="mainImageInput"
-							class="image-label">이미지 선택</label> <img id="mainImage" src=""
-							alt="">
-					</div>
-					<div class="image-box" id="topRightBox">
-						<input class="input-image-box" type="file" id="topRightImageInput"
-							name="upfile"> <label for="topRightImageInput"
-							class="image-label">이미지 선택</label> <img id="topRightImage" src=""
-							alt="">
-					</div>
-					<div class="image-box" id="bottomRightBox">
-						<input class="input-image-box" type="file"
-							id="bottomRightImageInput" name="upfile"> <label
-							for="bottomRightImageInput" class="image-label">이미지 선택</label> <img
-							id="bottomRightImage" src="" alt="">
-					</div>
-				</div>
+			<form action="/feed/feedWrite" method="post" enctype="multipart/form-data">
+				 <div class="image-container">
+			        <div class="image-box">
+			            <input class="input-image-box" type="file" id="mainImageInput" name="upfile1"> 
+			            <label for="mainImageInput" class="image-label">이미지 선택</label> 
+			            <img id="mainImage" src="" alt="">
+			            <button type="button" class="delete-image" data-target="#mainImage">삭제</button>
+			            <!-- 파일번호  -->
+			        </div>
+			        <div class="image-box" id="topRightBox">
+			            <input class="input-image-box" type="file" id="topRightImageInput" name="upfile2"> 
+			            <label for="topRightImageInput" class="image-label">이미지 선택</label> 
+			            <img id="topRightImage" src="" alt="">
+			            <button type="button" class="delete-image" data-target="#topRightImage">삭제</button>
+			        </div>
+			        <div class="image-box" id="bottomRightBox">
+			            <input class="input-image-box" type="file" id="bottomRightImageInput" name="upfile3"> 
+			            <label for="bottomRightImageInput" class="image-label">이미지 선택</label> 
+			            <img id="bottomRightImage" src="" alt="">
+			            <button type="button" class="delete-image" data-target="#bottomRightImage">삭제</button>
+			        </div>
+			    </div>
 				<table class="tbl">
 					<td style="width: 40%;">
-						<!--히든으로 숨길예정--> <input type="hidden" name="userFeedWriter"
-						th:value="${session.user.userId}">
+						<!--히든으로 숨길예정--> 
+						<input type="hidden" name="userFeedWriter" th:value="${session.user.userId}">
+						<!--<input type="hidden" name="userFeedWriter" th:value="${session.user.userNo}">-->
 					</td>
 					</tr>
 					<tr>
 						<td colspan="4">
 							<div class="input-item">
 								<!-- 본문은 여러줄의 값을 입력하므로 input이 아닌 textarea로 입력 받음 -->
-								<textarea name="userFeedContnet" id="userFeedContnet"></textarea>
+								<textarea name="userFeedContent" id="userFeedContent"></textarea>
 							</div>
 						</td>
 
@@ -71,7 +72,7 @@
 
 					<tr class="button-tr">
 						<td colspan="4">
-							<button type="submit" class="button-style">글 올리기</button>
+							<button type="submit" class="button-style" onclick="return func()";>글 올리기</button>
 						</td>
 					</tr>
 				</table>
@@ -99,7 +100,26 @@
 		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
 		crossorigin="anonymous"></script>
 	<script>
-		$('#userFeedContnet').summernote(
+		function func(){
+				const mainImage = document.querySelector("#mainImage");
+	            const src1 = mainImage.getAttribute("src");
+				const topRightImage = document.querySelector("#topRightImage");
+	            const src2 = topRightImage.getAttribute("src");
+	            const bottomRightImage = document.querySelector("#bottomRightImage");
+	            const src3 = bottomRightImage.getAttribute("src");
+	            const text = document.querySelector("#userFeedContent");
+	            const textContent = text.value;
+				if(src1 === ''  && src2 === '' && src3 === ''){
+					alert("사진을 첨부해주세요.");
+					return false;
+				}
+	            if(textContent === ''){
+	                alert("글을 입력해주세요.");
+	                return false;
+	            }
+		}
+	
+		$('#userFeedContent').summernote(
 				{
 					// 에디터 높이
 					height : 500,

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<link rel="stylesheet" href="/css/user/userStyle.css" />
+<link rel="stylesheet" href="/css/user/userStyle.css"/>
 <head>
 <meta charset="UTF-8">
 <title>MINIT_mypage</title>
@@ -20,19 +20,25 @@
                         <table class="info-tbl">
                             <tr>
                                 <th>프로필 사진</th>
-                                <td width="530px">
-	                              <img class="basic-img img-show" src="/image/logo/minit_logo_2.png">                               
+                                <td style="width:530px">
+                                <input type="hidden" name="imgtype" id="imgtype" value="0">
+                                  <div class="basic-img">
+                                  	<input type="hidden" name="userImg" th:value="${session.user.userImg}"/>
+	                                <img class="img-show" th:src="${'/user/'+session.user.userImg}">                               
+                                  </div>
 	                              <div id="img-viewer" class="img-none">
 	                                <img id="img-view">
 	                              </div>
+	                              <div class="logo-img img-none">
+	                                <img class="img-show logo" style="width: 40%; margin: 0 auto;"src="/user/minit_logo.png">                               
+                                  </div>
                                 </td>
                                 <td>
                                   <label for="upfile" class="img-change-btn">변경
                                 	<input type="file" name="upfile" id="upfile" accept=".jpg,.png,.jpeg" onchange="loadImg(this);" style="display: none;">
                                   </label>
-                                  <!-- <button type="button" class="img-change-btn">변경</button> -->
-                                  <button type="button" class="img-delete-btn">기본이미지</button>
-                                  <!-- <button type="button" class="img-delete-btn">기본이미지</button> -->
+                                  <button type="button" class="img-delete-btn">변경 취소</button>
+                                  <button type="button" class="img-logo-btn">기본이미지</button>
                                 </td>
                             </tr>
                             <tr>
@@ -46,7 +52,7 @@
                                 </th>
                                 <td>
                                   <div class="input-item">
-                                    <input type="text" name="userNick" id="userNick" th:value="${{session.user.userNick}}">
+                                    <input type="text" name="userNick" id="userNick" th:value="${session.user.userNick}">
 	                                <p class="input-msg nick-check-msg none"></p>
                                   </div>
                                 </td>
@@ -104,7 +110,7 @@
                         <div class="mypage-btn">
                           <button type="submit" class="btn-point1">정보수정</button>
                           <button type="button" class="btn-point2 delBtn">회원탈퇴</button>
-                          <a th:if="${session.user.userLevel == 1}" href="/admin/warningUser" class="btn-point3">관리자 페이지로</a>
+                          <a th:if="${session.user.userLevel == 1}" href="/admin/warningMain" class="btn-point3">관리자 페이지로</a>
                         </div>
                     </form>
                 </div>
@@ -142,8 +148,16 @@
 		});
 		
 
+		$(".img-logo-btn").on("click",function(){
+			$("#imgtype").val(1);
+			$(".logo-img").addClass("img-show").removeClass("img-none");
+			$(".basic-img").removeClass("img-show").addClass("img-none");
+			$("#img-viewer").removeClass("img-show").addClass("img-none");
+			$("#upfile").val(null); //이벤트의 주체가 이거니까! 제대로 확인
+		});
 		$(".img-delete-btn").on("click",function(){
 			$(".basic-img").addClass("img-show").removeClass("img-none");
+			$(".logo-img").removeClass("img-show").addClass("img-none");
 			$("#img-viewer").removeClass("img-show").addClass("img-none");
 			$("#upfile").val(null); //이벤트의 주체가 이거니까! 제대로 확인
 		});
@@ -155,6 +169,7 @@
 					reader.readAsDataURL(obj.files[0]);
 					reader.onload = function(e){
 						$(".basic-img").removeClass("img-show").addClass("img-none");
+						$(".logo-img").removeClass("img-show").addClass("img-none");
 						$("#img-viewer").removeClass("img-none").addClass("img-show");
 						console.log(1);
 						$("#img-view").attr("src",e.target.result);
@@ -162,6 +177,7 @@
 					console.log(2); //이게 먼저
 				}else{
 					$(".basic-img").addClass("img-show").removeClass("img-none");
+					$(".logo-img").removeClass("img-show").addClass("img-none");
 					$("#img-viewer").removeClass("img-show").addClass("img-none");
 					$("#img-view").attr("src","");
 				}

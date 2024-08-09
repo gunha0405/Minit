@@ -13,7 +13,7 @@ public class UserImgRowMapper implements RowMapper<UserImg> {
 	public UserImg mapRow(ResultSet rs, int rowNum) throws SQLException {
 		UserImg userImg = new UserImg();
 		userImg.setImgNo(rs.getInt("img_no"));
-		userImg.setUserId(rs.getString("user_id"));
+		userImg.setUserNo(rs.getInt("user_no"));
 		userImg.setImgType(rs.getInt("img_type"));
 		userImg.setImgOrg(rs.getString("img_org"));
 		userImg.setImgStorage(rs.getString("img_storage"));

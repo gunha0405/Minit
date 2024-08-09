@@ -22,6 +22,11 @@
 .content-info {
 	margin-top: 150px;
 }
+
+.slides-img img {
+	width: 100%;
+	height: 100%;
+}
 </style>
 </head>
 
@@ -40,18 +45,17 @@
 				<tr class="content-imgs">
 					<td colspan="3">
 						<div class="slider-img">
-					 <th:block th:each="item : ${list}">
-						<div class="slides-img">
-						
-                			 <img class="slide-img" th:src="${item.userFeedFilepath}" alt="photo"/>
-						</div>
-					 </th:block>
+							<div class="slides-img">
+								<th:block th:each="item : ${list}">
+									<img class="slide-img" th:src="${item.userFeedFilepath}" alt="photo" />
+								</th:block>
+							</div>
 							<button class="nav-button-img prev-img" onclick="prevSlide()">❮</button>
 							<button class="nav-button-img next-img" onclick="nextSlide()">❯</button>
 						</div>
 					</td>
 				</tr>
-		
+
 				<tr class="icons-row">
 					<td colspan="2">
 						<div class="left-icons">
@@ -66,39 +70,39 @@
 					<td th:utext="${feed.userFeedContent}"></td>
 				</tr>
 				<tr>
-					<td colspan="3" class="chat-icon"><span class="material-icons"
-						id="icon">add_comment</span></td>
+					<td colspan="3" class="chat-icon">
+					<span class="material-icons" id="icon">add_comment</span></td>
 				</tr>
 			</table>
 		</div>
 
 		<!--댓글 창 : chat icon 누르면 열리도록-->
-		<div class="inputCommentBox">
-			<form action="#" method="post">
-				<div class="form-wrap">
-					<ul>
-						<li class="comment-user-container"><img
-							src="image/profilePhoto.jfif" alt="user-image"
-							class="comment-user"></li>
-						<li class="comment-input-container"><input type="hidden"
-							name="feedCommentWriter" value="아이디"> <input
-							type="hidden" name="feedCommentWriterNo" value="회원번호">
-							<div class="input-item">
-								<textarea name="feedCommentContent" class="feedCommentContent"></textarea>
-							</div></li>
-						<li class="comment-button-container">
-							<button type="submit" class="btn-primary">등록</button>
-						</li>
-					</ul>
-				</div>
-			</form>
-		</div>
+		<div class="inputCommentBox hidden">
+	    <div class="form-wrap">
+	      <ul>
+	        <li class="comment-user-container">
+	          <img src="image/profilePhoto.jfif" alt="user-image" class="comment-user">
+	        </li>
+	        <li class="comment-input-container">
+	         <!--  <input type="hidden" name="feedCommentWriter" value="아이디"> -->
+	          <input type="hidden" name="feedCommentWriterNo" value="{feed.userFeedNo}">
+	          <input type="hidden" name="userFeedNo" class="userFeedNo" th:value="${feed.userFeedNo}">
+	          <input type="hidden" name="userId" class="userId" th:value="${session.user.userId}">
+	          <div class="input-item">
+	            <textarea name="feedCommentContent" class="feedCommentContent"></textarea>
+	          </div>
+	       		</li>
+	        	<li class="comment-button-container">
+	          <button class="btn-primary sendComment">등록</button>
+	        </li>
+	      </ul>
+	    </div>
 
 		<div class="comment-wrap">
 			<table>
 				<tr>
-					<td style="width: 10%;"><a href="#"><img
-							src="image/profilePhoto.jfif" alt="" class="comment-user"></a>
+					<td style="width: 10%;"><a href="#">
+					<img src="image/profilePhoto.jfif" alt="" class="comment-user"></a>
 					</td>
 					<td style="width: 70%;"><span>feed-comment</span></td>
 					<td style="width: 20%;"><span
@@ -119,81 +123,76 @@
 
 			</table>
 		</div>
-
+		</div>
 		<!-- 수정 / 삭제 버튼 : 로그인한 유저의 글에만 보임-->
 		<div class="btn-wrap">
 			<ul>
 				<li>
-					<button class="button-style" id="insertBtn">수정</button>
+					<button class="button-style" th:if="${session.user.userId == feed.userFeedWriter}" th:onclick="feedUpdate([[${feed.userFeedNo}]],[[${feed.userFeedWriter}]])">수정</button> 
 				</li>
 				<li>
-					<button class="button-style" th:onclick="feedDelete([[${feed.userFeedNo}]])">삭제</button>
+					<button class="button-style"
+						th:if="${session.user.userId == feed.userFeedWriter}" th:onclick="feedDelete([[${feed.userFeedNo}]])">삭제</button>
 				</li>
 			</ul>
 		</div>
+		
 
 		</section>
-	
-		<script>
-		function feedDelete(userFeedNo) {
-			swal({
-                title:"게시글 삭제",
-                text :"게시글을 삭제하시겠습니까?",
-                icon :"warning",
-                buttons:{
-                    cancel:{
-                        text:"취소",
-                        value:false,
-                        visible:true,
-                        className:"btn-secondary",
-                        closeModal:true
-                    },
-                    confirm:{
-                        text:"삭제",
-                        value:true,
-                        visible:true,
-                        className:"btn-point",
-                        closeModal:true
-                    }
-                }
-            }).then(function(isConfirm){
-                if(isConfirm){
-                    location.href="/feed/delete?userFeedNo="+userFeedNo;
-                }   
-            });
-		}
-		
-    document.addEventListener('DOMContentLoaded', () => {
-        const slides = document.querySelector('.slides-img');
-        const slideCount = document.querySelectorAll('.slide-img').length;
-        let index = 0;
 
-        function showSlide(newIndex) {
-            if (newIndex >= slideCount) {
-                index = 0;
-            } else if (newIndex < 0) {
-                index = slideCount - 1;
-            } else {
-                index = newIndex;
-            }
-            slides.style.transform = `translateX(${-index * 100}%)`;
-        }
+	<script src="/js/feed/view.js"></script>
+	<script>
+	$(document).on("click", ".sendComment", function(){
+		  const feedCommentContent = $(".feedCommentContent").val();
+	      const feedRef = $(".userFeedNo").val();
 
-        function prevSlide() {
-            showSlide(index - 1);
-        }
+	      // 콘솔 로그로 값 확인
+	      console.log("feedCommentContent: " + feedCommentContent);
+	      console.log("feedRef: " + feedRef);
+	      
+		  if(feedCommentContent.trim() === ""){
+		      alert("글을 입력해주세요"); // 오타 수정
+		      return; // 입력이 비어 있으면 함수 종료
+		  }
 
-        function nextSlide() {
-            showSlide(index + 1);
-        }
-
-        // Assign functions to buttons
-        document.querySelector('.prev-img').addEventListener('click', prevSlide);
-        document.querySelector('.next-img').addEventListener('click', nextSlide);
-    });
-    </script>
-
-
-		<th:block th:include="common/footer"></th:block>
+		  $.ajax({
+		      url: '/feed/commentWrite', // 서버의 댓글 처리 URL 
+		      type: 'post',
+		      data: {
+		    	  feedCommentContent : feedCommentContent,
+		    	  feedRef : feedRef
+		      },
+		      dataType: "json",
+		      success: function(data) {
+		    	  console.log(data);
+		          // 성공적으로 댓글이 저장된 후 댓글 목록을 갱신하거나, 댓글을 추가
+		          //$(".comment-wrap").append(`
+		          //    <tr>
+		           //       <td style="width: 10%;"><a href="#">
+		            //      <img src="image/profilePhoto.jfif" alt="" class="comment-user"></a>
+		            //      </td>
+		            //      <td style="width: 70%;"><span>${feedCommentContent}</span></td>
+		            //      <td style="width: 20%;"><span
+		            //          class="material-icons toggle-icon" id="icon-favorite">favorite_border</span>
+		            //          <span class="material-icons toggle-icon" id="icon-more">more_vert</span>
+		            //      </td>
+		            //      <td>
+		            //          <div id="icon-container" class="hidden">
+		            //              <span class="material-icons">edit_document</span> <span
+		            //                  class="material-icons">folder_delete</span>
+		             //         </div>
+		            //      </td>
+		            //  </tr>
+		        //  `);
+		          //$(".feedCommentContent").val(''); // 댓글 입력 필드 비우기
+		      },
+		      error: function() {
+		          console.log('댓글 저장 실패:');
+		          alert('댓글 저장 실패. 다시 시도해 주세요.');
+		      }
+		 })
+	});
+	</script>
+	<th:block th:include="common/footer"></th:block>
 </body>
 </html>

@@ -49,6 +49,8 @@ public class TextController {
     		int textFeedNo = textService.getTextFeedNo();
     		TextFeed textFeed = textService.selectOneTextFeed(textFeedNo); 
     		User writerUser = userService.selectOneUser(user);
+    		textFeed.setTextFeedWriterImg(writerUser.getUserImg());
+    		System.out.println("유저 이미지 : " + writerUser.getUserImg());
     		TextFeedJsonList textFeedJsonList = new TextFeedJsonList(writerUser, textFeed);
     		return textFeedJsonList;
     	} else {
@@ -75,6 +77,7 @@ public class TextController {
     		int textFeedCommentNo = textService.getTextFeedCommentNo();
     		TextFeedComment textFeedComment = textService.selectOnetTextFeedComment(textFeedCommentNo);
     		User commentWriterUser = userService.selectOneUser(user);
+    		textFeedComment.setTextFeedCommentWriterImg(commentWriterUser.getUserImg());
     		TextFeedCommentJsonList textFeedCommentJsonList = new TextFeedCommentJsonList(commentWriterUser, textFeedComment);
     		return textFeedCommentJsonList;
     	}else {    		
@@ -137,6 +140,26 @@ public class TextController {
     		int result = textService.textFeedReport(textFeedNo, userNo, isReport);
     		return result;
     	}
+    }
+    
+    @ResponseBody
+    @GetMapping(value="/textFeedSave")
+    public int textFeedSave(int textFeedNo, int isSave, @SessionAttribute(required = false) User user) {
+    	if(user == null) {
+    		return -10;
+    	}else {
+    		int userNo = user.getUserNo();
+    		int result = textService.textFeedSave(textFeedNo, userNo, isSave);
+    		return result;
+    	}
+    }
+    
+    @GetMapping(value="/selectReportFeed")
+    public String selectReportFeed(Model model) {
+    	List<TextFeed> reportList = textService.selectReportFeed();
+    	
+    	model.addAttribute("reportList", reportList);
+    	return "/admin/warningText";
     }
     
 }

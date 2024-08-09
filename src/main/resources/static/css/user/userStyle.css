@@ -10,7 +10,15 @@
 .warn-btn{
   background-color: #75daa4;
   border: none;
-  border-radius: 10px;
+  border-radius: 15px;
+}
+
+.checked-warn-btn{
+  background-color: #75daa4;
+  border: none;
+  border-radius: 15px;
+  width: 80%;
+  height: 30px;
 }
 
 .page-title{
@@ -71,13 +79,20 @@
 .info-tbl td #userInfo{
 	width: 100%;
 }
-.info-tbl td>.basic-img{
+.info-tbl td>.basic-img>img{
   width: 40%;
   margin: 0 auto;
 }
 .info-tbl td>#img-viewer>img{
   width: 40%;
+  margin: 0 auto;
 }
+/* 제대로 안 먹어서 html에 먹임
+.info-tbl td>.logo-img>img{
+  width: 40%;
+  margin: 0 auto;
+}
+*/
 .info-tbl td>button{
   margin: 20px 0;
 }
@@ -98,21 +113,21 @@
   width: 20%;
   height: 50px;
   border: none;
-  border-radius: 30px;
+  border-radius: 15px;
 }
 .btn-point2{
   background-color: #6fcc9a;
   width: 20%;
   height: 50px;
   border: none;
-  border-radius: 30px;
+  border-radius: 15px;
 }
 .btn-point3{
   background-color: #a4a4a4;
   width: 20%;
   height: 50px;
   border: none;
-  border-radius: 30px;
+  border-radius: 15px;
   text-align: center;
   text-decoration: none;
   line-height: 50px;
@@ -127,6 +142,14 @@
   height: 40px;
 }
 .img-change-btn{
+  background-color: #75daa4;
+  border: none;
+  border-radius: 30px;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+}
+.img-logo-btn{
   background-color: #75daa4;
   border: none;
   border-radius: 30px;
@@ -208,3 +231,24 @@
 	font-size: 13px;
 }
 
+
+
+
+/*관리페이지*/
+.link-button{
+	margin: 0 auto;
+}
+.btn-basic{
+    background-color: #75daa4;
+    width: 120px;
+    height: 40px;
+    border: none;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-block;
+	margin: 0 30px;
+}
+.btn-basic a{
+	line-height: 40px;
+	color: black;
+}

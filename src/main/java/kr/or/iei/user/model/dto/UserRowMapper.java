@@ -23,6 +23,7 @@ public class UserRowMapper implements RowMapper<User>{
 		user.setUserLevel(rs.getInt("user_level"));
 		user.setCreateDate(rs.getString("create_date"));
 		user.setUpdateDate(rs.getString("update_date"));
+		user.setUserImg(rs.getString("user_img"));
 		return user;
 	}
 	
