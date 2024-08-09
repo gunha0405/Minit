@@ -128,11 +128,11 @@
 		<div class="btn-wrap">
 			<ul>
 				<li>
-					<button class="button-style" th:onclick="feedUpdate([[${feed.userFeedNo}]],[[${feed.userFeedWriter}]])">수정</button> 
+					<button class="button-style" th:if="${session.user.userId == feed.userFeedWriter}" th:onclick="feedUpdate([[${feed.userFeedNo}]],[[${feed.userFeedWriter}]])">수정</button> 
 				</li>
 				<li>
 					<button class="button-style"
-						th:onclick="feedDelete([[${feed.userFeedNo}]])">삭제</button>
+						th:if="${session.user.userId == feed.userFeedWriter}" th:onclick="feedDelete([[${feed.userFeedNo}]])">삭제</button>
 				</li>
 			</ul>
 		</div>

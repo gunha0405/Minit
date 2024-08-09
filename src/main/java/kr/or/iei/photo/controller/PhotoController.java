@@ -1,7 +1,11 @@
 package kr.or.iei.photo.controller;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -14,43 +18,48 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+
 import jakarta.servlet.http.HttpSession;
 import kr.or.iei.photo.model.dto.Photo;
 import kr.or.iei.photo.model.dto.PhotoComment;
+import kr.or.iei.photo.model.etc.dto.Foodad;
 import kr.or.iei.photo.model.service.PhotoService;
 import kr.or.iei.user.model.dto.User;
 import kr.or.iei.util.FileUtils;
 
 @Controller
-@RequestMapping(value="/photo")
+@RequestMapping(value = "/photo")
 public class PhotoController {
     @Autowired
     private PhotoService photoService;
-    
+
     @Value("${file.root}")
     private String root;
-    
+
     @Autowired
     private FileUtils fileUtils;
 
-    @GetMapping(value="/list")
+    @GetMapping(value = "/list")
     public String list(Model model, @SessionAttribute(required = false) User user) {
         int userNo = user != null ? user.getUserNo() : 0;
-        List photoFeedList = photoService.selectPhotoFeed(userNo);
-        System.out.println(photoFeedList);
+        List<Photo> photoFeedList = photoService.selectPhotoFeed(userNo);
         model.addAttribute("list", photoFeedList);
         return "photo/list";
     }
 
     @ResponseBody
-    @GetMapping(value="/more")
-    public List photoMore(@SessionAttribute(required = false) User user) {
+    @GetMapping(value = "/more")
+    public List<Photo> photoMore(@SessionAttribute(required = false) User user) {
         int userNo = user != null ? user.getUserNo() : 0;
-        List photoList = photoService.selectPhotoFeed(userNo);
+        List<Photo> photoList = photoService.selectPhotoFeed(userNo);
         return photoList;
     }
 
-    @PostMapping(value="/write")
+    @PostMapping(value = "/write")
     public String write(Photo p, MultipartFile imageFile, Model model, @SessionAttribute(required = false) User user) {
         if (user == null) {
             model.addAttribute("title", "작성실패");
@@ -76,10 +85,11 @@ public class PhotoController {
         model.addAttribute("loc", "/photo/list");
         return "common/msg";
     }
-    
-    @PostMapping(value="/insertComment")
+
+    @PostMapping(value = "/insertComment")
     @ResponseBody
-    public String insertComment(PhotoComment pc, Model model, @SessionAttribute(required = false) User user, int photoFeedNo) {
+    public String insertComment(PhotoComment pc, Model model, @SessionAttribute(required = false) User user,
+            int photoFeedNo) {
         if (user == null) {
             model.addAttribute("loc", "/photo/list");
             return "common/msg";
@@ -89,7 +99,7 @@ public class PhotoController {
         return "common/msg";
     }
 
-    @GetMapping(value="/delete")
+    @GetMapping(value = "/delete")
     @ResponseBody
     public int delete(int photoFeedNo, @SessionAttribute(required = false) User user) {
         if (user == null) {
@@ -103,7 +113,7 @@ public class PhotoController {
         return result;
     }
 
-    @PostMapping(value="/update")
+    @PostMapping(value = "/update")
     @ResponseBody
     public int update(int photoFeedNo, MultipartFile imageFile, @SessionAttribute(required = false) User user) {
         if (user == null) {
@@ -127,7 +137,7 @@ public class PhotoController {
     }
 
     @ResponseBody
-    @PostMapping(value="/likePush")
+    @PostMapping(value = "/likePush")
     public int likePush(int photoFeedNo, int isLike, @SessionAttribute(required = false) User user) {
         if (user == null) {
             return -10;
@@ -139,7 +149,7 @@ public class PhotoController {
     }
 
     @ResponseBody
-    @GetMapping(value="/likeStatus")
+    @GetMapping(value = "/likeStatus")
     public int likeStatus(int photoFeedNo, @SessionAttribute(required = false) User user) {
         if (user == null) {
             return -10; // 로그인 필요
@@ -149,32 +159,35 @@ public class PhotoController {
             return isLiked ? 1 : 0;
         }
     }
+
     /*
-     댓글 
-      */
-    @GetMapping(value="comments")
+     * 댓글
+     */
+    @GetMapping(value = "/comments")
     @ResponseBody
     public List<PhotoComment> getComment(int photoFeedNo) {
-        List cl = photoService.getCommentList(photoFeedNo);
+        List<PhotoComment> cl = photoService.getCommentList(photoFeedNo);
         return cl;
     }
-    
-    @PostMapping(value="/updateComment")
+
+    @PostMapping(value = "/updateComment")
     @ResponseBody
-    public String updateComment(PhotoComment photoFeedCommentContent,Model model) {
+    public String updateComment(PhotoComment photoFeedCommentContent, Model model) {
         int result = photoService.updateComment(photoFeedCommentContent);
-        model.addAttribute("loc","/photo/list");
+        model.addAttribute("loc", "/photo/list");
         return "common/msg";
     }
-    @GetMapping(value="/deleteComment")
+
+    @GetMapping(value = "/deleteComment")
     @ResponseBody
-    public String deleteComment(PhotoComment pc,Model model) {
+    public String deleteComment(PhotoComment pc, Model model) {
         int result = photoService.deleteComment(pc);
-        model.addAttribute("loc","/photo/list");
+        model.addAttribute("loc", "/photo/list");
         return "common/msg";
     }
+
     @ResponseBody
-    @PostMapping(value="/report")
+    @PostMapping(value = "/report")
     public int contentsDec(int photoFeedNo, int isDec, @SessionAttribute(required = false) User user) {
         if (user == null) {
             return -10;
@@ -184,7 +197,8 @@ public class PhotoController {
             return result;
         }
     }
-    @RestController //controller에 responesbody가 섞인것
+
+    @RestController // controller에 responesbody가 섞인것
     @RequestMapping("/user")
     public class UserController {
         @GetMapping("/checkLoginStatus")
@@ -195,8 +209,19 @@ public class PhotoController {
         }
     }
     
+    
+    @GetMapping("/photo")
+    public String photoPage(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user != null) {
+            model.addAttribute("sessionUserId", user.getUserId());
+        }
+        return "photo";
+    }
+    
+
     @ResponseBody
-    @PostMapping(value="/save")
+    @PostMapping(value = "/save")
     public int save(int photoFeedNo, int isSave, @SessionAttribute(required = false) User user) {
         if (user == null) {
             return -10;
@@ -208,7 +233,7 @@ public class PhotoController {
     }
 
     @ResponseBody
-    @GetMapping(value="/saveStatus")
+    @GetMapping(value = "/saveStatus")
     public int saveStatus(int photoFeedNo, @SessionAttribute(required = false) User user) {
         if (user == null) {
             return -10; // 로그인 필요
@@ -218,6 +243,46 @@ public class PhotoController {
             return isSave ? 1 : 0;
         }
     }
-    
-    
+
+    @GetMapping(value = "adPlace")
+    @ResponseBody
+    public List<Foodad> adPlace(String pageNo) {
+        String url = "https://apis.data.go.kr/6260000/FoodService/getFoodKr";
+        String serviceKey = "EHvashpnNkdP1E98NdKt2l+KhCqEdg1mH6puKHX4iiZh2vQm1TfXgmZPkAOe1q0p+xCgaDjMjlMB2QOJ2cTLIQ=="; // 실제 키로 대체
+        String numOfRows = "10";
+        String resultType = "json";
+        List<Foodad> list = new ArrayList<>();
+
+        try {
+            String result = Jsoup.connect(url).data("serviceKey", serviceKey).data("pageNo", pageNo)
+                    .data("numOfRow", numOfRows).data("resultType", resultType).ignoreContentType(true).get().text();
+
+            JsonReader reader = new JsonReader(new StringReader(result));
+            reader.setLenient(true); // 약간의 JSON 구문 오류를 허용
+            JsonObject object = JsonParser.parseReader(reader).getAsJsonObject();
+
+            JsonObject getFoodKr = object.get("getFoodKr").getAsJsonObject();
+            JsonArray items = getFoodKr.get("item").getAsJsonArray();
+            for (int i = 0; i < items.size(); i++) {
+                JsonObject item = items.get(i).getAsJsonObject();
+                String mainTitle = item.get("MAIN_TITLE").getAsString();
+                String mainImg = item.get("MAIN_IMG_THUMB").getAsString();
+                String address = item.get("ADDR1").getAsString();
+                String tel = item.get("CNTCT_TEL").getAsString();
+                String intro = item.get("ITEMCNTNTS").getAsString();
+                Foodad fa = new Foodad(mainTitle, mainImg, address, tel, intro);
+                list.add(fa);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    @GetMapping(value = "/ad")
+    public String ad() {
+        return "photo/list";
+    }
+
 }

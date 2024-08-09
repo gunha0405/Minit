@@ -114,26 +114,9 @@ public class FeedController {
 	// feed-list-writeBtn
 	@PostMapping(value = "/feedWrite")
 	public String feedWirte(Feed f, MultipartFile upfile1, MultipartFile upfile2, MultipartFile upfile3, Model model) {
-		List<MultipartFile> files = Arrays.asList(upfile1, upfile2, upfile3);
-		boolean allFilesEmpty = files.stream().allMatch(file -> file == null || file.isEmpty());
-
-		if (f.getUserFeedContent().equals("")) {
-			model.addAttribute("title", "게시글을 작성해주세요");
-			model.addAttribute("msg", "게시글과 사진을 함께 작성해주세요");
-			model.addAttribute("icon", "warning");
-			model.addAttribute("loc", "/feed/view?");
-			return "common/msg";
-		} else if (allFilesEmpty) {
-			model.addAttribute("title", "사진첨부 필요");
-			model.addAttribute("msg", "사진을 첨부해야 서비스 이용이 가능합니다.");
-			model.addAttribute("icon", "warning");
-			model.addAttribute("loc", "/feed/writeForm");
-			return "common/msg";
-		} else {
-			//////////////////////////////////////////정리해야함
 			String savepath = root + "/feed/";
-			MultipartFile[] upfile = { upfile1, upfile2, upfile3 };
 			List<FeedFile> fileList = new ArrayList<FeedFile>();
+			MultipartFile[] upfile = { upfile1, upfile2, upfile3 };
 			for (MultipartFile file : upfile) {
 				if (!file.isEmpty()) {
 					// 파일경로 복사, 중복된 이름 있으면 인덱스 작업
@@ -144,9 +127,9 @@ public class FeedController {
 					//System.out.println(filepath);
 				}
 			}//for()
-			// fileList 
 			//System.out.println(f); 
 			
+			//결과값 0 or feedNo  
 			int result = feedService.insertfile(f, fileList);
 			if (result > 0) {
 				model.addAttribute("title", "작성성공!");
@@ -158,59 +141,87 @@ public class FeedController {
 				model.addAttribute("title", "실패!");
 				model.addAttribute("msg", "관리자에게 문의해주세요.");
 				model.addAttribute("icon", "warning");
-				model.addAttribute("loc", "/feed/myPage?userFeedWriter="+f.getUserFeedWriter());
+				model.addAttribute("loc", "/feed/myPage?userFeedWriter="+f.getUserFeedWriter()+"&reqPage=1");
 				return "common/msg";
 			}
-		}//else()
+		
 	}
 
 	@PostMapping(value = "/feedUpdate")
 	public String feedUpdate(Feed f, MultipartFile upfile1, MultipartFile upfile2, MultipartFile upfile3, Model model) {
-		List<MultipartFile> files = Arrays.asList(upfile1, upfile2, upfile3);
-		boolean allFilesEmpty = files.stream().allMatch(file -> file == null || file.isEmpty());
-
-		if (f.getUserFeedContent().equals("")) {
-			model.addAttribute("title", "게시글을 작성해주세요");
-			model.addAttribute("msg", "게시글과 사진을 함께 작성해주세요");
-			model.addAttribute("icon", "warning");
-			model.addAttribute("loc", "/feed/view?userFeedNo="+f.getUserFeedNo());
-			
-			return "common/msg";
-		} else if (allFilesEmpty) {
-			model.addAttribute("title", "사진첨부 필요");
-			model.addAttribute("msg", "사진을 첨부해야 서비스 이용이 가능합니다.");
-			model.addAttribute("icon", "warning");
-			model.addAttribute("loc", "/feed/view?userFeedNo="+f.getUserFeedNo());
-			return "common/msg";
-		} else {
+		//새로운 파일 경로 인덱스 작업 
+		int result = 0;
+		if(!upfile1.isEmpty()) {
+			System.out.println("여기 있어요1");
+		}
+		if(!upfile2.isEmpty()) {
+			System.out.println("여기 있어요2");
+		}
+		if(!upfile3.isEmpty()) {
+			System.out.println("여기 있어요3");
+		}
+		if(!upfile1.isEmpty()||!upfile2.isEmpty()||!upfile3.isEmpty()) {
+			MultipartFile[] newFiles = {upfile1, upfile2, upfile3};
 			String savepath = root + "/feed/";
-			List<FeedFile> newFileList = new ArrayList<FeedFile>();//새로운 파일 경로 저장 
-			for (MultipartFile file : files) {
+			List<FeedFile> newFileList = new ArrayList<FeedFile>();
+			for (MultipartFile file : newFiles) {
 				if (!file.isEmpty()) {
-					// 파일경로 복사, 중복된 이름 있으면 인덱스 작업
+					// 파일경로 복사, 중복된 이름 검사 
 					String filepath = fileUtils.upload(savepath, file); // ice5_2.png
 					FeedFile feedFile = new FeedFile();
 					feedFile.setUserFeedFilepath(filepath);
 					newFileList.add(feedFile);//새로운 파일 경로 작업
+					
 				}
 			}//for()
-			// fileList 첨부파일갯수
-			List fileList = Arrays.asList(f.getFile1(),f.getFile2(),f.getFile3());
-			int result = feedService.updatefile(f, newFileList, fileList);
-			if (result > 0) {
-				model.addAttribute("title", "수정 성공!");
-				model.addAttribute("msg", "게시글이 수정 되었습니다.");
-				model.addAttribute("icon", "success");
-				model.addAttribute("loc", "/feed/view?userFeedNo="+f.getUserFeedNo());
-				return "common/msg";
-			}else {
-				model.addAttribute("title", "실패!");
-				model.addAttribute("msg", "관리자에게 문의해주세요.");
-				model.addAttribute("icon", "warning");
-				model.addAttribute("loc", "/feed/myPage?userFeedWriter="+f.getUserFeedWriter());
-				return "common/msg";
-			}
-		}//else()
+//			for(FeedFile file : newFileList) {
+//				System.out.println("path="+file.getUserFeedFilepath());
+//			}
+			List<FeedFile> files = new ArrayList<FeedFile>();
+			
+		
+			result = feedService.updateNewFile(f, newFileList);
+				
+			
+		
+			//result = feedService.updatefile(f, newFileList, files);
+		}else {
+			result = feedService.updateFeedContent(f);
+		}
+		
+		
+		
+
+//		if(f.getFile1()!=null) {
+//			FeedFile file = new FeedFile();
+//			file.setUserFeedFilepath(f.getFile1());
+//			files.add(file);
+//		}
+//		if(f.getFile2()!=null) {
+//			FeedFile file = new FeedFile();
+//			file.setUserFeedFilepath(f.getFile2());
+//			files.add(file);
+//		}
+//		if(f.getFile3()!=null) {
+//			FeedFile file = new FeedFile();
+//			file.setUserFeedFilepath(f.getFile3());
+//			files.add(file);
+//		}
+
+
+		if (result > 0) {
+			model.addAttribute("title", "수정 성공!");
+			model.addAttribute("msg", "게시글이 수정 되었습니다.");
+			model.addAttribute("icon", "success");
+			model.addAttribute("loc", "/feed/view?userFeedNo="+f.getUserFeedNo());
+			return "common/msg";
+		}else {
+			model.addAttribute("title", "실패!");
+			model.addAttribute("msg", "관리자에게 문의해주세요.");
+			model.addAttribute("icon", "warning");
+			model.addAttribute("loc", "/feed/myPage?userFeedWriter="+f.getUserFeedWriter());
+			return "common/msg";
+		}
 	}
 
 	// feed-view-delBtn
@@ -238,9 +249,9 @@ public class FeedController {
 		Feed feed = feedService.selectUserOneFeed(userFeedNo);
 		model.addAttribute("feed", feed);
 		model.addAttribute("list", feed.getFeedList());
-		for (FeedFile file : feed.getFeedList()) {
-			System.out.println(file);
-		}
+		//for (FeedFile file : feed.getFeedList()) {
+			//System.out.println(file);
+		//}
 		return "/feed/updateFrm";
 	}
 
