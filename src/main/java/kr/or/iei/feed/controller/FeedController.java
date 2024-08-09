@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpSession;
 import kr.or.iei.feed.model.dto.Feed;
+import kr.or.iei.feed.model.dto.FeedComment;
 import kr.or.iei.feed.model.dto.FeedFile;
 import kr.or.iei.feed.model.dto.UserFeedNaviList;
 import kr.or.iei.feed.model.dto.feedListData;
@@ -253,6 +254,17 @@ public class FeedController {
 			//System.out.println(file);
 		//}
 		return "/feed/updateFrm";
+	}
+	
+	@ResponseBody
+	@PostMapping(value="/commentWrite")
+	public FeedComment commentWrite(@SessionAttribute(required =false) User user, String feedCommentContent, int feedRef ) {
+		String userId = user.getUserId();
+		System.out.println(userId);
+		//유저 이미지, 유저 댓글, 댓글 번호, 코멘트 
+		FeedComment fc = feedService.insertFeedComment(userId, feedCommentContent, feedRef);
+		System.out.println(fc);
+		return fc;
 	}
 
 }
