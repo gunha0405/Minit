@@ -70,6 +70,13 @@ public class UserDao {
 		return result;
 	}
 
+	public int selectUserNo(String userId) {
+		String query = "select user_no from user_tbl where user_id=?";
+		Object[] params = {userId};
+		int userNo = jdbc.update(query, params);
+		return userNo;
+	}
+
 	public int updateUser(User u) {
 		String query = "update user_tbl set user_nick=?, user_info=?, user_pw=?, update_date=to_char(sysdate,'yyyy-mm-dd') where user_no=?";
 		Object[] params = {u.getUserNick(),u.getUserInfo(),u.getUserPw(),u.getUserNo()};
@@ -119,6 +126,8 @@ public class UserDao {
 		return list;
 	}
 
+	
+	
 	public int changeCount(User u) {
 		String query = "update user_tbl set warning_count=(?+1) where user_no=?";
 		Object[] params = {u.getWarningCount(), u.getUserNo()};
@@ -143,6 +152,7 @@ public class UserDao {
 		System.out.println("처리값 :" +result);
 		return result;
 	}
+
 	
 	
 	

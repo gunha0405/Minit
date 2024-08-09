@@ -79,12 +79,13 @@
 .info-tbl td #userInfo{
 	width: 100%;
 }
-.info-tbl td>.basic-img{
+.info-tbl td>.basic-img>img{
   width: 40%;
   margin: 0 auto;
 }
 .info-tbl td>#img-viewer>img{
   width: 40%;
+  margin: 0 auto;
 }
 .info-tbl td>button{
   margin: 20px 0;

@@ -105,11 +105,17 @@ public class UserController {
 	public String join(User u, Model model) {
 		int result = userService.insertUser(u);
 		if(result > 0) {
-			model.addAttribute("title", "회원가입 성공");
-			model.addAttribute("msg", "MINIT의 회원이 되셨습니다!");
-			model.addAttribute("icon", "success");
-			model.addAttribute("loc", "/");
-			return "common/msg";
+			int userNo = userService.selectUserNo(u.getUserId());
+			int result2 = userService.insertUserImg(userNo);
+			if(result2 > 0) {
+				model.addAttribute("title", "회원가입 성공");
+				model.addAttribute("msg", "MINIT의 회원이 되셨습니다!");
+				model.addAttribute("icon", "success");
+				model.addAttribute("loc", "/");
+				return "common/msg";				
+			}else {
+				return "redirect:/";							
+			}
 		}else {
 			return "redirect:/";			
 		}

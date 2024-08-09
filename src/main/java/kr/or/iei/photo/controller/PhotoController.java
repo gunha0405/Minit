@@ -184,7 +184,7 @@ public class PhotoController {
             return result;
         }
     }
-    @RestController
+    @RestController //controller에 responesbody가 섞인것
     @RequestMapping("/user")
     public class UserController {
         @GetMapping("/checkLoginStatus")
