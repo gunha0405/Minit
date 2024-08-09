@@ -21,5 +21,5 @@ public class User {
 	private int warningCount;
 	private String createDate;
 	private String updateDate;
-	private List<UserImg> imgList;
+	private String userImg;
 }
