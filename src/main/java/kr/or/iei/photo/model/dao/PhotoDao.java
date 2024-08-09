@@ -85,7 +85,8 @@ public class PhotoDao {
     }
 
     public List<PhotoComment> getCommentList(int photoFeedNo) {
-        String query = "SELECT * FROM photo_comment_feed WHERE photo_ref=?";
+        String query = "select * from photo_comment_feed join user_tbl on photo_feed_comment_writer = user_id where photo_ref = ?";
+        
         Object[] params = {photoFeedNo};
         List<PhotoComment> list = jdbc.query(query, photoCommentRowMapper, params);
         return list;
