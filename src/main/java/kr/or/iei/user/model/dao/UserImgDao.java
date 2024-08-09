@@ -19,23 +19,23 @@ public class UserImgDao {
 	@Autowired
 	private UserImgRowMapper userImgRowMapper;
 	
-	public List<UserImg> selectUserImg(UserImg userImg) {
-		String query = "select * from user_img "
-				+ "where user_id=? "
-				+ "order by update_date desc, create_date desc";
-		Object[] params = {userImg.getUserId()};
-		List<UserImg> list = jdbc.query(query, userImgRowMapper, params);
-		return list.isEmpty() ? null : list;
-	}
-	
-	public int insertUserImg(UserImg userImg) {
+	public int insertUserImg(int userNo) {
 		String query = "insert into user_img "
-				+ "(img_no, user_id, img_org, img_storage, img_type, create_date) "
+				+ "(img_no, user_no, img_org, img_storage, img_type, create_date) "
 				+ "values "
-				+ "(user_img_seq.nextval,?,?,?,?,to_char(sysdate,'yyyy-mm-dd'))"; //html에서 img_type을 1로 넣어서 (hidden 값으로)
-		Object[] params = {userImg.getUserId(), userImg.getImgOrg(), userImg.getImgStorage(), userImg.getImgType()};
+				+ "(user_img_seq.nextval,?,minit.logo,minit.logo,1,to_char(sysdate,'yyyy-mm-dd'))";
+		Object[] params = {userNo};
 		int result = jdbc.update(query, params);
 		return result;
+	}
+	
+	public List<UserImg> selectUserImg(UserImg userImg) {
+		String query = "select * from user_img "
+				+ "where user_no=? "
+				+ "order by update_date desc, create_date desc";
+		Object[] params = {userImg.getUserNo()};
+		List<UserImg> list = jdbc.query(query, userImgRowMapper, params);
+		return list.isEmpty() ? null : list;
 	}
 	
 	public int updateUserImg(UserImg userImg) {
@@ -45,9 +45,9 @@ public class UserImgDao {
 				+ "img_storage = ?, "
 				+ "img_type = ?, "
 				+ "update_date = to_char(sysdate,'yyyy-mm-dd') "
-				+ "where user_id = ? "
+				+ "where user_no = ? "
 				+ "and img_no = ?";
-		Object[] params = {userImg.getImgOrg(), userImg.getImgStorage(), userImg.getImgType(), userImg.getUserId(), userImg.getImgNo()};
+		Object[] params = {userImg.getImgOrg(), userImg.getImgStorage(), userImg.getImgType(), userImg.getUserNo(), userImg.getImgNo()};
 		int result = jdbc.update(query, params);
 		return result;
 	}
@@ -57,9 +57,20 @@ public class UserImgDao {
 		if (userImg.getImgNo() > 0) {
 			query += "and img_no = ?";
 		}
-		Object[] params = {userImg.getUserId(), userImg.getImgNo()};
+		Object[] params = {userImg.getUserNo(), userImg.getImgNo()};
 		int result = jdbc.update(query, params);
 		return result;
 	}
+	/*
+	public int insertUserImg(UserImg userImg) {
+		String query = "insert into user_img "
+				+ "(img_no, user_id, img_org, img_storage, img_type, create_date) "
+				+ "values "
+				+ "(user_img_seq.nextval,?,?,?,?,to_char(sysdate,'yyyy-mm-dd'))"; //html에서 img_type을 1로 넣어서 (hidden 값으로)
+		Object[] params = {userImg.getUserId(), userImg.getImgOrg(), userImg.getImgStorage(), userImg.getImgType()};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+	 */
 	
 }
