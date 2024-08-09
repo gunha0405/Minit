@@ -132,15 +132,10 @@ table tr {
 }
 
 .inputCommentBox {
-	margin-left: auto;
 	margin: 0 auot;
 }
 
-.inputCommentBox>form {
-	width: 1000px;
-	display: flex;
-	margin-left: 45px;
-}
+
 
 .form-wrap>ul {
 	list-style: none; /* 목록 스타일 제거 */
@@ -160,7 +155,7 @@ table tr {
 	list-style: none; /* 목록 스타일 제거 */
 	padding: 0; /* 기본 패딩 제거 */
 	margin: 0; /* 기본 마진 제거 */
-	display: flex; /* Flexbox로 설정 */
+	 /*display: flex; Flexbox로 설정 */
 	align-items: center; /* 세로 정렬 */
 	width: 100%;
 }
@@ -198,8 +193,6 @@ table tr {
 }
 
 .inputCommentBox {
-	width: 100%;
-	display: flex;
 	justify-content: center;
 }
 

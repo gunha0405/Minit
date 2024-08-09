@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.iei.feed.model.dao.FeedDao;
 import kr.or.iei.feed.model.dto.Feed;
+import kr.or.iei.feed.model.dto.FeedComment;
 import kr.or.iei.feed.model.dto.FeedFile;
 import kr.or.iei.feed.model.dto.UserFeedNaviList;
 import kr.or.iei.feed.model.dto.feedListData;
@@ -294,7 +295,6 @@ public class FeedService {
 				System.out.println("3="+result);
 				return result;
 			}
-		
 		}
 		System.out.println("4="+result);
 		return result;
@@ -303,6 +303,17 @@ public class FeedService {
 	public int updateFeedContent(Feed f) {
 		int result = feedDao.updateFeed(f);
 		return result;
+	}
+	@Transactional
+	public FeedComment insertFeedComment(String userId, String feedCommentContent, int feedRef) {
+		FeedComment fc = null;
+		int result = feedDao.insertFeedComment(userId, feedCommentContent, feedRef);
+		if(result > 0) {
+			int commentNo = feedDao.getCommentNo();
+			fc = feedDao.getFeedComment(commentNo, userId);
+			
+		}
+		return fc;
 	}
 
 }
