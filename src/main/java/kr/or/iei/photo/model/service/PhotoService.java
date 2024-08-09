@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.or.iei.photo.model.dao.PhotoDao;
 import kr.or.iei.photo.model.dto.Photo;
 import kr.or.iei.photo.model.dto.PhotoComment;
+import kr.or.iei.photo.model.dto.PhotoRowMapper;
 import kr.or.iei.user.model.dto.User;
 
 @Service
@@ -104,5 +105,12 @@ public class PhotoService {
 	    }
         return result;
     }
+    
+    
+    public Photo getPhotoById(int photoFeedNo) {
+    	Photo p = photoDao.getPhotoById(photoFeedNo);
+        return p;
+    }
+    
 }
 
