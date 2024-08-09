@@ -15,119 +15,133 @@ import kr.or.iei.user.model.dto.User;
 
 @Repository
 public class PhotoDao {
-	@Autowired
-	private JdbcTemplate jdbc;
-	@Autowired
-	private PhotoRowMapper photoRowMapper;
-	@Autowired
-	private PhotoCommentRowMapper photoCommentRowMapper;
-	
-	
-	
-	public int insertPhoto(Photo p,User user) {
-		String query = "insert into photo_feed values(photo_feed_seq.nextval,?,?,0,to_char(sysdate,'yyyy-mm-dd'))";
-		Object[] params = {p.getPhotoFeedImg(),user.getUserId()};
-		int result = jdbc.update(query,params);
-		return result;
-	}
+    @Autowired
+    private JdbcTemplate jdbc;
+    @Autowired
+    private PhotoRowMapper photoRowMapper;
+    @Autowired
+    private PhotoCommentRowMapper photoCommentRowMapper;
 
-	
-	
-	public List selectPhotoList() {
-		String query = "select * from photo_feed order by 1";
-		List list = jdbc.query(query, photoRowMapper);
-		return list;
-	}
-	public int deletePhoto(int photoFeedNo) {
-		String query = "delete from photo_feed where photo_feed_no=?";
-		Object[] params = {photoFeedNo};
-		int result = jdbc.update(query,params);
-		return result;
-	}
-	public int updatePhoto(Photo p) {
-        String query = "update photo_feed set photo_feed_img = ? where photo_feed_no = ?";
+    public int insertPhoto(Photo p, User user) {
+        String query = "INSERT INTO photo_feed VALUES(photo_feed_seq.NEXTVAL,?,?,0,TO_CHAR(SYSDATE,'YYYY-MM-DD'),0)";
+        Object[] params = {p.getPhotoFeedImg(), user.getUserId()};
+        int result = jdbc.update(query, params);
+        return result;
+    }
+
+    public List<Photo> selectPhotoList() {
+        String query = "SELECT * FROM photo_feed WHERE photo_feed_status = 0 ORDER BY 1";
+        List<Photo> list = jdbc.query(query, photoRowMapper);
+        return list;
+    }
+
+    public int deletePhoto(int photoFeedNo) {
+        String query = "DELETE FROM photo_feed WHERE photo_feed_no=?";
+        Object[] params = {photoFeedNo};
+        int result = jdbc.update(query, params);
+        return result;
+    }
+
+    public int updatePhoto(Photo p) {
+        String query = "UPDATE photo_feed SET photo_feed_img=? WHERE photo_feed_no=?";
         Object[] params = {p.getPhotoFeedImg(), p.getPhotoFeedNo()};
         int result = jdbc.update(query, params);
         return result;
     }
-	public int insertPhotoLike(int photoFeedNo, int userNo) {
-		String query = "insert into photo_feed_like values(?,?)";
-		Object[] params = {photoFeedNo, userNo};
-		int result = jdbc.update(query, params);
-		return result;
-	}
-	public int deletePhotoLike(int photoFeedNo, int userNo) {
-		String query = "delete from photo_feed_like where photo_feed_like_no=? and photo_feed_like_writer=?";
-		Object[] params = {photoFeedNo, userNo};
-		int result = jdbc.update(query, params);
-		return result;
-	}
-	public int selectPhotoLike(int photoFeedNo,int userNo) {
-		String query = "SELECT COUNT(*) FROM photo_feed_like WHERE photo_feed_like_no = ? AND photo_feed_like_writer = ?";
-		Object[] params = {photoFeedNo, userNo};
-        int isLike = jdbc.queryForObject(query,Integer.class ,params);
+
+    public int insertPhotoLike(int photoFeedNo, int userNo) {
+        String query = "INSERT INTO photo_feed_like VALUES(?,?)";
+        Object[] params = {photoFeedNo, userNo};
+        int result = jdbc.update(query, params);
+        return result;
+    }
+
+    public int deletePhotoLike(int photoFeedNo, int userNo) {
+        String query = "DELETE FROM photo_feed_like WHERE photo_feed_like_no=? AND photo_feed_like_writer=?";
+        Object[] params = {photoFeedNo, userNo};
+        int result = jdbc.update(query, params);
+        return result;
+    }
+
+    public int selectPhotoLike(int photoFeedNo, int userNo) {
+        String query = "SELECT COUNT(*) FROM photo_feed_like WHERE photo_feed_like_no=? AND photo_feed_like_writer=?";
+        Object[] params = {photoFeedNo, userNo};
+        int isLike = jdbc.queryForObject(query, Integer.class, params);
         return isLike;
-	}
-	public boolean isLikecheck(int photoFeedNo, int userNo) {
-		String query = "SELECT COUNT(*) FROM photo_feed_like WHERE photo_feed_like_no = ? AND photo_feed_like_writer = ?";
-		Object[] params = { photoFeedNo, userNo };
-	    int count = jdbc.queryForObject(query,Integer.class ,params);
-	    return count > 0;
-	    
-	}
-	
-	public int insertComment(PhotoComment pc, User user,int photoFeedNo) {
-		String query = "insert into photo_comment_feed values(photo_comment_feed_seq.nextval,?,?,to_char(sysdate,'yyyy-mm-dd'),?)";
-		Object[] params = {user.getUserId(),pc.getPhotoFeedCommentContent(), photoFeedNo};
-		int result = jdbc.update(query, params);
-		return result;
-	}
+    }
 
+    public boolean isLikecheck(int photoFeedNo, int userNo) {
+        String query = "SELECT COUNT(*) FROM photo_feed_like WHERE photo_feed_like_no=? AND photo_feed_like_writer=?";
+        Object[] params = {photoFeedNo, userNo};
+        int count = jdbc.queryForObject(query, Integer.class, params);
+        return count > 0;
+    }
 
-	public List<PhotoComment> getCommentList(int photoFeedNo) {
-		String query = "select * from photo_comment_feed where photo_ref = ?";
+    public int insertComment(PhotoComment pc, User user, int photoFeedNo) {
+        String query = "INSERT INTO photo_comment_feed VALUES(photo_comment_feed_seq.NEXTVAL,?,?,TO_CHAR(SYSDATE,'YYYY-MM-DD'),?)";
+        Object[] params = {user.getUserId(), pc.getPhotoFeedCommentContent(), photoFeedNo};
+        int result = jdbc.update(query, params);
+        return result;
+    }
+
+    public List<PhotoComment> getCommentList(int photoFeedNo) {
+        String query = "SELECT * FROM photo_comment_feed WHERE photo_ref=?";
+        Object[] params = {photoFeedNo};
+        List<PhotoComment> list = jdbc.query(query, photoCommentRowMapper, params);
+        return list;
+    }
+
+    public int updateComment(PhotoComment photoFeedCommentContent) {
+        String query = "UPDATE photo_comment_feed SET photo_feed_comment_content=? WHERE photo_feed_comment_no=?";
+        Object[] params = {photoFeedCommentContent.getPhotoFeedCommentContent(), photoFeedCommentContent.getPhotoFeedCommentNo()};
+        int result = jdbc.update(query, params);
+        return result;
+    }
+
+    public int deleteComment(PhotoComment pc) {
+        String query = "DELETE FROM photo_comment_feed WHERE photo_feed_comment_no=?";
+        Object[] params = {pc.getPhotoFeedCommentNo()};
+        int result = jdbc.update(query, params);
+        return result;
+    }
+
+    public boolean contentsDec(int photoFeedNo, int userNo) {
+        String query = "SELECT COUNT(*) FROM photo_feed_dec WHERE photo_feed_dec_no=? AND photo_feed_dec_writer=?";
+        Object[] params = {photoFeedNo, userNo};
+        int count = jdbc.queryForObject(query, Integer.class, params);
+        return count > 0;
+    }
+
+    public int insertDec(int photoFeedNo, int userNo) {
+        String query = "INSERT INTO photo_feed_dec VALUES(?,?)";
+        Object[] params = {photoFeedNo, userNo};
+        int result = jdbc.update(query, params);
+        return result;
+    }
+
+    public int decCheck(int photoFeedNo, int userNo) {
+        String query = "SELECT COUNT(*) FROM photo_feed_dec WHERE photo_feed_dec_no=? AND photo_feed_dec_writer=?";
+        Object[] params = {photoFeedNo, userNo};
+        int isDec = jdbc.queryForObject(query, Integer.class, params);
+        return isDec;
+    }
+
+	public int selectTextFeedReportCount(int photoFeedNo) {
+		String query = "SELECT COUNT(*) FROM photo_feed_dec WHERE photo_feed_dec_no=?";
 		Object[] params = {photoFeedNo};
-		List list = jdbc.query(query, photoCommentRowMapper, params);
-		return list;
+        int countDec = jdbc.queryForObject(query, Integer.class, params);
+        return countDec;
 	}
 
-
-
-
-	public int updateComment(PhotoComment photoFeedCommentContent) {
-		String query = "update photo_comment_feed set photo_feed_comment_content=? where photo_feed_comment_no=?";
-		Object [] params = {photoFeedCommentContent.getPhotoFeedCommentContent(),photoFeedCommentContent.getPhotoFeedCommentNo()};
-		System.out.println(photoFeedCommentContent);
-		int result = jdbc.update(query,params);
-		return result;
+	public int hideTextFeed(int photoFeedNo) {
+		String query = "update photo_feed set photo_feed_status = 1 where photo_feed_no=?";
+		Object[] params = {photoFeedNo};
+        int resultDec = jdbc.update(query, params);
+        return resultDec;
 	}
-
-
-
-	public int deleteComment(PhotoComment pc) {
-		String query = "delete from photo_comment_feed where photo_feed_comment_no=?";
-		Object[]params = {pc.getPhotoFeedCommentNo()};
-		int result = jdbc.update(query,params);
-		return result;
+	public Photo getPhotoById(int photoFeedNo) {
+	    String query = "SELECT * FROM photo_feed WHERE photo_feed_no=?";
+	    Object[] params = {photoFeedNo};
+	    return jdbc.queryForObject(query, photoRowMapper, params);
 	}
-
-
-
-	public boolean contentsDec(int photoFeedNo, int userNo) {
-		String query = "SELECT COUNT(*) FROM photo_feed_dec WHERE photo_feed_dec_no = ? AND photo_feed_dec_writer = ?";
-		Object[] params = { photoFeedNo, userNo };
-	    int count = jdbc.queryForObject(query,Integer.class ,params);
-	    return count > 0;
-	}
-
-
-
-	public int insertDec(int photoFeedNo, int userNo) {
-		String query = "insert into photo_feed_dec values(?,?)";
-		Object[] params = {photoFeedNo, userNo};
-		int result = jdbc.update(query, params);
-		return result;
-	}
-	
-	
 }

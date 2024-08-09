@@ -34,12 +34,12 @@
                             <td th:text="${u.userName}"></td>
                             <td th:text="${u.warningCount}"></td>
                             <td>
-                            	<button type="button" class="warn-btn">경고</button>
+                            	<button class="warn-btn">경고</button>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="6">
-                                <button class="warn-btn" style="width: 80%; height: 30px">선택회원경고</button>
+                                <button class="checked-warn-btn">선택회원경고</button>
                             </td>
                         </tr>
                     </table>
@@ -56,6 +56,25 @@
           		//console.log(warningCount);
           		location.href="/admin/changeCount?userNo="+userNo+"&warningCount="+warningCount;
           		
+          	});
+          	$(".checked-warn-btn").on("click",function(){
+          		const check = $(".chk:checked");
+          		//console.log(check.length);
+          		if(check.length == 0){
+          			return;//선택된 회원 없으면 종료
+          		}
+          		const no = new Array();//체크회원 번호 모두 저장
+          		const count = new Array();//체크회원 경고횟수 모두 저장
+          		check.each(function(index,item){
+          			const userNo = $(item).parent().next().text();
+          			no.push(userNo);
+          			const warningCount = $(item).parent().next().next().next().next().text();
+          			count.push(warningCount);
+          		});
+          		console.log(no);
+          		console.log(count);
+          		
+          		location.href="/admin/checkedChangeCount?no="+no.join("/")+"&count="+count.join("/");
           	});
           </script>
 	<th:block th:include="common/footer"></th:block>

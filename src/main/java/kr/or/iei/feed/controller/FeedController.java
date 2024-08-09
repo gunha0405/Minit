@@ -1,6 +1,7 @@
 package kr.or.iei.feed.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,14 +35,20 @@ public class FeedController {
 	@Autowired
 	FileUtils fileUtils = new FileUtils();
 
-	@GetMapping(value="/list")
+	@GetMapping(value = "/list")
 	public String list() {
-		return "feed/list";   //작성자의 아이디나 넘버를 보낸다 
+		return "feed/list"; // 작성자의 아이디나 넘버를 보낸다
+	}
+	
+	@GetMapping(value = "/writeForm")
+	public String wirteForm() {
+		return "feed/writeForm";
 	}
 
+	// feed-view
 	@GetMapping(value = "/view")
 	public String view(int userFeedNo, Model model) {
-		Feed feed = feedService.selectUserOneFeed(userFeedNo); //해당 글 유저의 정보와 사진 파일리스트
+		Feed feed = feedService.selectUserOneFeed(userFeedNo); // 해당 글 유저의 정보와 사진 파일리스트
 		model.addAttribute("feed", feed);
 		model.addAttribute("list", feed.getFeedList());
 		return "feed/view";
@@ -56,101 +64,184 @@ public class FeedController {
 
 	}
 
-	@GetMapping(value = "/writeForm")
-	public String wirteForm() {
-		return "feed/writeForm";
-	}
-
 	@GetMapping(value = "/userStorage")
 	public String userStorage() {
 		return "/#";
 	}
-	
-	//유저 아디디도 받아야 할것 같음 검색해야할것 같음 
+
+	// 유저 아디디도 받아야 할것 같음 검색해야할것 같음
 	@GetMapping(value = "/myPage")
-	public String myPage(HttpSession session, Model model, Integer reqPage) {
-		User user = (User)session.getAttribute("user");
-		if (user == null) {
+	public String myPage(Integer reqPage, String userFeedWriter, Model model) {
+		reqPage =  (reqPage != null) ? reqPage : 1;
+		//User user = (User) session.getAttribute("user");
+		//String userId = feedId.getUserFeedWriter();
+		if (userFeedWriter ==null) {
 			model.addAttribute("title", "로그인을 해주세요");
 			model.addAttribute("msg", "서비스 이용이 불가합니다");
 			model.addAttribute("icon", "warning");
 			model.addAttribute("loc", "/#");
 			return "common/msg";
 		} else {
-			Feed feed = new Feed();
-			//유저 정보 가져오기 
-			User u = feedService.searchUser(user.getUserId());
-			//또다른 유저로 들어가게 되면은 그 유저의 번호 가지고 있게 하자. ??? 
+			//Feed f = new Feed();
+			// 유저 정보 가져오기
+			User u = feedService.searchUser(userFeedWriter);
+			// 또다른 유저로 들어가게 되면은 그 유저의 번호 가지고 있게 하자. ???
+
+			// 페이지 구현 / 유저와 페이지에 들어가는 피드, 네비바 ,,,/유저가 올린 사진 가져오기 (사진 경로와 피드 번호)
+			feedListData list = feedService.selectUserAllFeed(reqPage,  u);
 			
-			//페이지 구현 / 유저와 페이지에 들어가는 피드, 네비바 ,,,/유저가 올린 사진 가져오기 (사진 경로와 피드 번호)
-			feedListData list = feedService.selectUserAllFeed(reqPage, user);
 			List<Feed> feedList = list.getList();
 			List<Feed> filefath = new ArrayList<Feed>();
-			for(Feed feedlist : feedList) {
+			for (Feed feedlist : feedList) {
 				String filename = feedlist.getUserFeedFilepath();
 				String savepath = "/feed/";
-				String filepath = savepath+filename;
-				Feed f = new Feed();
-				f.setUserFeedFilepath(filepath);
-				f.setUserFeedNo(feedlist.getUserFeedNo());
-				filefath.add(f);
-				//System.out.println(filepath);
+				String filepath = savepath + filename;
+				Feed feed = new Feed();
+				feed.setUserFeedFilepath(filepath);
+				feed.setUserFeedNo(feedlist.getUserFeedNo());
+				filefath.add(feed);
+				// System.out.println(filepath);
 			}
 
 			model.addAttribute("list", filefath);
 			model.addAttribute("pageNavi", list.getPageNavi());
-			feed.setUser(u);
+			//f.setUser(u);
 			model.addAttribute("user", u);
 			return "/feed/list";
 		}
 	}
-	
-	@PostMapping(value ="/feedWrite")
-	public String feedWirte(Feed f, MultipartFile[] upfile, Model model) {
-		List<FeedFile> fileList = new ArrayList<FeedFile>();
-		if(upfile[0].isEmpty()) {
+
+	// feed-list-writeBtn
+	@PostMapping(value = "/feedWrite")
+	public String feedWirte(Feed f, MultipartFile upfile1, MultipartFile upfile2, MultipartFile upfile3, Model model) {
+		List<MultipartFile> files = Arrays.asList(upfile1, upfile2, upfile3);
+		boolean allFilesEmpty = files.stream().allMatch(file -> file == null || file.isEmpty());
+
+		if (f.getUserFeedContent().equals("")) {
+			model.addAttribute("title", "게시글을 작성해주세요");
+			model.addAttribute("msg", "게시글과 사진을 함께 작성해주세요");
+			model.addAttribute("icon", "warning");
+			model.addAttribute("loc", "/feed/view?");
+			return "common/msg";
+		} else if (allFilesEmpty) {
 			model.addAttribute("title", "사진첨부 필요");
 			model.addAttribute("msg", "사진을 첨부해야 서비스 이용이 가능합니다.");
 			model.addAttribute("icon", "warning");
 			model.addAttribute("loc", "/feed/writeForm");
 			return "common/msg";
-		}else {
-			String savepath = root+"/feed/";
-            for(MultipartFile file : upfile) {
-                //파일경로 복사, 중복된 이름 있으면 인덱스 작업
-                String filepath = fileUtils.upload(savepath, file); // ice5_2.png
-                FeedFile feedFile = new FeedFile();
-                feedFile.setUserFeedFilepath(filepath);
-                fileList.add(feedFile);
-               }
-        }
-        // fileList 첨부파일갯수
-        int result = feedService.insertfile(f,fileList);
-        if(result >0) {
-            model.addAttribute("title","작성성공!");
-            model.addAttribute("msg","공지사항 작성에 성공했습니다.");
-            model.addAttribute("icon","success");
-            model.addAttribute("loc","/feed/list");
-            return "common/msg";
-        }
-        return "redirect:/feed/myPage?reqPage=1";
+		} else {
+			//////////////////////////////////////////정리해야함
+			String savepath = root + "/feed/";
+			MultipartFile[] upfile = { upfile1, upfile2, upfile3 };
+			List<FeedFile> fileList = new ArrayList<FeedFile>();
+			for (MultipartFile file : upfile) {
+				if (!file.isEmpty()) {
+					// 파일경로 복사, 중복된 이름 있으면 인덱스 작업
+					String filepath = fileUtils.upload(savepath, file); // ice5_2.png
+					FeedFile feedFile = new FeedFile();
+					feedFile.setUserFeedFilepath(filepath);
+					fileList.add(feedFile);
+					//System.out.println(filepath);
+				}
+			}//for()
+			// fileList 
+			//System.out.println(f); 
+			
+			int result = feedService.insertfile(f, fileList);
+			if (result > 0) {
+				model.addAttribute("title", "작성성공!");
+				model.addAttribute("msg", "글작성이 완료되었습니다.");
+				model.addAttribute("icon", "success");
+				model.addAttribute("loc", "/feed/view?userFeedNo="+result);
+				return "common/msg";
+			}else {
+				model.addAttribute("title", "실패!");
+				model.addAttribute("msg", "관리자에게 문의해주세요.");
+				model.addAttribute("icon", "warning");
+				model.addAttribute("loc", "/feed/myPage?userFeedWriter="+f.getUserFeedWriter());
+				return "common/msg";
+			}
+		}//else()
 	}
-	
-	@GetMapping(value ="/delete")
+
+	@PostMapping(value = "/feedUpdate")
+	public String feedUpdate(Feed f, MultipartFile upfile1, MultipartFile upfile2, MultipartFile upfile3, Model model) {
+		List<MultipartFile> files = Arrays.asList(upfile1, upfile2, upfile3);
+		boolean allFilesEmpty = files.stream().allMatch(file -> file == null || file.isEmpty());
+
+		if (f.getUserFeedContent().equals("")) {
+			model.addAttribute("title", "게시글을 작성해주세요");
+			model.addAttribute("msg", "게시글과 사진을 함께 작성해주세요");
+			model.addAttribute("icon", "warning");
+			model.addAttribute("loc", "/feed/view?userFeedNo="+f.getUserFeedNo());
+			
+			return "common/msg";
+		} else if (allFilesEmpty) {
+			model.addAttribute("title", "사진첨부 필요");
+			model.addAttribute("msg", "사진을 첨부해야 서비스 이용이 가능합니다.");
+			model.addAttribute("icon", "warning");
+			model.addAttribute("loc", "/feed/view?userFeedNo="+f.getUserFeedNo());
+			return "common/msg";
+		} else {
+			String savepath = root + "/feed/";
+			List<FeedFile> newFileList = new ArrayList<FeedFile>();//새로운 파일 경로 저장 
+			for (MultipartFile file : files) {
+				if (!file.isEmpty()) {
+					// 파일경로 복사, 중복된 이름 있으면 인덱스 작업
+					String filepath = fileUtils.upload(savepath, file); // ice5_2.png
+					FeedFile feedFile = new FeedFile();
+					feedFile.setUserFeedFilepath(filepath);
+					newFileList.add(feedFile);//새로운 파일 경로 작업
+				}
+			}//for()
+			// fileList 첨부파일갯수
+			List fileList = Arrays.asList(f.getFile1(),f.getFile2(),f.getFile3());
+			int result = feedService.updatefile(f, newFileList, fileList);
+			if (result > 0) {
+				model.addAttribute("title", "수정 성공!");
+				model.addAttribute("msg", "게시글이 수정 되었습니다.");
+				model.addAttribute("icon", "success");
+				model.addAttribute("loc", "/feed/view?userFeedNo="+f.getUserFeedNo());
+				return "common/msg";
+			}else {
+				model.addAttribute("title", "실패!");
+				model.addAttribute("msg", "관리자에게 문의해주세요.");
+				model.addAttribute("icon", "warning");
+				model.addAttribute("loc", "/feed/myPage?userFeedWriter="+f.getUserFeedWriter());
+				return "common/msg";
+			}
+		}//else()
+	}
+
+	// feed-view-delBtn
+	@GetMapping(value = "/delete")
 	public String delete(int userFeedNo, Model model) {
 		int result = feedService.deleteFeed(userFeedNo);
-		if(result > 0) {
-			 model.addAttribute("title","게시글 삭제성공!");
-	            model.addAttribute("msg","게시글 삭제 성공했습니다.");
-	            model.addAttribute("icon","success");
-	            model.addAttribute("loc","/feed/myPage?reqPage=1");
-	            return "common/msg";
-		}else {
-			 model.addAttribute("title","삭제 실패");
-	            model.addAttribute("msg","관리자에게 문의하세요.");
-	            model.addAttribute("icon","warning");
-	            model.addAttribute("loc","/feed/view?userFeedNo="+userFeedNo);
-	            return "common/msg";
+		if (result > 0) {
+			model.addAttribute("title", "게시글 삭제성공!");
+			model.addAttribute("msg", "게시글 삭제 성공했습니다.");
+			model.addAttribute("icon", "success");
+			model.addAttribute("loc", "/feed/myPage?reqPage=1");
+			return "common/msg";
+		} else {
+			model.addAttribute("title", "삭제 실패");
+			model.addAttribute("msg", "관리자에게 문의하세요.");
+			model.addAttribute("icon", "warning");
+			model.addAttribute("loc", "/feed/view?userFeedNo=" + userFeedNo);
+			return "common/msg";
 		}
 	}
+
+	// feed-view-updateBtn
+	@GetMapping(value = "/updateFrm")
+	public String updateFrm(String userFeedWriter, int userFeedNo, Model model) {
+		Feed feed = feedService.selectUserOneFeed(userFeedNo);
+		model.addAttribute("feed", feed);
+		model.addAttribute("list", feed.getFeedList());
+		for (FeedFile file : feed.getFeedList()) {
+			System.out.println(file);
+		}
+		return "/feed/updateFrm";
+	}
+
 }
