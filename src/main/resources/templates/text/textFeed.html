@@ -58,7 +58,9 @@
 	                	<span class="textFeedNo" th:text="${textFeed.textFeedNo}" style="display:none;"></span>
 	                	<span class="feed-is-report" th:text="${textFeed.isReport}"></span>
 	                    <div class="feed-profile-pic">
-	                        <img src="Profile Picture" alt="Profile Picture">
+	                    	
+	                        <img th:if="${textFeed.textFeedWriterImg != null}" th:src="${'/user/'+textFeed.textFeedWriterImg}">
+	                        <img th:if="${textFeed.textFeedWriterImg == null}" src="/user/minit_logo.png">
 	                    </div>
 	                    <div class="feed-content">
 	                        <p class="text-feed-writer" th:text="${textFeed.textFeedWriter}"></p>
@@ -87,7 +89,8 @@
 							    <div class="comment" th:each="comment : ${textFeed.textFeedCommentList}">
 							    	<span class="textFeedCommentNo" th:text="${comment.textFeedCommentNo}" style="display:none;"></span>
 							        <div class="comment-profile-pic">
-							            <img src="Profile Picture" alt="Profile Picture">
+							            <img th:if="${comment.textFeedCommentWriterImg != null}" th:src="${'/user/'+comment.textFeedCommentWriterImg}">
+	                        			<img th:if="${comment.textFeedCommentWriterImg == null}" src="/user/minit_logo.png">
 							        </div>
 							        <div class="comment-content">
 							            <p class="comment-author" th:text="${comment.textFeedCommentWriter}"></p>
@@ -418,11 +421,13 @@
                     console.log(data);
                     const newfeed = data.textFeed;
                     const user = data.user;
+                    const userImg = newfeed.textFeedWriterImg;
+                    console.log(userImg);
                     const feedHtml = `
                         <div class="feed" style="display:none;">
                             <span class="textFeedNo" style="display:none;">${newfeed.textFeedNo}</span>
                             <div class="feed-profile-pic">
-                                <img src="Profile Picture" alt="Profile Picture">
+                                <img src="/user/${userImg}" alt="Profile Picture">
                             </div>
                             <div class="feed-content">
                                 <p class="text-feed-writer">${newfeed.textFeedWriter}</p>
@@ -494,11 +499,12 @@
                 success: function(data){
                     const comment = data.textFeedComment;
                     const user = data.commentWriterUser;
+                    const userImg = comment.textFeedCommentWriterImg;
                     const commentHtml = `
                         <div class="comment" style="display:none;">
                             <span class="textFeedCommentNo" style="display:none;">${comment.textFeedCommentNo}</span>
                             <div class="comment-profile-pic">
-                                <img src="userprofilePic" alt="Profile Picture">
+                                <img src="/user/${userImg}" alt="Profile Picture">
                             </div>
                             <div class="comment-content">
                                 <p class="comment-author">${comment.textFeedCommentWriter}</p>

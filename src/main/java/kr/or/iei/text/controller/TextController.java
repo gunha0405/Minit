@@ -49,6 +49,8 @@ public class TextController {
     		int textFeedNo = textService.getTextFeedNo();
     		TextFeed textFeed = textService.selectOneTextFeed(textFeedNo); 
     		User writerUser = userService.selectOneUser(user);
+    		textFeed.setTextFeedWriterImg(writerUser.getUserImg());
+    		System.out.println("유저 이미지 : " + writerUser.getUserImg());
     		TextFeedJsonList textFeedJsonList = new TextFeedJsonList(writerUser, textFeed);
     		return textFeedJsonList;
     	} else {
@@ -75,6 +77,7 @@ public class TextController {
     		int textFeedCommentNo = textService.getTextFeedCommentNo();
     		TextFeedComment textFeedComment = textService.selectOnetTextFeedComment(textFeedCommentNo);
     		User commentWriterUser = userService.selectOneUser(user);
+    		textFeedComment.setTextFeedCommentWriterImg(commentWriterUser.getUserImg());
     		TextFeedCommentJsonList textFeedCommentJsonList = new TextFeedCommentJsonList(commentWriterUser, textFeedComment);
     		return textFeedCommentJsonList;
     	}else {    		

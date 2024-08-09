@@ -31,6 +31,7 @@ public class TextService {
             textFeed.setIsLike(isLike);
             textFeed.setIsReport(isReport);
             textFeed.setIsSave(isSave);
+            System.out.println(textFeed.getTextFeedWriterImg());
         }
         return textFeedList;
     }

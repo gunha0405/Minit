@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import kr.or.iei.text.model.dto.TextFeed;
 import kr.or.iei.text.model.dto.TextFeedComment;
+import kr.or.iei.text.model.dto.TextFeedCommentPhotoRowMapper;
 import kr.or.iei.text.model.dto.TextFeedCommentRowMapper;
+import kr.or.iei.text.model.dto.TextFeedPhotoRowMapper;
 import kr.or.iei.text.model.dto.TextFeedReportRowMapper;
 import kr.or.iei.text.model.dto.TextFeedRowMapper;
 import kr.or.iei.user.model.dto.User;
@@ -26,10 +28,17 @@ public class TextDao {
 	
 	@Autowired
 	private TextFeedReportRowMapper textFeedReportRowMapper;
+	
+	@Autowired
+	private TextFeedPhotoRowMapper textFeedPhotoRowMapper;
+	
+	@Autowired
+	private TextFeedCommentPhotoRowMapper textFeedCommentPhotoRowMapper;
+	
 
 	public List selectTextFeed() {
-		String query = "select * from text_feed where text_feed_status = 0 order by 1 desc";
-		List textFeedList = jdbc.query(query, textFeedRowMapper);
+		String query = "select * from text_feed join user_tbl on text_feed_writer = user_id order by 1 desc";
+		List textFeedList = jdbc.query(query, textFeedPhotoRowMapper);
 		return textFeedList;
 	}
 
@@ -52,6 +61,7 @@ public class TextDao {
 		String query = "select * from text_feed where text_feed_no = ?";
 		Object[] params = {textFeedNo};
 		List list = jdbc.query(query,textFeedRowMapper ,params);
+		System.out.println(list);
 		return (TextFeed)list.get(0);
 	}
 
@@ -85,9 +95,9 @@ public class TextDao {
 	
 
 	public List<TextFeedComment> selectTextFeedComment(int textFeedNo) {
-	    String query = "select * from text_feed_comment where text_feed_comment_ref = ? order by 1 desc";
+	    String query = "select * from text_feed_comment join user_tbl on text_feed_comment_writer = user_id where text_feed_comment_ref = ?";
 	    Object[] params = {textFeedNo};
-	    List<TextFeedComment> list= jdbc.query(query, textFeedCommentRowMapper, params);
+	    List<TextFeedComment> list= jdbc.query(query, textFeedCommentPhotoRowMapper, params);
 	    return list;
 	}
 

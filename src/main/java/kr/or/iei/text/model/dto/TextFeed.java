@@ -21,4 +21,5 @@ public class TextFeed {
 	private int isSave;
 	private int userNo;
 	private int warningCount;
+	private String textFeedWriterImg;
 }
