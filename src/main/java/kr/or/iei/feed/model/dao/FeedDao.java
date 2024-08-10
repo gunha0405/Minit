@@ -110,12 +110,6 @@ public class FeedDao {
 		return totalCount;
 	}
 
-	public int searchUserFeedNum(String userId) {
-		String query = "select count(*) from (select user_feed_no from user_feed_tbl join user_feed_file using(user_feed_no) where USER_FEED_WRITER = ? group by user_feed_no)"; 
-		Object[] parmas = {userId};
-		int totalCount = jdbc.queryForObject(query, Integer.class, parmas);
-		return totalCount;
-	}
 
 	public int searhFeedNo(int start, int end, User u, int i) {
 		String query = "select user_feed_no from\r\n" + 
@@ -212,27 +206,25 @@ public class FeedDao {
 	}
 
 	public int insertFeedComment(String userId, String feedCommentContent, int feedRef) {
-		String query ="insert into USER_FEED_COMMENT  values(USER_FEED_COMMENT_SEQ.nextval,?,to_char(sysdate,'YYYY-MM-DD'),?,?)";
+		String query ="insert into USER_FEED_COMMENT  values(USER_FEED_COMMENT_SEQ.nextval,?,to_char(sysdate,'YYYY-MM-DD'),?,?)";		
 		Object[] params = {feedCommentContent, feedRef, userId};
 		int result = jdbc.update(query, params);
 		return result;
 	}
 
 	public int getCommentNo() {
-		String query = "select count(*) from user_feed_comment";
+		String query = "select feed_comment_no from (select rownum as rnum, n. * from (select * from user_feed_comment)n order by feed_comment_no desc) where rnum=1";
 		int commentNo = jdbc.queryForObject(query, Integer.class);
 		return commentNo;
 	}
 
 	public FeedComment getFeedComment(int commentNo, String userId) {
-		String query = "select \r\n" + 
-				"user_id, user_img,feed_comment_no, feed_comment_content, feed_comment_date, feed_ref \r\n" + 
-				"from\r\n" + 
-				"(select * from user_tbl join USER_FEED_COMMENT on (user_id = FEED_COMMENT_WRITER)) \r\n" + 
-				"where feed_comment_no=? and user_id=?";
-		Object[] params = {commentNo, userId};
+		String query = "select feed_comment_writer,feed_comment_no, feed_comment_date,  feed_comment_content, feed_ref, user_img \n" + 
+				"from ((select * from user_feed_comment where feed_comment_writer =? and feed_comment_no=?) \n" + 
+				"join user_tbl on (feed_comment_writer = user_id))";
+		Object[] params = {userId,commentNo};
 		List list = jdbc.query(query, feedCommentRowMapper, params);
-		System.out.println(list);
+		//System.out.println(list);
 		return (FeedComment)list.get(0);
 	}
 
