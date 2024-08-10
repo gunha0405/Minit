@@ -180,10 +180,9 @@ public class PhotoController {
 
     @GetMapping(value = "/deleteComment")
     @ResponseBody
-    public String deleteComment(PhotoComment pc, Model model) {
-        int result = photoService.deleteComment(pc);
-        model.addAttribute("loc", "/photo/list");
-        return "common/msg";
+    public int deleteComment(PhotoComment photoFeedCommentNo) {
+        int result = photoService.deleteComment(photoFeedCommentNo);
+        return result;
     }
 
     @ResponseBody
