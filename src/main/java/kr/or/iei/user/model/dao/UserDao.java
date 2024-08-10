@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import kr.or.iei.text.model.dto.TextFeed;
 import kr.or.iei.user.model.dto.User;
 import kr.or.iei.user.model.dto.UserRowMapper;
 
@@ -141,7 +142,16 @@ public class UserDao {
 		return list;
 	}
 
-	
+	public User selectOneUser(int userNo) {
+		String query = "select * from user_tbl where user_no=?";
+		Object[] params = {userNo};
+		List list = jdbc.query(query, userRowMapper, params);
+		if(list.isEmpty()) {
+			return null;
+		}else {
+			return (User)list.get(0);
+		}
+	}
 	
 	public int changeCount(User u) {
 		String query = "update user_tbl set warning_count=(?+1) where user_no=?";
@@ -149,8 +159,6 @@ public class UserDao {
 		int result = jdbc.update(query, params);
 		return result;
 	}
-	
-//	update user_tbl set user_level=3 where warning_count=3;
 
 	public int warningCount(User u) {
 		String query ="select warning_count from user_tbl where user_no=?";
@@ -164,75 +172,16 @@ public class UserDao {
 		String query = "update user_tbl set user_level=3 where warning_count=5 and user_no=?";
 		Object[] params = {u.getUserNo()};
 		int result = jdbc.update(query,params);
-		System.out.println("처리값 :" +result);
+		System.out.println("경고 처리값 :" +result);
 		return result;
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/*
-	public User selectUser(User user) {
-		String query = "select * from user_tbl "
-				+ "where user_id=? "
-				+ "order by update_date desc, create_date desc";
-		Object[] params = {user.getUserId()};
-		List list = jdbc.query(query, userRowMapper, params);
-		return list.isEmpty() ? null : (User)list.get(0);
-	}
-	
-	public int insertUser(User user) {
-		String query = "insert into user_tbl "
-				+ "(user_id, user_pw, user_name, user_nick, user_info, user_email, create_date) "
-				+ "values "
-				+ "(?,?,?,?,?,?,to_char(sysdate,'yyyy-mm-dd'))";
-		Object[] params = {user.getUserId(), user.getUserPw(), user.getUserName(), user.getUserNick(), user.getUserInfo(), user.getUserEmail()};
+	public int deleteTextFeed(int textFeedNo) {
+		String query = "delete from text_feed where text_feed_no=?";
+		Object[] params = {textFeedNo};
 		int result = jdbc.update(query, params);
-		return result;
-	}
-	
-	public int updateUser(User user) {
-		String query = "update user_tbl "
-				+ "set "
-				+ "user_pw = ?, "
-				+ "user_name = ?, "
-				+ "user_nick = ?, "
-				+ "user_info = ?, "
-				+ "user_level = ?, "
-				+ "warning_count = ?,"
-				+ "update_date = to_char(sysdate,'yyyy-mm-dd') "
-				+ "where user_id = ?";
-		Object[] params = {user.getUserPw(), user.getUserName(), user.getUserNick(), user.getUserInfo(), user.getUserLevel(), user.getWarningCount(), user.getUserId()};
-		int result = jdbc.update(query, params);
-		return result;
-	}
-	
-	public int deleteUser(User user) {
-		String query = "delete from user_tbl where user_id = ?";
-		Object[] params = {user.getUserId()};
-		int result = jdbc.update(query, params);
+		System.out.println("삭제 처리값 :" +result);
 		return result;
 	}
 
-	*/
-	
 }

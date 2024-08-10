@@ -20,7 +20,7 @@
                         <table class="info-tbl">
                             <tr>
                                 <th>프로필 사진</th>
-                                <td style="width:530px">
+                                <td style="width:600px">
                                 <input type="hidden" name="imgtype" id="imgtype" value="0">
                                   <div class="basic-img">
                                   	<input type="hidden" name="userImg" th:value="${session.user.userImg}"/>
@@ -33,82 +33,78 @@
 	                                <img class="img-show logo" style="width: 40%; margin: 0 auto;"src="/user/minit_logo.png">                               
                                   </div>
                                 </td>
-                                <td>
-                                  <label for="upfile" class="img-change-btn">변경
+                                <td style="width: 150px">
+                                  <label for="upfile" class="img-change-btn wh-btn">변경
                                 	<input type="file" name="upfile" id="upfile" accept=".jpg,.png,.jpeg" onchange="loadImg(this);" style="display: none;">
                                   </label>
-                                  <button type="button" class="img-delete-btn">변경 취소</button>
-                                  <button type="button" class="img-logo-btn">기본이미지</button>
+                                  <button type="button" class="img-delete-btn wh-btn">변경 취소</button>
+                                  <button type="button" class="img-logo-btn wh-btn">기본이미지</button>
                                 </td>
                             </tr>
                             <tr>
                                 <th>아이디</th>
-                                <td th:text="${session.user.userId}">아이디</td>
-                                <td></td>
+                                <td colspan="2" th:text="${session.user.userId}">아이디</td>
                             </tr>
                             <tr>
                                 <th>
                                   <label for="userNick">사용자이름</label>
                                 </th>
-                                <td>
+                                <td colspan="2">
+                                  <input type="hidden" id="sessionNick" th:value="${session.user.userNick}">
                                   <div class="input-item">
-                                    <input type="text" name="userNick" id="userNick" th:value="${session.user.userNick}">
+                                    <input type="text" name="userNick" id="userNick" th:value="${session.user.userNick}" class="required">
 	                                <p class="input-msg nick-check-msg none"></p>
                                   </div>
                                 </td>
-                                <td>
-	                              <button type="button" class="nick-check-btn">중복체크</button>
-	                            </td>
                             </tr>
                             <tr>
                                 <th>
                                   <label for="userInfo">소개글</label>
                                 </th>
-                                <td>
+                                <td colspan="2">
                                   <div class="input-item">
                                     <input type="text" name="userInfo" id="userInfo" th:value="${session.user.userInfo}" placeholder="소개글 입력란">
                                   </div>
                                 </td>
-                                <td></td>
                             </tr>
                             <tr>
                                 <th>이름</th>
-                                <td th:text="${session.user.userName}">이름</td>
-                                <td></td>
+                                <td colspan="2" th:text="${session.user.userName}">이름</td>
                             </tr>
                             <tr>
                                 <th>이메일</th>
-                                <td th:text="${session.user.userEmail}">이메일</td>
-                                <td></td>
+                                <td colspan="2" th:text="${session.user.userEmail}">이메일</td>
                             </tr>
                             <tr>
                                 <th>비밀번호</th>
-                                <td>
+                                <td colspan="2">
                                   <div class="input-item">
-                                    <input type="password" name="userPw" id="userPw" th:value="${session.user.userPw}">
-                                  </div>
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th>비밀번호 확인</th>
-                                <td>
-                                  <div class="input-item">
-                                    <input type="password" name="userRePw" id="userRePw">
+                                    <input type="password" name="userPw" id="userPw" th:value="${session.user.userPw}" class="required">
                                     <p class="input-msg pw-check-msg none"></p>
                                   </div>
                                 </td>
-                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>비밀번호 확인</th>
+                                <td colspan="2">
+                                  <div class="input-item">
+                                    <input type="password" name="userRePw" id="userRePw">
+                                    <p class="input-msg repw-check-msg none"></p>
+                                  </div>
+                                </td>
                             </tr>
                             <tr>                                
                               <th>가입일</th>
-                              <td th:text="${session.user.createDate}">가입일</td>
-                              <td></td>
+                              <td colspan="2" th:text="${session.user.createDate}"></td>
+                            </tr>
+                            <tr>                                
+                              <th>최근 수정일</th>
+                              <td colspan="2" th:text="${session.user.updateDate}"></td>
                             </tr>
                         </table>
                         <input type="hidden" name="userNo" th:value="${session.user.userNo}">
                         <div class="mypage-btn">
-                          <button type="submit" class="btn-point1">정보수정</button>
+                          <button type="submit" class="btn-point2 update">정보수정</button>
                           <button type="button" class="btn-point2 delBtn">회원탈퇴</button>
                           <a th:if="${session.user.userLevel == 1}" href="/admin/warningMain" class="btn-point3">관리자 페이지로</a>
                         </div>
@@ -183,9 +179,11 @@
 				}
 			}
 		
-			$(".nick-check-btn").on("click",function(){
+			$("#userNick").on("keyup",function(){
+				$("#userNick").removeClass("required");
 				$(".nick-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
 				const userNick = $("#userNick").val();
+				const sessionNick = $("#sessionNick").val();
 				console.log(userNick);
 				$.ajax({
 					url : "/user/ajaxCheckNick",
@@ -193,10 +191,15 @@
 					data : {userNick : userNick},
 					success : function(data){
 						if(data == 0){
-							$(".nick-check-msg").text("사용 가능한 닉네임 입니다.");
+							$(".nick-check-msg").text("사용 가능한 사용자이름 입니다.");
 							$(".nick-check-msg").addClass("valid");
+							$("#userNick").addClass("required");
+						}else if(userNick == sessionNick){
+							$(".nick-check-msg").text("기존에 사용하던 사용자이름입니다.");
+							$(".nick-check-msg").addClass("valid");
+							$("#userNick").addClass("required");
 						}else{
-							$(".nick-check-msg").text("이미 사용중인 닉네임 입니다.");
+							$(".nick-check-msg").text("이미 사용중인 사용자이름 입니다.");
 							$(".nick-check-msg").addClass("invalid");
 						}
 					},
@@ -205,18 +208,56 @@
 					}
 				});
 			});
+			$("#userPw").on("keyup",function(){
+	    		$("#userPw").removeClass("required");
+	    		$(".pw-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
+	    		const userPw = $("#userPw").val();
+	    		console.log(userPw);
+	    		const pwReg = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/;
+	    		if(!pwReg.test(userPw)){
+	    			$(".pw-check-msg").text("영문자+숫자+특수문자 조합으로 8~16글자 이내 작성해주세요.");
+					$(".pw-check-msg").addClass("invalid");
+	    		}else{
+	    			$(".pw-check-msg").text("유효한 비밀번호 입니다.");
+					$(".pw-check-msg").addClass("valid");
+					$("#userPw").addClass("required");
+					const pwReValue = $("#userRePw").val();
+					if(userPw === pwReValue){
+						$(".repw-check-msg").text("비밀번호가 일치합니다.");
+						$(".repw-check-msg").addClass("valid").removeClass("invalid");
+						$("#userRePw").addClass("required");
+					}
+	    		}
+	    	})
 			$("#userRePw").on("change",function(){
-				$(".pw-check-msg").removeClass("none");
+				$("#userRePw").removeClass("required");
+				$(".repw-check-msg").removeClass("none");
 				const pwValue = $("#userPw").val();
 				const pwReValue = $("#userRePw").val();
 				if(pwValue === pwReValue){
-					$(".pw-check-msg").text("비밀번호가 일치합니다.");
-					$(".pw-check-msg").addClass("valid");
+					$(".repw-check-msg").text("비밀번호가 일치합니다.");
+					$(".repw-check-msg").addClass("valid").removeClass("invalid");
+					$("#userRePw").addClass("required");
 				}else{
-					$(".pw-check-msg").text("비밀번호가 일치하지 않습니다.");
-					$(".pw-check-msg").addClass("invalid");				
+					$(".repw-check-msg").text("비밀번호가 일치하지 않습니다.");
+					$(".repw-check-msg").addClass("invalid");				
 				}
 			});
+			
+			//잘못된 정보 있으면 안 넘어가게 
+	    	$(".update").on("click",function(){
+	    		const required = $(".required").length;
+	    		console.log(required);
+	    		const check = $("[name=check]");
+	    		const checkInput = check.filter(":checked");
+	    		console.log(checkInput.length);
+	    		if(required != 3){
+	    			alert("입력값을 확인해주세요"); 			
+	    			event.preventDefault(); //이벤트 방지 submit 안 넘어가고
+	    		}else {    			
+	    			location.href = "/user/mypage";
+	    		}
+	    	})
 		</script>
         
         
