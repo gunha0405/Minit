@@ -13,6 +13,7 @@ import kr.or.iei.feed.model.dto.FeedCommentRowMapper;
 import kr.or.iei.feed.model.dto.FeedFile;
 import kr.or.iei.feed.model.dto.FeedFileRowMapper;
 import kr.or.iei.feed.model.dto.FeedRowMapper;
+import kr.or.iei.feed.model.dto.FollowUserRowMapper;
 import kr.or.iei.feed.model.dto.UserFeedNaviList;
 import kr.or.iei.user.model.dto.User;
 import kr.or.iei.user.model.dto.UserRowMapper;
@@ -27,6 +28,8 @@ public class FeedDao {
 	FeedFileRowMapper feedFileRowMapper = new FeedFileRowMapper();
 	@Autowired
 	UserRowMapper userRowMapper = new UserRowMapper();
+	@Autowired
+	FollowUserRowMapper followUserFowMapper = new FollowUserRowMapper();
 	@Value("${file.root}")
 	private String root;
 	@Autowired
@@ -243,6 +246,38 @@ public class FeedDao {
 		Object[] params = {userFeedNo, i+1};
 		List list = jdbc.query(query, feedCommentRowMapper, params); 
 		return (FeedComment)list.get(0);
+	}
+
+	public int following(String userFeedWriter) {
+		String query = "select count(*) from follow where user_id = ?";
+		Object[] params = {userFeedWriter};
+		int following = jdbc.queryForObject(query, Integer.class, params);
+		return following;
+	}
+
+	public int follower(String userFeedWriter) {
+		String query ="select count(*) from follow where following_id = ?";
+		Object[] params = {userFeedWriter};
+		int follower = jdbc.queryForObject(query, Integer.class, params);
+		return follower;
+	}
+
+	public User searchFollowingUser(String userFeedWriter, int i) {
+		String query ="select user_id, user_img from user_tbl\n" + 
+				"where user_id=\n" + 
+				"(select following_id from (select rownum as rnum, n. * from(select * from follow where user_id = ?)n) where rnum=?)";
+		Object[] params = {userFeedWriter, i};
+		List list = jdbc.query(query, followUserFowMapper, params);
+		return (User)list.get(0);
+	}
+
+	public User searchFollowerUser(String userFeedWriter, int i) {
+		String query ="select user_id, user_img from user_tbl\n" + 
+				"where user_id=\n" + 
+				"(select user_id from (select rownum as rnum, n. * from(select * from follow where following_id = ?)n) where rnum=?)";
+		Object[] params = {userFeedWriter, i};
+		List list = jdbc.query(query, followUserFowMapper, params);
+		return (User)list.get(0);
 	}
 
 

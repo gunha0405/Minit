@@ -94,11 +94,23 @@ public class FeedController {
 				String filepath = savepath + filename;
 				Feed feed = new Feed();
 				feed.setUserFeedFilepath(filepath);
-				feed.setUserFeedNo(feedlist.getUserFeedNo());
+				feed.setUserFeedNo(feedlist.getUserFeedNo()); 
 				filefath.add(feed);
 			}//for
+			//팔로잉, 팔로우 
+			Feed following = feedService.following(userFeedWriter);
+			Feed follower = feedService.follower(userFeedWriter);
+			List<User> user = following.getUserList();
+			//System.out.println(user.get(0));
+			
+			model.addAttribute("following", following);
+			model.addAttribute("follower", follower);
+			model.addAttribute("followingList", user);
+			model.addAttribute("followerList", follower.getUserList());
+		
 			model.addAttribute("list", filefath);
 			model.addAttribute("pageNavi", list.getPageNavi());
+			model.addAttribute("totalCount", list.getTotalCount());
 			model.addAttribute("user", u);
 			return "/feed/list";
 		}

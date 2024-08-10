@@ -98,7 +98,8 @@ public class FeedService {
 		// 페이지 네비게이션 제작(사용자가 클릭해서 다른 페이지를 요청할 수 있도록 하는 요소 ) 제작
 		// 페이지 네비게이션을 서비스에서 만드는 이유 -> 총 게시물수를 조회해와야 가능하기 떄문
 		// select count(*) from notice;
-		int totalCount = feedDao.selectFeedTotalCount();
+		int totalCount = 0;
+		totalCount = feedDao.selectFeedTotalCount();
 		// 전체 페이지 수 계산
 		int totalPage = 0;
 		if (totalCount % numPerPage == 0) {
@@ -158,7 +159,7 @@ public class FeedService {
 		// 컨트롤러로 되돌려줄 데이터가 공지사항 목록, 만든 페이지 네비게이션
 		// -> java의 메소드는 1개의 자료형만 리턴 가능 -> 2개를 되돌려줘야함 List, String
 		// -> 되돌려주고 싶은 데이터 2개를 저장할 수 있는 객체를 생성해서 객체로 묶어서 하나로 리턴
-		feedListData fld = new feedListData(feedList, pageNavi);
+		feedListData fld = new feedListData(feedList, pageNavi, totalCount);		
 		return fld;
 	}
 	
@@ -315,5 +316,36 @@ public class FeedService {
 		}
 		return fc;
 	}
+
+	public Feed following(String userFeedWriter) {
+		Feed f = new Feed();
+		int following = feedDao.following(userFeedWriter);
+		f.setUserFeedCount(following);
+		List<User> userList = new ArrayList<User>();
+		for(int i = 0; i < following; i++) {
+			User user = feedDao.searchFollowingUser(userFeedWriter, i+1);
+			//System.out.println("userfff="+user);
+			
+			userList.add(user);
+		}
+		f.setUserList(userList);
+		return f;
+	}
+
+	public Feed follower(String userFeedWriter) {
+		int follower = feedDao.follower(userFeedWriter);
+		Feed f = new Feed();
+		f.setUserFeedCount(follower);
+		List<User> userList = new ArrayList<User>();
+		for(int i = 0; i < follower; i++) {
+			User user = feedDao.searchFollowerUser(userFeedWriter, i+1);
+			//System.out.println("user="+user);
+			
+			userList.add(user);
+		}
+		f.setUserList(userList);
+		return f;
+	}
+
 
 }
