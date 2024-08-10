@@ -96,7 +96,7 @@ public class FeedController {
 				feed.setUserFeedFilepath(filepath);
 				feed.setUserFeedNo(feedlist.getUserFeedNo());
 				filefath.add(feed);
-			}
+			}//for
 			model.addAttribute("list", filefath);
 			model.addAttribute("pageNavi", list.getPageNavi());
 			model.addAttribute("user", u);
@@ -255,7 +255,6 @@ public class FeedController {
 		String userId = user.getUserId();
 		//유저 정보 가져오기 
 		FeedComment fc = feedService.insertFeedComment(userId, feedCommentContent, feedRef);
-		
 		return fc;
 	}
 

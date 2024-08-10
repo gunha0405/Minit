@@ -97,14 +97,15 @@
 	        </li>
 	      </ul>
 	    </div>
-
+		<!-- 댓글 출력 -->
 		<div class="comment-wrap">
+		<th:block th:each="fc : ${feed.feedComment} ">
 			<table>
 				<tr>
 					<td style="width: 10%;"><a href="#">
-					<img src="image/profilePhoto.jfif" alt="" class="comment-user"></a>
+					<img src="user/${fc.userImg}" alt="${fc.userFeedWriter}" class="comment-user"></a>
 					</td>
-					<td style="width: 70%;"><span>feed-comment</span></td>
+					<td style="width: 70%;"><span th:text="${fc.feedCommentContent}"></span></td>
 					<td style="width: 20%;"><span
 						class="material-icons toggle-icon" id="icon-favorite">favorite_border</span>
 						<!--댓글 주인이 아닌 유저에게는 신고하기 버튼--> <!-- <span class="material-icons toggle-icon" id="icon-report">report_gmailerrorred</span> -->
@@ -120,7 +121,6 @@
 					</td>
 					</td>
 				</tr>
-
 			</table>
 		</div>
 		</div>

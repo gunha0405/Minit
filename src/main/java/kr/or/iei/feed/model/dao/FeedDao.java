@@ -228,5 +228,22 @@ public class FeedDao {
 		return (FeedComment)list.get(0);
 	}
 
+	public int commentTotalNum(int userFeedNo) {
+		String query = "select count(*) from (select *from user_feed_comment where feed_ref=?)";
+		Object[] params = {userFeedNo};
+		int commentToalNum = jdbc.queryForObject(query, Integer.class, params);
+		return commentToalNum;
+	}
+
+	public FeedComment selectFeedComment(int userFeedNo, int i) {
+		String query = "select feed_comment_content, feed_comment_date, feed_comment_no, feed_comment_writer, feed_ref, user_img\n" + 
+				"from \n" + 
+				"(select rownum as rnum, n. * from ((select * from (select *from user_feed_comment where feed_ref=?) order by feed_comment_no)n))\n" + 
+				"join user_tbl on (feed_comment_writer = user_id) where rnum = ?";
+		Object[] params = {userFeedNo, i+1};
+		List list = jdbc.query(query, feedCommentRowMapper, params); 
+		return (FeedComment)list.get(0);
+	}
+
 
 }

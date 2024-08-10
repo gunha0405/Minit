@@ -179,6 +179,13 @@ public class FeedService {
 		}
 		feed.setFeedList(feedList);
 		
+		List<FeedComment> feedCommentList = new ArrayList<FeedComment>();
+		int commentTotalNum = feedDao.commentTotalNum(userFeedNo);
+		for(int i = 0; i < commentTotalNum; i++) {
+			FeedComment fc = feedDao.selectFeedComment(userFeedNo, i);
+			feedCommentList.add(fc);
+		}
+		feed.setFeedComment(feedCommentList);
 		return feed;
 	}
 
