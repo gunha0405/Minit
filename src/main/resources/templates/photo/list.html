@@ -123,11 +123,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script th:inline="javascript">
   $(document).ready(function() {
-	  
-	  
-	  
-	  
-	  
     
     $('#imageModal').on('hidden.bs.modal', function () {
         // 모달을 비운 후 다시 로드
@@ -193,56 +188,6 @@
             const userId = $(this).data("userId");
             var sessionUserId = $("#userIdClass").text(); // 현재 로그인된 사용자 ID를 가져옴
 
-            
-            
-            $("#addCommentBtn").on("click", function() {
-    		    const commentText = $("#commentInput").val();
-    		    if (commentText.trim() === "") {
-    		        Swal.fire({
-    		            title: "댓글 입력 오류",
-    		            text: "댓글 내용을 입력해주세요.",
-    		            icon: "warning"
-    		        });
-    		        return;
-    		    }
-
-    		    $.ajax({
-    		        url: "/photo/insertComment",
-    		        type: "POST",
-    		        data: {
-    		            photoFeedNo: photoFeedNo,
-    		            photoFeedCommentContent: commentText
-    		        },
-    		        success: function(response) {
-    		            if (response == "common/msg") {
-    		                Swal.fire({
-    		                    title: "댓글 작성 성공",
-    		                    text: "댓글이 성공적으로 작성되었습니다.",
-    		                    icon: "success"
-    		                });
-    		                loadComments(currentPhotoFeedNo); // 새로 댓글 목록을 로드
-    		                $("#commentInput").val(""); // 입력 필드 초기화
-    		            } else {
-    		                Swal.fire({
-    		                    title: "댓글 작성 실패",
-    		                    text: "댓글 작성에 실패했습니다.",
-    		                    icon: "error"
-    		                });
-    		            }
-    		        },
-    		        error: function(xhr, status, error) {
-    		            console.log("Error: " + error);
-    		            Swal.fire({
-    		                title: "서버 전송 실패",
-    		                text: "서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.",
-    		                icon: "error"
-    		            });
-    		        }
-    		    });
-    		});
-            
-            
-            
             console.log("Photo Feed No: " + photoFeedNo);
             console.log("Session User ID: " + sessionUserId); // 세션 ID 출력
             console.log("User ID: " + userId); // 이미지 작성자 ID 출력

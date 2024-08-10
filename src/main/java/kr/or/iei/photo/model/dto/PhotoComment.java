@@ -13,5 +13,4 @@ public class PhotoComment {
 	private String photoFeedCommentContent;
 	private String photoFeedCommentDate;
 	private int photoRef;
-	private String user;
 }

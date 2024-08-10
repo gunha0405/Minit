@@ -167,7 +167,6 @@ public class PhotoController {
     @ResponseBody
     public List<PhotoComment> getComment(int photoFeedNo) {
         List<PhotoComment> cl = photoService.getCommentList(photoFeedNo);
-        PhotoComment.setTextFeedCommentWriterImg(commentWriterUser.getUserImg());
         return cl;
     }
 
