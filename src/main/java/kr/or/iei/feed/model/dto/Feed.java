@@ -22,4 +22,6 @@ public class Feed {
 	private String file1;
 	private String file2;
 	private String file3;
+	private List<FeedComment> feedComment;
+	private List<User> userList;
 }

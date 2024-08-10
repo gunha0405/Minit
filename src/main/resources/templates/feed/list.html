@@ -89,21 +89,21 @@
 										<ul>
 											<li>
 												<ul class="content-no">
-													<li><span class="content-total-no">0</span></li>
+													<li><span class="content-total-no" th:text="${totalCount}"></span></li>
 													<li>게시물</li>
 												</ul>
 											</li>
 											<li>
 												<ul class="content-no">
 													<a href="#" id="openFollowModal"><li><span
-															class="follow-total-no">0</span></li>
+															class="follow-total-no" th:text="${follower.userFeedCount}"></span></li>
 														<li>팔로워</li></a>
 												</ul>
 											</li>
 											<li>
 												<ul class="content-no">
 													<a href="#" id="openFollowingModal"><li><span
-															class="following-total-no">0</span></li>
+															class="following-total-no" th:text="${following.userFeedCount}"></span></li>
 														<li>팔로잉</li></a>
 													<!--내가 친구-->
 												</ul>
@@ -111,51 +111,20 @@
 										</ul>
 									</div> <!-- 팔로워 모달 -->
 									<div id="followModal" class="modal">
-										<div class="modal-content">   <!-- 비동기로 띄우는걸로 해보자  -->
+										<div class="modal-content">   
 											<span class="close" id="closeFollowModal">&times;</span>
 											<div class="modal-header">팔로워 목록</div>
 											<div class="modal-body" id="followList">
 												<!-- 팔로워 리스트 항목들 -->
-												<p>
-													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
-														class="user-id">유저아이디</span>
-												</p>
-												<p>
-													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
-														class="user-id">유저아이디</span>
-												</p>
-												<p>
-													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
-														class="user-id">유저아이디</span>
-												</p>
-												<p>
-													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
-														class="user-id">유저아이디</span>
-												</p>
-												<p>
-													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
-														class="user-id">유저아이디</span>
-												</p>
-												<p>
-													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
-														class="user-id">유저아이디</span>
-												</p>
-												<p>
-													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
-														class="user-id">유저아이디</span>
-												</p>
-												<p>
-													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
-														class="user-id">유저아이디</span>
-												</p>
-												<p>
-													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
-														class="user-id">유저아이디</span>
-												</p>
-												<p>
-													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
-														class="user-id">유저아이디</span>
-												</p>
+												<th:block th:each="item : ${followerList}">
+													<p>
+														<a th:href="@{/feed/myPage(userFeedWriter=${item.userId})}">
+															<img src="/user/${item.userImg}">
+															<span class="user-id" th:text="${item.userId}"></span>
+														</a>
+													</p>
+												</th:block>
+											
 											</div>
 										</div>
 									</div> <!-- 팔로잉 모달 -->
@@ -165,55 +134,18 @@
 											<div class="modal-header">팔로잉 목록</div>
 											<div class="modal-body" id="followingList">
 												<!-- 팔로잉 리스트 항목들 -->
+												<th:block th:each="item : ${followingList}">
+													<p>
+														<a th:href="@{/feed/myPage(userFeedWriter=${item.userId})}">
+															<img src="/user/${item.userImg}">
+															<span class="user-id" th:text="${item.userId}"></span>
+														</a>	
+													</p>
+												</th:block>
 												<p>
 													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
 														class="user-id">유저아이디</span>
-													<button class="modal-del">삭제</button>
-												</p>
-												<p>
-													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
-														class="user-id">유저아이디</span>
-													<button class="modal-del">삭제</button>
-												</p>
-												<p>
-													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
-														class="user-id">유저아이디</span>
-													<button class="modal-del">삭제</button>
-												</p>
-												<p>
-													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
-														class="user-id">유저아이디</span>
-													<button class="modal-del">삭제</button>
-												</p>
-												<p>
-													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
-														class="user-id">유저아이디</span>
-													<button class="modal-del">삭제</button>
-												</p>
-												<p>
-													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
-														class="user-id">유저아이디</span>
-													<button class="modal-del">삭제</button>
-												</p>
-												<p>
-													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
-														class="user-id">유저아이디</span>
-													<button class="modal-del">삭제</button>
-												</p>
-												<p>
-													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
-														class="user-id">유저아이디</span>
-													<button class="modal-del">삭제</button>
-												</p>
-												<p>
-													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
-														class="user-id">유저아이디</span>
-													<button class="modal-del">삭제</button>
-												</p>
-												<p>
-													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
-														class="user-id">유저아이디</span>
-													<button class="modal-del">삭제</button>
+													<button class="modal-del">삭제</button> ??
 												</p>
 											</div>
 										</div>
@@ -223,9 +155,21 @@
 								<li class="user-content-repository">
 									<div>							 	<!-- th:if="${session.user != null && session.user.userNo == u.userNo}" -->
 										
-										<a href="/feed/writeForm"><button th:if="${session.user != null}" class="button-style" id="write-feed">피드작성</button></a>
-										<a href="/feed/userStorage"><button th:if="${session.user != null}" class="button-style" id="storage">보관함</button></a>
-										<button th:if="${session.user == null}" class="button-style" id="follow-btn" >팔로우</button>
+										<a href="/feed/writeForm">
+											<button th:if="${session.user != null && session.user.userId == user.userId}" class="button-style" id="write-feed">
+											피드작성
+											</button>
+										</a>
+										<a href="/feed/userStorage">
+											<button th:if="${session.user != null && session.user.userId == user.userId}" class="button-style" id="storage">
+											보관함
+											</button>
+										</a>
+										<button th:if="${session.user != null && session.user.userId != user.userId}" 
+									        class="button-style" id="follow-btn" th:onclick="userFollow([[${session.user.userId}]], [[${user.userId}]])">
+									   	 팔로우
+									   	 </button>				
+										<button th:if="${session.user == null}" class="button-style" id="follow-btn" th:onclick="userFollow([[${session.user.userId}]],[[${user.userId}]])">팔로우</button>
 										<!-- 팔로우를 누르면 팔로우 취소 버튼으로 ,  -->
 									</div>
 								</li>
@@ -254,24 +198,6 @@
 			<div class="list-navi" th:utext="${pageNavi}"></div>
 			
 			
-<div class="bottom-navBar">
-      <ul class="nav">
-        <li class="nav-item">
-          <a class="item" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-        <!-- session에 있는 유저 아이디 가져오기 ? 만약에 아이디가 null 이면 로그인해주세요. 로그인 시 서비스 이용가능합니다. msg 사용 -->
-          <a class="item" href="/feed/myPage">MY</a>  
-        </li>
-        <li class="nav-item">
-          <a class="item" href="#">자유</a>
-        </li>
-        <li class="nav-item">
-          <a class="item" href="#">M</a>
-        </li>
-      </ul>
-    </div>
-
 
 		</section>
 	
@@ -279,6 +205,10 @@
 	<script src="/js/feed/followModal.js"></script>
 
 	<script>
+	function userFollow(loginUserId, pageUser){
+		
+	}
+	
 	$('write-feed').on('click', function() {
 		window.location.href = '/feed/writeForm'
 	})

@@ -97,14 +97,15 @@
 	        </li>
 	      </ul>
 	    </div>
-
+		<!-- 댓글 출력 -->
 		<div class="comment-wrap">
+		<th:block th:each="fc : ${feed.feedComment} ">
 			<table>
 				<tr>
 					<td style="width: 10%;"><a href="#">
-					<img src="image/profilePhoto.jfif" alt="" class="comment-user"></a>
+					<img src="user/${fc.userImg}" alt="${fc.userFeedWriter}" class="comment-user"></a>
 					</td>
-					<td style="width: 70%;"><span>feed-comment</span></td>
+					<td style="width: 70%;"><span th:text="${fc.feedCommentContent}"></span></td>
 					<td style="width: 20%;"><span
 						class="material-icons toggle-icon" id="icon-favorite">favorite_border</span>
 						<!--댓글 주인이 아닌 유저에게는 신고하기 버튼--> <!-- <span class="material-icons toggle-icon" id="icon-report">report_gmailerrorred</span> -->
@@ -120,7 +121,6 @@
 					</td>
 					</td>
 				</tr>
-
 			</table>
 		</div>
 		</div>
@@ -166,29 +166,32 @@
 		      success: function(data) {
 		    	  console.log(data);
 		          // 성공적으로 댓글이 저장된 후 댓글 목록을 갱신하거나, 댓글을 추가
-		          //$(".comment-wrap").append(`
-		          //    <tr>
-		           //       <td style="width: 10%;"><a href="#">
-		            //      <img src="image/profilePhoto.jfif" alt="" class="comment-user"></a>
-		            //      </td>
-		            //      <td style="width: 70%;"><span>${feedCommentContent}</span></td>
-		            //      <td style="width: 20%;"><span
-		            //          class="material-icons toggle-icon" id="icon-favorite">favorite_border</span>
-		            //          <span class="material-icons toggle-icon" id="icon-more">more_vert</span>
-		            //      </td>
-		            //      <td>
-		            //          <div id="icon-container" class="hidden">
-		            //              <span class="material-icons">edit_document</span> <span
-		            //                  class="material-icons">folder_delete</span>
-		             //         </div>
-		            //      </td>
-		            //  </tr>
-		        //  `);
-		          //$(".feedCommentContent").val(''); // 댓글 입력 필드 비우기
+		          $(".comment-wrap").prepend(`
+		        		  <tr>
+							<td style="width: 10%;"><a href="/feed/myPage/userFeedWriter=${data.feedCommentWriter}">
+							<img src="/user/${data.userImg}" alt="" class="comment-user"></a>
+							</td>
+							<td style="width: 70%;"><span>${data.feedCommentContent}</span></td>
+							<td style="width: 20%;"><span
+								class="material-icons toggle-icon" id="icon-favorite">favorite_border</span>
+								<!--댓글 주인이 아닌 유저에게는 신고하기 버튼--> <!-- <span class="material-icons toggle-icon" id="icon-report">report_gmailerrorred</span> -->
+								<!-- 댓글 주인에게는 수정/삭제 버튼 점세개 누르면 옆으로 나오게 --> <span
+								class="material-icons toggle-icon" id="icon-more">more_vert</span>
+							</td>
+							<td>
+								<div id="icon-container" class="hidden">
+									<span class="material-icons">edit_document</span> <span
+										class="material-icons">folder_delete</span>
+								</div>
+
+							</td>
+							</td>
+						</tr>
+		          `);
+		          $(".feedCommentContent").val(''); // 댓글 입력 필드 비우기
 		      },
 		      error: function() {
-		          console.log('댓글 저장 실패:');
-		          alert('댓글 저장 실패. 다시 시도해 주세요.');
+		          alert('댓글을 달수 없습니다. 다시 시도해 주세요.');
 		      }
 		 })
 	});

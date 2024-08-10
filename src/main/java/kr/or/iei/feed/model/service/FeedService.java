@@ -24,24 +24,12 @@ public class FeedService {
 	@Value("${file.root}")
 	private String root;
 
-//	public List<Feed> feedList(String userId) {
-//		int numPerFeedImg = 8;
-//		//유저의 사진을 가져와야함
-//		//유저가 올린 글의 갯수 
-//		int num = feedDao.searchUserFeedNum(userId);
-//		for(int i = 0; i < num ; i++) {
-//			int feedNo = feedDao.searhFeedNo(userId, i);
-//			List<Feed> feedFath = feedDao.searchFeed
-//		}
-//		
-//		return ;
-//	}
-
 	public User searchUser(String userId) {
 		User u = feedDao.searchUser(userId);
 		return u;
 	}
 
+	//게시물과 사진 insert 
 	@Transactional
 	public int insertfile(Feed f, List<FeedFile> fileList) {
 		int result = 0;
@@ -56,11 +44,12 @@ public class FeedService {
 			// insert할때 생성된 번호를 조회
 			int feedNo = feedDao.selectFeedNo();
 			// 반복문으로 사진 크기만큼 feed_file 테이블 insert
-			for (FeedFile feedFile : fileList) {
+			for(FeedFile feedFile : fileList) {
 				// insert될때 생성된 공지사항번호를 저장한 후 feed_file insert 요청
 				feedFile.setUserFeedNo(feedNo);
 				result += feedDao.insertFeedFile(feedFile);
 			}
+			//입력받는 파일이 세개의 파일보다 적을때 
 			if(fileSize > fileListNum) {
 				for(int i = 0; i < fileSize-fileListNum; i++) {
 					result += feedDao.inserFeedNull(feedNo);
@@ -73,6 +62,7 @@ public class FeedService {
 		return result;
 	}
 
+	//페이징 작업
 	public feedListData selectUserAllFeed(int reqPage, User u) {
 		// System.out.println(u);
 
@@ -91,8 +81,6 @@ public class FeedService {
 		// 요청페이지에 필요한 공지사항 목록을 조회(파일 패스랑 , 파일 번호 저장)
 		List<Feed> feedList = new ArrayList<Feed>();
 
-		// 해당 페이지에 있는 글의 갯수
-		// int num = feedDao.searchUserFeedNum(userId);
 
 		// 피드 갯수 만큼 for문 돌게
 		int feedNum = feedDao.selectFeedList(start, end, u);
@@ -110,7 +98,8 @@ public class FeedService {
 		// 페이지 네비게이션 제작(사용자가 클릭해서 다른 페이지를 요청할 수 있도록 하는 요소 ) 제작
 		// 페이지 네비게이션을 서비스에서 만드는 이유 -> 총 게시물수를 조회해와야 가능하기 떄문
 		// select count(*) from notice;
-		int totalCount = feedDao.selectFeedTotalCount();
+		int totalCount = 0;
+		totalCount = feedDao.selectFeedTotalCount();
 		// 전체 페이지 수 계산
 		int totalPage = 0;
 		if (totalCount % numPerPage == 0) {
@@ -170,12 +159,13 @@ public class FeedService {
 		// 컨트롤러로 되돌려줄 데이터가 공지사항 목록, 만든 페이지 네비게이션
 		// -> java의 메소드는 1개의 자료형만 리턴 가능 -> 2개를 되돌려줘야함 List, String
 		// -> 되돌려주고 싶은 데이터 2개를 저장할 수 있는 객체를 생성해서 객체로 묶어서 하나로 리턴
-		feedListData fld = new feedListData(feedList, pageNavi);
+		feedListData fld = new feedListData(feedList, pageNavi, totalCount);		
 		return fld;
 	}
-
+	
+	// 피드 게시물 보기 
 	public Feed selectUserOneFeed(int userFeedNo) {
-		// 게시물정보 입력받기
+		//게시물정보 입력받기
 		Feed feed = feedDao.searchFeedUser(userFeedNo);
 		// 게시물당 사진 게시물 몇개인지
 		int totalImgNo = feedDao.totalImg(userFeedNo);
@@ -187,10 +177,16 @@ public class FeedService {
 			FeedFile fF = new FeedFile();
 			fF.setUserFeedFilepath(filepath);
 			feedList.add(fF);
-			// System.out.println(filepath);
 		}
 		feed.setFeedList(feedList);
-		;
+		
+		List<FeedComment> feedCommentList = new ArrayList<FeedComment>();
+		int commentTotalNum = feedDao.commentTotalNum(userFeedNo);
+		for(int i = 0; i < commentTotalNum; i++) {
+			FeedComment fc = feedDao.selectFeedComment(userFeedNo, i);
+			feedCommentList.add(fc);
+		}
+		feed.setFeedComment(feedCommentList);
 		return feed;
 	}
 
@@ -252,7 +248,7 @@ public class FeedService {
 	@Transactional
 	public int updateNewFile(Feed f, List<FeedFile> newFileList) {
 		int result = 0;
-		System.out.println("0="+result);
+		//System.out.println("0="+result);
 		result = feedDao.updateFeed(f);
 		int filesize = 3;
 		int newFileSize = newFileList.size();
@@ -270,18 +266,18 @@ public class FeedService {
 			//-2            1            3          1
 			//System.out.println("숫자 왜이래.."+result);
 			if(sum == 0) { //   
-				System.out.println(1);
-				System.out.println(result);
+				//System.out.println(1);
+				//System.out.println(result);
 				for(int i = 0; i < 3; i++) {
 					result += feedDao.updateFilePathSame(newFileList.get(i).getUserFeedFilepath(), fileNo[i]);
-					System.out.println("path"+newFileList.get(i).getUserFeedFilepath());
-					System.out.println("fileNo="+fileNo[i]);
-					System.out.println(result);
+					//System.out.println("path"+newFileList.get(i).getUserFeedFilepath());
+					//System.out.println("fileNo="+fileNo[i]);
+					//System.out.println(result);
 				}   //1             3
-				System.out.println("2="+result);
+				//System.out.println("2="+result);
 				return result;
 			}else {
-				System.out.println(2);
+				//System.out.println(2);
 				int num = filesize - newFileSize;  //2 
 				//System.out.println("num="+num);
 				for(int i = 0; i <newFileSize; i++) { //1                                               0
@@ -292,11 +288,11 @@ public class FeedService {
 				    // System.out.println("Index out of bounds: " + (num - 1 + i));
 
 				}
-				System.out.println("3="+result);
+				//System.out.println("3="+result);
 				return result;
 			}
 		}
-		System.out.println("4="+result);
+		//System.out.println("4="+result);
 		return result;
 	}
 	@Transactional
@@ -304,16 +300,52 @@ public class FeedService {
 		int result = feedDao.updateFeed(f);
 		return result;
 	}
+	//피드 게시물 댓글 업데이트 
 	@Transactional
 	public FeedComment insertFeedComment(String userId, String feedCommentContent, int feedRef) {
 		FeedComment fc = null;
+		//댓글 업데이트 
 		int result = feedDao.insertFeedComment(userId, feedCommentContent, feedRef);
+		//업데이트 성공시 댓글 정보 가져오기(실패시 null반환)
 		if(result > 0) {
+			//업데이트 된 번호가져오기 
 			int commentNo = feedDao.getCommentNo();
+			//댓글 단 유저의 정보 
 			fc = feedDao.getFeedComment(commentNo, userId);
 			
 		}
 		return fc;
 	}
+
+	public Feed following(String userFeedWriter) {
+		Feed f = new Feed();
+		int following = feedDao.following(userFeedWriter);
+		f.setUserFeedCount(following);
+		List<User> userList = new ArrayList<User>();
+		for(int i = 0; i < following; i++) {
+			User user = feedDao.searchFollowingUser(userFeedWriter, i+1);
+			//System.out.println("userfff="+user);
+			
+			userList.add(user);
+		}
+		f.setUserList(userList);
+		return f;
+	}
+
+	public Feed follower(String userFeedWriter) {
+		int follower = feedDao.follower(userFeedWriter);
+		Feed f = new Feed();
+		f.setUserFeedCount(follower);
+		List<User> userList = new ArrayList<User>();
+		for(int i = 0; i < follower; i++) {
+			User user = feedDao.searchFollowerUser(userFeedWriter, i+1);
+			//System.out.println("user="+user);
+			
+			userList.add(user);
+		}
+		f.setUserList(userList);
+		return f;
+	}
+
 
 }

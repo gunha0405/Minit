@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class feedListData {
 	private List<Feed> list;
 	private String pageNavi;
+	private int totalCount;
 }
