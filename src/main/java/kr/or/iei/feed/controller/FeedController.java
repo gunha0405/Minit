@@ -38,7 +38,7 @@ public class FeedController {
 
 	@GetMapping(value = "/list")
 	public String list() {
-		return "feed/list"; // 작성자의 아이디나 넘버를 보낸다
+		return "feed/list"; 
 	}
 	
 	@GetMapping(value = "/writeForm")
@@ -46,10 +46,11 @@ public class FeedController {
 		return "feed/writeForm";
 	}
 
-	// feed-view
+	//feed-view 개인 회원 피드 페이지 
 	@GetMapping(value = "/view")
 	public String view(int userFeedNo, Model model) {
-		Feed feed = feedService.selectUserOneFeed(userFeedNo); // 해당 글 유저의 정보와 사진 파일리스트
+		//해당 글 유저의 정보와 사진 파일리스트
+		Feed feed = feedService.selectUserOneFeed(userFeedNo); 
 		model.addAttribute("feed", feed);
 		model.addAttribute("list", feed.getFeedList());
 		return "feed/view";
@@ -70,12 +71,9 @@ public class FeedController {
 		return "/#";
 	}
 
-	// 유저 아디디도 받아야 할것 같음 검색해야할것 같음
 	@GetMapping(value = "/myPage")
 	public String myPage(Integer reqPage, String userFeedWriter, Model model) {
 		reqPage =  (reqPage != null) ? reqPage : 1;
-		//User user = (User) session.getAttribute("user");
-		//String userId = feedId.getUserFeedWriter();
 		if (userFeedWriter ==null) {
 			model.addAttribute("title", "로그인을 해주세요");
 			model.addAttribute("msg", "서비스 이용이 불가합니다");
@@ -83,15 +81,12 @@ public class FeedController {
 			model.addAttribute("loc", "/#");
 			return "common/msg";
 		} else {
-			//Feed f = new Feed();
-			// 유저 정보 가져오기
+			//페이지 주인 정보 불러오기 -> 페이징 작업 
 			User u = feedService.searchUser(userFeedWriter);
-			// 또다른 유저로 들어가게 되면은 그 유저의 번호 가지고 있게 하자. ???
-
-			// 페이지 구현 / 유저와 페이지에 들어가는 피드, 네비바 ,,,/유저가 올린 사진 가져오기 (사진 경로와 피드 번호)
 			feedListData list = feedService.selectUserAllFeed(reqPage,  u);
-			
 			List<Feed> feedList = list.getList();
+			
+			//게시물 마다 1개의 사진 정보 보내기 
 			List<Feed> filefath = new ArrayList<Feed>();
 			for (Feed feedlist : feedList) {
 				String filename = feedlist.getUserFeedFilepath();
@@ -101,12 +96,9 @@ public class FeedController {
 				feed.setUserFeedFilepath(filepath);
 				feed.setUserFeedNo(feedlist.getUserFeedNo());
 				filefath.add(feed);
-				// System.out.println(filepath);
 			}
-
 			model.addAttribute("list", filefath);
 			model.addAttribute("pageNavi", list.getPageNavi());
-			//f.setUser(u);
 			model.addAttribute("user", u);
 			return "/feed/list";
 		}
@@ -150,16 +142,17 @@ public class FeedController {
 
 	@PostMapping(value = "/feedUpdate")
 	public String feedUpdate(Feed f, MultipartFile upfile1, MultipartFile upfile2, MultipartFile upfile3, Model model) {
+		//수정할 부분 화면에서 사진 경로 같이 숨겨서 보내서 그 부분만 수정하자 
 		//새로운 파일 경로 인덱스 작업 
 		int result = 0;
 		if(!upfile1.isEmpty()) {
-			System.out.println("여기 있어요1");
+			//System.out.println("여기 있어요1");
 		}
 		if(!upfile2.isEmpty()) {
-			System.out.println("여기 있어요2");
+			//System.out.println("여기 있어요2");
 		}
 		if(!upfile3.isEmpty()) {
-			System.out.println("여기 있어요3");
+			//System.out.println("여기 있어요3");
 		}
 		if(!upfile1.isEmpty()||!upfile2.isEmpty()||!upfile3.isEmpty()) {
 			MultipartFile[] newFiles = {upfile1, upfile2, upfile3};
@@ -260,10 +253,9 @@ public class FeedController {
 	@PostMapping(value="/commentWrite")
 	public FeedComment commentWrite(@SessionAttribute(required =false) User user, String feedCommentContent, int feedRef ) {
 		String userId = user.getUserId();
-		System.out.println(userId);
-		//유저 이미지, 유저 댓글, 댓글 번호, 코멘트 
+		//유저 정보 가져오기 
 		FeedComment fc = feedService.insertFeedComment(userId, feedCommentContent, feedRef);
-		System.out.println(fc);
+		
 		return fc;
 	}
 
