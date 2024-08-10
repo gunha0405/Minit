@@ -1,5 +1,18 @@
 @charset "UTF-8";
 
+@font-face {
+    font-family: 'goorm-b';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408@1.0/goorm-sans-bold.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'goorm-sans';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408@1.0/goorm-sans-code.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
 *{
 	box-sizing: border-box;
 }
@@ -405,6 +418,7 @@ footer div {
   border: 2px solid #75daa4;
   border-radius: 8px;
   color: black;
+  font-family: 'goorm-eb'
 }
 .wh-btn:hover, .warn-btn:focus{
   background-color: #75daa4;
