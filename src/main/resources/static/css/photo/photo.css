@@ -342,6 +342,13 @@ footer div {
   z-index: 1060;
 }
 
+.image-modal-header{
+	display:flex;
+	flex-direction: row!important;
+	
+}
+
+
 /* 오션 CSS*/
 
 .ocean {

@@ -11,7 +11,6 @@ import kr.or.iei.photo.model.dto.PhotoComment;
 import kr.or.iei.photo.model.dto.PhotoCommentPhotoRowMapper;
 import kr.or.iei.photo.model.dto.PhotoCommentRowMapper;
 import kr.or.iei.photo.model.dto.PhotoRowMapper;
-import kr.or.iei.text.model.dto.TextFeedComment;
 import kr.or.iei.user.model.dto.User;
 
 @Repository

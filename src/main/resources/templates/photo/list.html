@@ -73,14 +73,18 @@
     <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header image-modal-header">
+          <div id="contents-writer"></div>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
           </div>
           <div class="modal-body">
             <img id="modalImage" src="#" alt="이미지" style="width: 100%" />
           </div>
+          
           <div class="imageRow">
-            <div class="imageIconBox">      			
+          
+            <div class="imageIconBox"> 
+                 			
               <i class="fa-regular fa-heart like-button" id="likeBtn"></i>
               <i class="fa-solid fa-comment"></i>
               <i class="fa-solid fa-bookmark bookmark-button" id="bookmarkBtn"></i>
@@ -88,8 +92,10 @@
               <i class="fa-solid fa-trash delete-button" style="display:none;"></i>
               <i class="fa-solid fa-exclamation"></i>
             </div>
+            
             <i class="fa-solid fa-ellipsis-vertical imageToggle"></i>
           </div>
+          
           <div class="comment-section" style="display: none">
             <div class="comment-input">
               <input type="text" class="form-control" id="commentInput" placeholder="댓글을 입력하세요"/>
@@ -161,6 +167,13 @@
     	
     	
     	
+    	
+    	
+  
+    	
+    	
+    	
+    	
       $('#imageModal').on('hidden.bs.modal', function () {
         // 모달을 비운 후 다시 로드
         $("#modalImage").attr("src", ""); // 이미지 초기화
@@ -225,7 +238,7 @@
           const userId = $(this).data("userId");
           var sessionUserId = $("#userIdClass").text(); // 현재 로그인된 사용자 ID를 가져옴
 
-          
+          $("#contents-writer").text(userId);
           // 댓글 추가 이벤트 핸들러
          $("#addCommentBtn").off("click").on("click", function() {
     checkLoginStatus(function() {
@@ -517,7 +530,6 @@
       }
 
       function del(element, photoFeedNo) {
-        console.log(photoFeedNo);
         $.ajax({
           url: "/photo/delete",
           type: "get",
