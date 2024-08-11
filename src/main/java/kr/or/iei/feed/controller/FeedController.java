@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -283,7 +284,7 @@ public class FeedController {
 	@PostMapping(value="/userFollowCancel")
 	public int userFollowCancel(String loginUser, String writerUser) {
 		int num = feedService.userFollowCancel(loginUser, writerUser);
-		System.out.println("userFollowCancel");
+		//System.out.println("userFollowCancel");
 		return num;
 	}
 
@@ -291,7 +292,21 @@ public class FeedController {
 	@PostMapping(value="/userFollow")
 	public int userFollow(String loginUser, String writerUser) {
 		int num = feedService.userFollow(loginUser, writerUser);
-		System.out.println("userFollow="+num);
+		//System.out.println("userFollow="+num);
 		return num;
+	}
+	
+	@ResponseBody
+	@PostMapping(value="/feedCommentDelete")
+	public int feedCommentDelete(int feedCommentNo) {
+		System.out.println(feedCommentNo);
+		int result = feedService.feedCommentDelete(feedCommentNo);
+		return result;
+	}
+	@ResponseBody
+	@PostMapping(value="/commentUpdate")
+	public int commentUpdate(int feedCommentNo, String updatedContent ) {
+		int result = feedService.feedCommentUpdate(feedCommentNo, updatedContent);
+		return result;
 	}
 }

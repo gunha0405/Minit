@@ -365,6 +365,17 @@ public class FeedService {
 		int result = feedDao.userFollow(loginUser, writerUser);
 		return result;
 	}
+	
+	@Transactional
+	public int feedCommentDelete(int feedCommentNo) {
+		int result = feedDao.feedCommentDelete(feedCommentNo);
+		return result;
+	}
+
+	public int feedCommentUpdate(int feedCommentNo, String updatedContent) {
+		int result = feedDao.feedCommentUpdate(feedCommentNo, updatedContent);
+		return result;
+	}
 
 
 }

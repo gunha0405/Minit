@@ -302,5 +302,19 @@ public class FeedDao {
 		return result;
 	}
 
+	public int feedCommentDelete(int feedCommentNo) {
+		String query = "delete from USER_FEED_COMMENT where FEED_COMMENT_NO=?";
+		Object[] params = {feedCommentNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+	public int feedCommentUpdate(int feedCommentNo, String updatedContent) {
+		String query = "update user_feed_comment set FEED_COMMENT_CONTENT=? where FEED_COMMENT_NO=?";
+		Object[] params = {updatedContent, feedCommentNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
 
 }
