@@ -178,7 +178,7 @@ public class PhotoDao {
 	public PhotoComment selectOnePhotoFeedComment(int photoFeedCommentNo) {
 		String query = "select * from photo_comment_feed where photo_feed_comment_no = ?";
 		Object[] params = {photoFeedCommentNo};
-		List list = jdbc.query(query, photoCommentPhotoRowMapper, params);
+		List list = jdbc.query(query, photoCommentRowMapper, params);
 		return (PhotoComment)list.get(0);
 	}
 

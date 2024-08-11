@@ -592,146 +592,136 @@
       }
 
       function loadComments(photoFeedNo) {
-        $.ajax({
-          url: "/photo/comments",
-          type: "GET",
-          data: { photoFeedNo: photoFeedNo },
-          success: function(comments) {
-            const commentsList = $(".comments-list");
-            commentsList.empty();
-            if (comments.length > 0) {
-              comments.forEach(comment => {
-                const commentItem = $("<div>").addClass("comment").data("commentId", comment.photoFeedCommentNo);
-                console.log(comment.photoFeedCommentNo);
-                commentItem.append($("<img>").attr("src", "/user/" + comment.photoFeedCommentWriterImg).attr("alt", "Avatar").addClass("comment-avatar"));
-                console.log("이미지"+comment.photoFeedCommentWriterImg);
-                const commentContent = $("<div>").addClass("comment-content");
-                commentContent.append($("<p>").addClass("commenter-name").text(comment.photoFeedCommentWriter));
-                commentContent.append($("<p>").addClass("comment-text").text(comment.photoFeedCommentContent));
-                commentItem.append(commentContent);
-                const commentActions = $("<div>").addClass("comment-actions");
-                commentActions.append($("<span>").addClass("edit-comment").text("수정"));
-                commentActions.append($("<span>").addClass("delete-comment").text("삭제"));
-                commentItem.append(commentActions);
-                commentsList.append(commentItem);
+    	    $.ajax({
+    	        url: "/photo/comments",
+    	        type: "GET",
+    	        data: { photoFeedNo: photoFeedNo },
+    	        success: function(comments) {
+    	            const commentsList = $(".comments-list");
+    	            commentsList.empty();
+    	            if (comments.length > 0) {
+    	                comments.forEach(comment => {
+    	                    const commentItem = $("<div>").addClass("comment").data("commentId", comment.photoFeedCommentNo);
+    	                    commentItem.append($("<img>").attr("src", "/user/" + comment.photoFeedCommentWriterImg).attr("alt", "Avatar").addClass("comment-avatar"));
+    	                    const commentContent = $("<div>").addClass("comment-content");
+    	                    commentContent.append($("<p>").addClass("commenter-name").text(comment.photoFeedCommentWriter));
+    	                    const commentText = $("<p>").addClass("comment-text").text(comment.photoFeedCommentContent);
+    	                    commentContent.append(commentText);
+    	                    commentItem.append(commentContent);
+    	                    const commentActions = $("<div>").addClass("comment-actions");
+    	                    commentActions.append($("<span>").addClass("edit-comment").text("수정"));
+    	                    commentActions.append($("<span>").addClass("delete-comment").text("삭제"));
+    	                    commentItem.append(commentActions);
+    	                    commentsList.append(commentItem);
 
-                // 수정 버튼 클릭 이벤트 핸들러
-                commentActions.find(".edit-comment").on("click", function() {
-                  checkLoginStatus(function() {
-                    const commentTextElem = commentContent.find(".comment-text");
-                    const currentText = commentTextElem.text();
-                    const editInput = $("<input>").attr("type", "text").val(currentText).addClass("form-control");
-                    commentTextElem.replaceWith(editInput);
-                    $(this).text("저장").removeClass("edit-comment").addClass("save-comment");
+    	                    // 수정 버튼 클릭 이벤트 핸들러
+    	                    commentActions.find(".edit-comment").on("click", function() {
+    	                        const commentTextElem = commentContent.find(".comment-text");
+    	                        const currentText = commentTextElem.text();
+    	                        const editInput = $("<input>").attr("type", "text").val(currentText).addClass("form-control");
+    	                        commentTextElem.replaceWith(editInput);
+    	                        $(this).text("저장").removeClass("edit-comment").addClass("save-comment");
 
-                    commentActions.find(".save-comment").on("click", function() {
-                      const photoFeedCommentContent = editInput.val();
-                      const photoFeedCommentNo = commentItem.data("commentId");
-                      console.log(photoFeedCommentNo);
-                      $.ajax({
-                        url: "/photo/updateComment",
-                        type: "POST",
-                        data: { photoFeedCommentNo: photoFeedCommentNo, photoFeedCommentContent: photoFeedCommentContent },
-                        success: function(data) {
-                          if (data) {
-                            Swal.fire({
-                              title: "수정 성공",
-                              text: "댓글이 성공적으로 수정되었습니다.",
-                              icon: "success"
-                            });
-                            editInput.replaceWith($("<p>").addClass("comment-text").text(photoFeedCommentContent));
-                            commentActions.find(".save-comment").text("수정").removeClass("save-comment").addClass("edit-comment");
-                          } else {
-                            Swal.fire({
-                              title: "수정 실패",
-                              text: "댓글 수정에 실패했습니다. 다시 시도해주세요.",
-                              icon: "error"
-                            });
-                          }
-                        },
-                        error: function(xhr, status, error) {
-                          console.log("댓글 수정 오류: " + error);
-                          Swal.fire({
-                            title: "서버 전송 실패",
-                            text: "서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.",
-                            icon: "error"
-                          });
-                        }
-                      });
-                    });
-                  });
-                });
+    	                        // 저장 버튼 클릭 이벤트 핸들러
+    	                        commentActions.find(".save-comment").on("click", function() {
+    	                            const photoFeedCommentContent = editInput.val();
+    	                            const photoFeedCommentNo = commentItem.data("commentId");
 
-                commentActions.find(".delete-comment").on("click", function() {
-                    const commentItem = $(this).closest('.comment');
-                    const photoFeedCommentNo = commentItem.data("commentId");
-                    console.log("Retrieved Comment ID:", photoFeedCommentNo); // 삭제 시 ID 확인
+    	                            $.ajax({
+    	                                url: "/photo/updateComment",
+    	                                type: "POST",
+    	                                data: { photoFeedCommentNo: photoFeedCommentNo, photoFeedCommentContent: photoFeedCommentContent },
+    	                                success: function(data) {
+    	                                    if (data) {
+    	                                        Swal.fire({
+    	                                            title: "수정 성공",
+    	                                            text: "댓글이 성공적으로 수정되었습니다.",
+    	                                            icon: "success"
+    	                                        });
+    	                                        editInput.replaceWith($("<p>").addClass("comment-text").text(photoFeedCommentContent));
+    	                                        commentActions.find(".save-comment").text("수정").removeClass("save-comment").addClass("edit-comment");
+    	                                    } else {
+    	                                        Swal.fire({
+    	                                            title: "수정 실패",
+    	                                            text: "댓글 수정에 실패했습니다. 다시 시도해주세요.",
+    	                                            icon: "error"
+    	                                        });
+    	                                    }
+    	                                },
+    	                                error: function(xhr, status, error) {
+    	                                    console.log("댓글 수정 오류: " + error);
+    	                                    Swal.fire({
+    	                                        title: "서버 전송 실패",
+    	                                        text: "서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.",
+    	                                        icon: "error"
+    	                                    });
+    	                                }
+    	                            });
+    	                        });
+    	                    });
 
-                    if (!photoFeedCommentNo) {
-                        console.error("photoFeedCommentNo를 가져오지 못했습니다.");
-                        return;
-                    }
+    	                    // 삭제 버튼 클릭 이벤트 핸들러
+    	                    commentActions.find(".delete-comment").on("click", function() {
+    	                        const photoFeedCommentNo = commentItem.data("commentId");
 
-                    Swal.fire({
-                        title: "댓글 삭제",
-                        text: "댓글을 삭제하시겠습니까?",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        cancelButtonColor: "#d33",
-                        confirmButtonText: "삭제",
-                        cancelButtonText: "취소"
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            $.ajax({
-                                url: "/photo/deleteComment",
-                                type: "GET",
-                                data: { photoFeedCommentNo: photoFeedCommentNo },
-                                success: function(data) {
-                                    if (data) {
-                                        Swal.fire({
-                                            title: "삭제 성공",
-                                            text: "댓글이 성공적으로 삭제되었습니다.",
-                                            icon: "success"
-                                        });
-                                        commentItem.remove(); // 댓글 삭제
-                                    } else {
-                                        Swal.fire({
-                                            title: "삭제 실패",
-                                            text: "댓글 삭제에 실패했습니다. 다시 시도해주세요.",
-                                            icon: "error"
-                                        });
-                                    }
-                                },
-                                error: function(xhr, status, error) {
-                                    console.log("댓글 삭제 오류: " + error);
-                                    Swal.fire({
-                                        title: "서버 전송 실패",
-                                        text: "서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.",
-                                        icon: "error"
-                                    });
-                                }
-                            });
-                        }
-                    });
-                });
-
-                // 수정 버튼 클릭 이벤트 핸들러 (기존 코드 그대로 유지)
-            });
-            } else {
-              commentsList.append($("<div>").addClass("no-comments").text("댓글이 없습니다."));
-            }
-          },
-          error: function(xhr, status, error) {
-            console.log("Error loading comments: " + error);
-            Swal.fire({
-              title: "댓글 로드 실패",
-              text: "댓글을 로드하는 중 오류가 발생했습니다.",
-              icon: "error"
-            });
-          }
-        });
-      }
+    	                        Swal.fire({
+    	                            title: "댓글 삭제",
+    	                            text: "댓글을 삭제하시겠습니까?",
+    	                            icon: "warning",
+    	                            showCancelButton: true,
+    	                            confirmButtonColor: "#3085d6",
+    	                            cancelButtonColor: "#d33",
+    	                            confirmButtonText: "삭제",
+    	                            cancelButtonText: "취소"
+    	                        }).then((result) => {
+    	                            if (result.isConfirmed) {
+    	                                $.ajax({
+    	                                    url: "/photo/deleteComment",
+    	                                    type: "GET",
+    	                                    data: { photoFeedCommentNo: photoFeedCommentNo },
+    	                                    success: function(data) {
+    	                                        if (data) {
+    	                                            Swal.fire({
+    	                                                title: "삭제 성공",
+    	                                                text: "댓글이 성공적으로 삭제되었습니다.",
+    	                                                icon: "success"
+    	                                            });
+    	                                            commentItem.remove(); // 댓글 삭제
+    	                                        } else {
+    	                                            Swal.fire({
+    	                                                title: "삭제 실패",
+    	                                                text: "댓글 삭제에 실패했습니다. 다시 시도해주세요.",
+    	                                                icon: "error"
+    	                                            });
+    	                                        }
+    	                                    },
+    	                                    error: function(xhr, status, error) {
+    	                                        console.log("댓글 삭제 오류: " + error);
+    	                                        Swal.fire({
+    	                                            title: "서버 전송 실패",
+    	                                            text: "서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.",
+    	                                            icon: "error"
+    	                                        });
+    	                                    }
+    	                                });
+    	                            }
+    	                        });
+    	                    });
+    	                });
+    	            } else {
+    	                commentsList.append($("<div>").addClass("no-comments").text("댓글이 없습니다."));
+    	            }
+    	        },
+    	        error: function(xhr, status, error) {
+    	            console.log("Error loading comments: " + error);
+    	            Swal.fire({
+    	                title: "댓글 로드 실패",
+    	                text: "댓글을 로드하는 중 오류가 발생했습니다.",
+    	                icon: "error"
+    	            });
+    	        }
+    	    });
+    	}
 
       function checkLoginStatus(callback) {
         $.ajax({
