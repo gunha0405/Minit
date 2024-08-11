@@ -126,6 +126,41 @@
   
   
     $(document).ready(function() {
+    	$(document).ready(function () {
+            const photoUploadButton = $(".uploadItem"); // 업로드 버튼 요소
+            const bottomElement = document.querySelector("footer"); // 페이지 하단 요소 선택
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        // 스크롤이 맨 아래에 도달했을 때 아이콘을 위쪽 화살표로 변경
+                        photoUploadButton.html('<i class="fa-solid fa-up-long"></i>');
+                        // 모달 연동을 없애고 페이지 맨 위로 이동하는 기능만 남김
+                        photoUploadButton.removeAttr('data-bs-toggle');
+                        photoUploadButton.removeAttr('data-bs-target');
+                    } else {
+                        // 스크롤이 다시 위로 올라가면 아이콘을 플러스 모양으로 변경
+                        photoUploadButton.html('<i class="fa-solid fa-plus"></i>');
+                        // 모달 연동 기능 복구
+                        photoUploadButton.attr('data-bs-toggle', 'modal');
+                        photoUploadButton.attr('data-bs-target', '#uploadModal');
+                    }
+                });
+            });
+
+            observer.observe(bottomElement); // 하단 요소를 관찰
+
+            // 위쪽 화살표 아이콘을 클릭하면 페이지 맨 위로 스크롤
+            photoUploadButton.on("click", function () {
+                if ($(this).find("i").hasClass("fa-up-long")) {
+                    $("html, body").animate({ scrollTop: 0 }, "slow");
+                }
+            });
+        });
+    	
+    	
+    	
+    	
       $('#imageModal').on('hidden.bs.modal', function () {
         // 모달을 비운 후 다시 로드
         $("#modalImage").attr("src", ""); // 이미지 초기화
