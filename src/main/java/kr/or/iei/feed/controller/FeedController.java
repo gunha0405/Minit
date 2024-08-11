@@ -283,6 +283,7 @@ public class FeedController {
 	@PostMapping(value="/userFollowCancel")
 	public int userFollowCancel(String loginUser, String writerUser) {
 		int num = feedService.userFollowCancel(loginUser, writerUser);
+		System.out.println("userFollowCancel");
 		return num;
 	}
 
@@ -290,6 +291,7 @@ public class FeedController {
 	@PostMapping(value="/userFollow")
 	public int userFollow(String loginUser, String writerUser) {
 		int num = feedService.userFollow(loginUser, writerUser);
+		System.out.println("userFollow="+num);
 		return num;
 	}
 }

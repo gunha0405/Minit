@@ -289,7 +289,7 @@ public class FeedDao {
 	}
 
 	public int userFollowCancel(String loginUser, String writerUser) {
-		String query = "delete from follow where user_id=?, following_id=?)";
+		String query = "delete from follow where user_id=? and following_id=?";
 		Object[] params = {loginUser, writerUser};
 		int result = jdbc.update(query, params);
 		return result;
