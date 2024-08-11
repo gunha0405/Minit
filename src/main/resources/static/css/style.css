@@ -25,18 +25,42 @@ html,body{
 
 .wrapper {
   display: flex;
-  flex-direction: row; /* 수평 방향으로 배치 */
+  flex-direction: column;
   height: auto;
   min-height: 100vh;
   padding-top: 60px; /* header 높이 만큼 추가 */
-  justify-content: center; /* 왼쪽 정렬 */
-  align-items: flex-start; /* 상단 정렬 */
+  display: flex;
+  align-items: center;
+}
+
+.wrapper section {
+  position: relative; /* section 요소를 상대적으로 배치 */
+  width: 1000px; /* 고정된 너비 설정 */
+  max-width: 1000px;
+  overflow: auto;
+  margin-top: 5px;
+  height: 100%;
+  flex-grow: 1;  /*background-color: antiquewhite;*/
+  /* 부모 요소가 전체 높이를 가지도록 설정 */
+  flex: 1; /* 스크롤바가 생기도록 설정 */
+}
+
+/*
+화면 오류 때문에 잠깐 수정해둠 맞춰야 할 듯
+.wrapper {
+  display: flex;
+  flex-direction: row; /* 수평 방향으로 배치 
+  height: auto;
+  min-height: 100vh;
+  padding-top: 60px; /* header 높이 만큼 추가 
+  justify-content: center; /* 왼쪽 정렬 
+  align-items: flex-start; /* 상단 정렬 
 }
 
 .wrapper section {
   flex: 1;
   position: relative;
-  width: 1000px;/* sub1-contents의 너비를 제외한 나머지 공간을 차지 */
+  width: 1000px;/* sub1-contents의 너비를 제외한 나머지 공간을 차지 
   max-width: 1000px;
   overflow: auto;
   margin-top: 5px;
@@ -47,6 +71,7 @@ html,body{
   justify-content: center;
   align-items: center;
 }
+*/
 
 
 header {
@@ -344,6 +369,11 @@ footer div {
   background-color: tomato;
 }
 
+
+
+
+
+/*원희 작성*/
 .findaccount-main>*{
   margin: 0;
   padding: 0;
@@ -413,25 +443,17 @@ footer div {
 }
 
 
-.wh-btn{
+.btn-point1{
   background-color: #ffffff;
   border: 2px solid #75daa4;
   border-radius: 8px;
   color: black;
-  font-family: 'goorm-eb'
 }
-.wh-btn:hover, .warn-btn:focus{
+.btn-point1:hover, .btn-point1:focus{
   background-color: #75daa4;
   border: 2px solid #75daa4;
   border-radius: 8px;
-  color: black;
-}
-
-
-.btn-point1{
-	background-color: #75daa4;
-	border: none;
-  	border-radius: 30px;
+  color: #ffffff;
 }
 .check{
   display: flex;
@@ -439,7 +461,7 @@ footer div {
 }
 .check-btn{
   margin-right: 5px;
-  width: 90px;
+  width: 20%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -462,17 +484,26 @@ footer div {
 
 
 .valid{
-	visibility: visible;
+	display: block;
 	color: #61bb8b;
 }
 .invalid{
-	visibility: visible;
+	display: block;
 	color: red;
 }
 .none{
-	visibility: hidden;
+	display: none;
 }
-.mb-3 p{
+.mb-3 .input-msg{
+	height: 24px;
+	line-height: 24px;
+}
+.mb-3 .input-msg .material-icons{
+	width:24px;
+	font-size: 24px;
+	vertical-align: middle;
+}
+.mb-3 .input-msg span{
 	font-size: 13px;
 }
 #authMsg{

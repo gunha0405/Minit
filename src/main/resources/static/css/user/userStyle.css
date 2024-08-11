@@ -19,28 +19,28 @@
 
 .wrapper {
   display: flex;
-  flex-direction: row; /* 수평 방향으로 배치 */
+  flex-direction: column;
   height: auto;
   min-height: 100vh;
   padding-top: 60px; /* header 높이 만큼 추가 */
-  justify-content: center; /* 왼쪽 정렬 */
-  align-items: flex-start; /* 상단 정렬 */
+  display: flex;
+  align-items: center;
 }
 
 .wrapper section {
-  flex: 1;
-  position: relative;
-  width: 1000px;/* sub1-contents의 너비를 제외한 나머지 공간을 차지 */
+  position: relative; /* section 요소를 상대적으로 배치 */
+  width: 1000px; /* 고정된 너비 설정 */
   max-width: 1000px;
   overflow: auto;
   margin-top: 5px;
   height: 100%;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  flex-grow: 1;  /*background-color: antiquewhite;*/
+  /* 부모 요소가 전체 높이를 가지도록 설정 */
+  flex: 1; /* 스크롤바가 생기도록 설정 */
 }
+
+
+
 
 .page-title{
   text-align: center;
@@ -61,6 +61,28 @@
   border-radius: 8px;
   color: #ffffff;
 }
+/*
+.wh-btn a{
+  color: black;
+}
+.wh-btn a:hover, .wh-btn a:focus{
+  color: #ffffff;
+}
+*/
+
+.wh-btn2{
+  background-color: #ffffff;
+  border: 2px solid #6fcc9a;
+  border-radius: 8px;
+  color: black;
+}
+.wh-btn2:hover, .wh-btn2:focus{
+  background-color: #6fcc9a;
+  border: 2px solid #6fcc9a;
+  border-radius: 8px;
+  color: #ffffff;
+}
+
 
 /*관리자페이지*/
 
@@ -90,7 +112,9 @@
   text-align: center;
 }
 
-
+.warn-btn{
+	width: 50px;
+}
 
 
 /*마이페이지*/
@@ -128,12 +152,12 @@
   width: 40%;
   margin: 0 auto;
 }
-/* 제대로 안 먹어서 html에 먹임
+
 .info-tbl td>.logo-img>img{
   width: 40%;
   margin: 0 auto;
 }
-*/
+
 .info-tbl td>button{
   margin: 20px 0;
 }
@@ -166,32 +190,41 @@
 }
 
 .btn-point3{
-  background-color: #a4a4a4;
+  background-color: #ffffff;
+  border: 2px solid #a4a4a4;
   width: 20%;
   height: 40px;
-  border: none;
-  border-radius: 15px;
+  border-radius: 8px;
   text-align: center;
   text-decoration: none;
   line-height: 40px;
   color: black;
 }
+.btn-point3:hover, .btn-point3:focus{
+  background-color: #a4a4a4;
+  width: 20%;
+  height: 40px;
+  background-color: #a4a4a4;
+  border: 2px solid #a4a4a4;
+  border-radius: 8px;
+  text-align: center;
+  text-decoration: none;
+  line-height: 40px;
+  color: #ffffff;
+}
 
 .img-delete-btn{
   width: 100%;
   height: 40px;
-  font-size: 15px;
 }
 .img-change-btn{
   width: 100%;
   height: 40px;
   line-height: 40px;
-  font-size: 15px;
 }
 .img-logo-btn{
   width: 100%;
   height: 40px;
-  font-size: 15px;
 }
 
 
@@ -252,21 +285,31 @@
 	display: block;
 }
 
+
+/*유효성 확인 메시지*/
 .valid{
-	visibility: visible;
+	display: block;
 	color: #61bb8b;
 }
 .invalid{
-	visibility: visible;
+	display: block;
 	color: red;
 }
 .none{
-	visibility: hidden;
+	display: none;
 }
-.mb-3 p{
+.input-msg{
+	height: 24px;
+	line-height: 24px;
+}
+.input-msg .material-icons{
+	width:24px;
+	font-size: 24px;
+	vertical-align: middle;
+}
+.input-msg span{
 	font-size: 13px;
 }
-
 
 
 
@@ -285,15 +328,27 @@
 .link-button{
 	margin: 0 auto;
 }
+
+
 .btn-basic{
-    width: 140px;
+	width: 140px;
     height: 50px;
     display: inline-block;
 	margin: 0 30px;
+	background-color: #ffffff;
+	border: 2px solid #6fcc9a;
+	border-radius: 8px;
+	color: black;
+}
+.btn-basic:hover, .btn-basic:focus{
+  background-color: #6fcc9a;
+  border: 2px solid #6fcc9a;
+  border-radius: 8px;
+  color: black;
 }
 .btn-basic a{
 	line-height: 50px;
 	text-decoration: none;
-	color: black;
 	font-size: 17px;
+	color: black;
 }

@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <script defer src="index.js"></script>
+<!-- 구글 아이콘 -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/js/sweetalert.min.js"></script>
 <link rel="stylesheet" href="/css/style.css" />
@@ -18,10 +21,9 @@
         <div class="container-fluid">
           <a class="navbar-brand" href="#">
             <img
-              src="/docs/5.3/assets/brand/bootstrap-logo.svg"
+              src="/image/logo/homepage_logo.jpg"
               alt="Logo"
-              width="30"
-              height="24"
+              width="150"
               class="d-inline-block align-text-top"/>
           </a>
           <form
@@ -152,30 +154,50 @@
                 <div class="modal-body">
                   <form action="/user/join" method="post" autocomplete="off">
                     <div class="mb-3">
-                      <div class="check">
+                      <div>
                         <label for="userId" class="form-label">아이디</label>
-                        <button type="button" class="wh-btn id-check-btn"><span>중복체크</span></button>
                       </div>
-                      <input
-                        type="text"
-                        class="form-control"
-                        name="userId"
-                        id="userId"
-                        placeholder="아이디를 입력하세요!"/>
-                      <p class="input-msg id-check-msg"></p>
+                      <div class="check">
+	                  <input
+	                    type="text"
+	                    class="form-control w-75"
+	                    name="userId"
+	                    id="userId"
+	                    placeholder="아이디를 입력하세요!"/>	                        
+                        <button type="button" class="btn btn-outline-success id-check-btn"><span>중복체크</span></button>
+	                  </div>
+                        <div class="input-msg id-check-msg-invalid none">
+                        	<span class="material-icons">info_outline</span>  
+                        	<span>영문자+숫자 조합으로 4~10글자 이내 작성해주세요.</span>                      	
+                        </div>
+                        <div class="input-msg id-check-msg-same none">
+                        	<span class="material-icons">info_outline</span>
+                        	<span>이미 사용중인 아이디입니다.</span>                      	
+                        </div>
+                        <div class="input-msg id-check-msg-valid none">
+                        	<span class="material-icons">check_circle_outline</span>
+                        	<span>사용가능한 아이디입니다.</span>                      	
+                        </div>
                     </div>
                     <div class="mb-3">
-                      <div class="check">
                         <label for="userEmail" class="form-label">이메일</label>
-                        <button type="button" class="btn btn-outline-success email-check-btn" id="sendBtn"><span>인증받기</span></button>
-                      </div>
+                      <div class="check">
                       <input
                         type="text"
-                        class="form-control"
+                        class="form-control w-75"
                         name="userEmail"
                         id="userEmail"
                         placeholder="이메일을 입력하세요! ex)minit@minit.com"/>
-                      <p class="input-msg email-check-msg none"></p>
+                        <button type="button" class="btn btn-outline-success email-check-btn" id="sendBtn"><span>인증받기</span></button>
+                      </div>
+                      <div class="input-msg email-check-msg-invalid none">
+                        	<span class="material-icons">info_outline</span>  
+                        	<span>올바른 이메일 형식으로 작성해주세요.</span>                      	
+                        </div>
+                        <div class="input-msg email-check-msg-same none">
+                        	<span class="material-icons">info_outline</span>
+                        	<span>이미 가입된 이메일입니다. 다른 이메일을 사용해주세요.</span>                      	
+                        </div>
                       <div id="auth" class="input-item" style="display:none;">
 						<input type="text" id="authCode" placeholder="인증번호입력">
 						<button type="button" class="btn-point1" id="authBtn">인증하기</button>
@@ -192,7 +214,14 @@
                         name="userPw"
                         id="userPw"
                         placeholder="비밀번호를 입력하세요!"/>
-                        <p class="input-msg pw-check-msg none"></p>
+                        <div class="input-msg pw-check-msg-invalid none">
+                        	<span class="material-icons">info_outline</span>  
+                        	<span>영문자or숫자or특수문자 중 2가지를 조합해 8~16글자 이내 작성해주세요.</span>                      	
+                        </div>
+                        <div class="input-msg pw-check-msg-valid none">
+                        	<span class="material-icons">check_circle_outline</span>
+                        	<span>유효한 비밀번호 입니다.</span>                      	
+                        </div>
                     </div>
                     <div class="mb-3">
                       <label for="userRePw" class="form-label">비밀번호 확인</label>
@@ -202,7 +231,14 @@
                         name="userRePw"
                         id="userRePw"
                         placeholder="비밀번호를 한 번 더 입력하세요!"/>
-                        <p class="input-msg repw-check-msg none"></p>
+                        <div class="input-msg repw-check-msg-invalid none">
+                        	<span class="material-icons">info_outline</span>  
+                        	<span>비밀번호가 일치하지 않습니다.</span>                      	
+                        </div>
+                        <div class="input-msg repw-check-msg-valid none">
+                        	<span class="material-icons">check_circle_outline</span>
+                        	<span>비밀번호가 일치합니다.</span>                      	
+                        </div>
                     </div>
                     <div class="mb-3">
                       <label for="userName" class="form-label">성명</label>
@@ -214,18 +250,29 @@
                         placeholder="성명을 입력하세요!"/>
                     </div>
                     <div class="mb-3">
-                      <div class="check">
                         <label for="userNick" class="form-label">사용자이름</label>
-                        <button type="button" class="btn btn-outline-success nick-check-btn"><span>중복체크</span></button>
-                      </div>
+	                 <div class="check">
                       <input
                         type="text"
-                        class="form-control"
+                        class="form-control w-75"
                         name="userNick"
                         id="userNick"
                         placeholder="MINIT에서 사용하실 이름을 입력하세요!"/>
+	                  <button type="button" class="btn btn-outline-success nick-check-btn"><span>중복체크</span></button>
+	                 </div>
+                        <div class="input-msg nick-check-msg-invalid none">
+                        	<span class="material-icons">info_outline</span>  
+                        	<span>사용자이름은 한글, 영문, 숫자만 사용가능하며 1~10글자 이내로 작성해주세요</span>                      	
+                        </div>
+                        <div class="input-msg nick-check-msg-same none">
+                        	<span class="material-icons">info_outline</span>
+                        	<span>이미 사용중인 사용자이름입니다.</span>                      	
+                        </div>
+                        <div class="input-msg nick-check-msg-valid none">
+                        	<span class="material-icons">check_circle_outline</span>
+                        	<span>사용가능한 사용자이름입니다.</span>                      	
+                        </div>
                     </div>
-                    <p class="input-msg nick-check-msg"></p>
                   
 
                   <div class="agree">
@@ -265,6 +312,7 @@
                 </div>
                 </form>
               </div>
+              
             </div>
           </div>
         </div>
@@ -290,17 +338,26 @@
 						authTime(); //시간 가는 함수
 						$(".email-check-msg").hide();
 					}else{
-						$(".email-check-msg").text("이미 가입된 이메일입니다. 다른 이메일을 사용해주세요.");
-						$(".email-check-msg").removeClass("none").addClass("invalid");
+						$(".email-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+						$(".email-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
+						$(".email-check-msg-same").removeClass("none").addClass("invalid");
 					}
 				},
 				error : function(){
-					console.log("에러");
+					swal({
+	    		        title: "에러 발생",
+	    		        text: "잠시 후 다시 시도해주시기 바랍니다.",
+	    		        icon: "warning",
+	    		        closeOnClickOutside : false
+	    		      });
+					console.log("에러 발생");
 				}
 				});			
 			}else{
-				$(".email-check-msg").text("올바른 이메일을 작성해주세요.");
-				$(".email-check-msg").removeClass("none").addClass("invalid");
+
+				$(".email-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+				$(".email-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
+				$(".email-check-msg-invalid").removeClass("none").addClass("invalid");
 			}
 		});
 		let interverId = null;
@@ -336,7 +393,7 @@
 		$("#authBtn").on("click",function(){
 			const authCode = $("#authCode").val();
 			if(authCode == mailCode){
-				$("#authMsg").text("인증완료");
+				$("#authMsg").text("인증이 완료되었습니다.");
 				$("#authMsg").css("color","blue");
 				
 				window.clearInterval(intervalId);
@@ -365,7 +422,7 @@
     	
     	$(".id-check-btn").on("click", function(){
     		$("#userId").removeClass("required");
-			$(".id-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
+			//$(".id-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
 			const userId = $("#userId").val();
 			//console.log(userId);
 			const idReg = /^[a-zA-Z0-9]{4,10}$/;
@@ -376,80 +433,109 @@
 					data : {userId : userId},
 					success : function(data){
 						if(data == 0){
-							$(".id-check-msg").text("사용 가능한 아이디 입니다.");
-							$(".id-check-msg").addClass("valid");
+							$(".id-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+							$(".id-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+							$(".id-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
+							$(".id-check-msg-valid").removeClass("none").addClass("valid");
 							$("#userId").addClass("required");
 						}else{
-							$(".id-check-msg").text("이미 사용중인 아이디 입니다.");
-							$(".id-check-msg").addClass("invalid");							
+							$(".id-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+							$(".id-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+							$(".id-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
+							$(".id-check-msg-same").removeClass("none").addClass("invalid");							
 						}
 					},
 					error : function(){
+						swal({
+		    		        title: "에러 발생",
+		    		        text: "잠시 후 다시 시도해주시기 바랍니다.",
+		    		        icon: "warning",
+		    		        closeOnClickOutside : false
+		    		      });
 						console.log("에러 발생");
 					}
 				})
 			}else{
-				$(".id-check-msg").text("영문자+숫자 조합으로 4~10글자 이내 작성해주세요.");
-				$(".id-check-msg").addClass("invalid");
+				$(".id-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+				$(".id-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+				$(".id-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
+				$(".id-check-msg-invalid").removeClass("none").addClass("invalid");
 			}
     	});
     	
-    	$("#userPw").on("keyup",function(){
+    	$("#userPw").on("change",function(){
     		$("#userPw").removeClass("required");
-    		$(".pw-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
+    		//$(".pw-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
     		const userPw = $("#userPw").val();
-    		console.log(userPw);
-    		const pwReg = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/;
+    		const pwReg = /^(?!((?:[A-Za-z]+)|(?:[~!@#$%^&*()_+=]+)|(?:[0-9]+))$)[A-Za-z\d~!@#$%^&*()_+=]{8,16}$/;
     		if(!pwReg.test(userPw)){
-    			$(".pw-check-msg").text("영문자+숫자+특수문자 조합으로 8~16글자 이내 작성해주세요.");
-				$(".pw-check-msg").addClass("invalid");
+    			$(".pw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+    			$(".pw-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+    			$(".pw-check-msg-invalid").removeClass("none").addClass("invalid");
     		}else{
-    			$(".pw-check-msg").text("유효한 비밀번호 입니다.");
-				$(".pw-check-msg").addClass("valid");
+    			$(".pw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+				$(".pw-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+				$(".pw-check-msg-valid").removeClass("none").addClass("valid");
 				$("#userPw").addClass("required");
     		}
     	})
     
 	    $("#userRePw").on("change",function(){
 			$("#userRePw").removeClass("required");
-			$(".repw-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
+			//$(".repw-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
 			const pwValue = $("#userPw").val();
 			const pwReValue = $("#userRePw").val();
-			console.log(pwValue);
-			console.log(pwReValue);
 			if(pwValue === pwReValue){
-				$(".repw-check-msg").text("비밀번호가 일치합니다.");
-				$(".repw-check-msg").addClass("valid");
+				$(".repw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+				$(".repw-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+				$(".repw-check-msg-valid").removeClass("none").addClass("valid");
 				$("#userRePw").addClass("required");
 			}else{
-				$(".repw-check-msg").text("비밀번호가 일치하지 않습니다.");
-				$(".repw-check-msg").addClass("invalid");				
+				$(".repw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+    			$(".repw-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+    			$(".repw-check-msg-invalid").removeClass("none").addClass("invalid");				
 			}
 		});
     	
     	$(".nick-check-btn").on("click",function(){
     		$("#userNick").removeClass("required");
-			$(".nick-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
 			const userNick = $("#userNick").val();
-			console.log(userNick);
-			$.ajax({
-				url : "/user/ajaxCheckNick",
-				type : "get",
-				data : {userNick : userNick},
-				success : function(data){
-					if(data == 0){
-						$(".nick-check-msg").text("사용 가능한 닉네임 입니다.");
-						$(".nick-check-msg").addClass("valid");
-						$("#userNick").addClass("required");
-					}else{
-						$(".nick-check-msg").text("이미 사용중인 닉네임 입니다.");
-						$(".nick-check-msg").addClass("invalid");
+			const nickReg = /^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]{1,10}$/;
+			if(!nickReg.test(userNick)){
+			$(".nick-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+			$(".nick-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+			$(".nick-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
+			$(".nick-check-msg-invalid").removeClass("none").addClass("invalid");
+			}else{
+				$.ajax({
+					url : "/user/ajaxCheckNick",
+					type : "get",
+					data : {userNick : userNick},
+					success : function(data){
+						if(data == 0){
+							$(".nick-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+							$(".nick-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+							$(".nick-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
+							$(".nick-check-msg-valid").removeClass("none").addClass("valid");
+							$("#userNick").addClass("required");
+						}else{
+							$(".nick-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+							$(".nick-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+							$(".nick-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
+							$(".nick-check-msg-same").removeClass("none").addClass("invalid");
+						}
+					},
+					error : function(){
+						swal({
+		    		        title: "에러 발생",
+		    		        text: "잠시 후 다시 시도해주시기 바랍니다.",
+		    		        icon: "warning",
+		    		        closeOnClickOutside : false
+		    		      });
+						console.log("에러 발생");
 					}
-				},
-				error : function(){
-					console.log("에러 발생");
-				}
-			});
+				});
+			}
 		});
     
 		//다 입력했는지 확인
@@ -460,10 +546,22 @@
     		const checkInput = check.filter(":checked");
     		console.log(checkInput.length);
     		if(required != 6){
-    			alert("중복체크 및 모든 입력값 작성을 완료해주세요"); 			
+    			swal({
+    		        title: "작성 미완료",
+    		        text: "중복체크, 이메일인증 및 모든 입력값 작성을 완료해주세요",
+    		        icon: "warning",
+    		        closeOnClickOutside : false
+    		      });
+    			//alert("중복체크 및 모든 입력값 작성을 완료해주세요"); 			
     			event.preventDefault(); //이벤트 방지 submit 안 넘어가고
     		}else if(checkInput.length != 2){
-    			alert("약관에 모두 동의해주세요"); 			
+    			swal({
+    		        title: "약관동의 미완료",
+    		        text: "필수 약관에 모두 동의해주세요",
+    		        icon: "warning",
+    		        closeOnClickOutside : false
+    		      });
+    			//alert("약관에 모두 동의해주세요"); 			
     			event.preventDefault();
     		}else {    			
     			location.href = "/user/join";

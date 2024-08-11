@@ -21,7 +21,7 @@
                         <table class="info-tbl">
                             <tr>
                                 <th>프로필 사진</th>
-                                <td style="width:600px">
+                                <td width= 530px;>
                                 <input type="hidden" name="imgtype" id="imgtype" value="0">
                                   <div class="basic-img">
                                   	<input type="hidden" name="userImg" th:value="${session.user.userImg}"/>
@@ -34,12 +34,12 @@
 	                                <img class="img-show logo" style="width: 40%; margin: 0 auto;"src="/user/minit_logo.png">                               
                                   </div>
                                 </td>
-                                <td style="width: 150px">
-                                  <label for="upfile" class="img-change-btn wh-btn">변경
+                                <td>
+                                  <label for="upfile" class="wh-btn img-change-btn">변경
                                 	<input type="file" name="upfile" id="upfile" accept=".jpg,.png,.jpeg" onchange="loadImg(this);" style="display: none;">
                                   </label>
-                                  <button type="button" class="img-delete-btn wh-btn">변경 취소</button>
-                                  <button type="button" class="img-logo-btn wh-btn">기본이미지</button>
+                                  <button type="button" class="wh-btn img-delete-btn">변경 취소</button>
+                                  <button type="button" class="wh-btn img-logo-btn">기본이미지</button>
                                 </td>
                             </tr>
                             <tr>
@@ -55,6 +55,22 @@
                                   <div class="input-item">
                                     <input type="text" name="userNick" id="userNick" th:value="${session.user.userNick}" class="required">
 	                                <p class="input-msg nick-check-msg none"></p>
+	                                <div class="input-msg nick-check-msg-invalid none">
+			                        	<span class="material-icons">info_outline</span>  
+			                        	<span>사용자이름은 한글, 영문, 숫자만 사용가능하며 1~10글자 이내로 작성해주세요</span>                      	
+			                        </div>
+			                        <div class="input-msg nick-check-msg-same none">
+			                        	<span class="material-icons">info_outline</span>
+			                        	<span>이미 사용중인 사용자이름입니다.</span>                      	
+			                        </div>
+			                        <div class="input-msg nick-check-msg-valid-same none">
+			                        	<span class="material-icons">check_circle_outline</span>
+			                        	<span>기존에 사용하던 사용자이름입니다.</span>                      	
+			                        </div>
+			                        <div class="input-msg nick-check-msg-valid none">
+			                        	<span class="material-icons">check_circle_outline</span>
+			                        	<span>사용가능한 사용자이름입니다.</span>                      	
+			                        </div>
                                   </div>
                                 </td>
                             </tr>
@@ -82,6 +98,15 @@
                                   <div class="input-item">
                                     <input type="password" name="userPw" id="userPw" th:value="${session.user.userPw}" class="required">
                                     <p class="input-msg pw-check-msg none"></p>
+                                    
+                                    <div class="input-msg pw-check-msg-invalid none">
+			                        	<span class="material-icons">info_outline</span>  
+			                        	<span>영문자or숫자or특수문자 중 2가지를 조합해 8~16글자 이내 작성해주세요.</span>                      	
+			                        </div>
+			                        <div class="input-msg pw-check-msg-valid none">
+			                        	<span class="material-icons">check_circle_outline</span>
+			                        	<span>유효한 비밀번호 입니다.</span>                      	
+			                        </div>
                                   </div>
                                 </td>
                             </tr>
@@ -90,7 +115,18 @@
                                 <td colspan="2">
                                   <div class="input-item">
                                     <input type="password" name="userRePw" id="userRePw">
-                                    <p class="input-msg repw-check-msg none"></p>
+                                    <div class="input-msg repw-check-msg-invalid none">
+			                        	<span class="material-icons">info_outline</span>  
+			                        	<span>비밀번호가 일치하지 않습니다.</span>                      	
+			                        </div>
+			                        <div class="input-msg repw-check-msg-valid none">
+			                        	<span class="material-icons">check_circle_outline</span>
+			                        	<span>비밀번호가 일치합니다.</span>                      	
+			                        </div>
+			                        <div class="input-msg repw-check-msg-same none">
+			                        	<span class="material-icons">info_outline</span>
+			                        	<span>비밀번호를 수정하셨습니다. 다시 작성해주세요.</span>                      	
+			                        </div>
                                   </div>
                                 </td>
                             </tr>
@@ -171,7 +207,7 @@
 						console.log(1);
 						$("#img-view").attr("src",e.target.result);
 					}
-					console.log(2); //이게 먼저
+					//console.log(2); //이게 먼저
 				}else{
 					$(".basic-img").addClass("img-show").removeClass("img-none");
 					$(".logo-img").removeClass("img-show").addClass("img-none");
@@ -182,66 +218,104 @@
 		
 			$("#userNick").on("keyup",function(){
 				$("#userNick").removeClass("required");
-				$(".nick-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
+				//$(".nick-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
 				const userNick = $("#userNick").val();
 				const sessionNick = $("#sessionNick").val();
-				console.log(userNick);
-				$.ajax({
-					url : "/user/ajaxCheckNick",
-					type : "get",
-					data : {userNick : userNick},
-					success : function(data){
-						if(data == 0){
-							$(".nick-check-msg").text("사용 가능한 사용자이름 입니다.");
-							$(".nick-check-msg").addClass("valid");
-							$("#userNick").addClass("required");
-						}else if(userNick == sessionNick){
-							$(".nick-check-msg").text("기존에 사용하던 사용자이름입니다.");
-							$(".nick-check-msg").addClass("valid");
-							$("#userNick").addClass("required");
-						}else{
-							$(".nick-check-msg").text("이미 사용중인 사용자이름 입니다.");
-							$(".nick-check-msg").addClass("invalid");
+				const nickReg = /^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]{1,10}$/;
+				if(!nickReg.test(userNick)){
+					$(".nick-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+					$(".nick-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+					$(".nick-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
+					$(".nick-check-msg-valid-same").addClass("none").removeClass("valid").removeClass("invalid");
+					$(".nick-check-msg-invalid").removeClass("none").addClass("invalid");
+				}else{
+					$.ajax({
+						url : "/user/ajaxCheckNick",
+						type : "get",
+						data : {userNick : userNick},
+						success : function(data){
+							if(data == 0){
+								$(".nick-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+								$(".nick-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+								$(".nick-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
+								$(".nick-check-msg-valid-same").addClass("none").removeClass("valid").removeClass("invalid");
+								$(".nick-check-msg-valid").removeClass("none").addClass("valid");
+								$("#userNick").addClass("required");
+								
+								$("#userNick").addClass("required");
+							}else if(userNick == sessionNick){
+								$(".nick-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+								$(".nick-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+								$(".nick-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
+								$(".nick-check-msg-valid-same").addClass("none").removeClass("valid").removeClass("invalid");
+								$(".nick-check-msg-valid-same").removeClass("none").addClass("valid");
+								$("#userNick").addClass("required");
+							}else{
+								$(".nick-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+								$(".nick-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+								$(".nick-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
+								$(".nick-check-msg-valid-same").addClass("none").removeClass("valid").removeClass("invalid");
+								$(".nick-check-msg-same").removeClass("none").addClass("invalid");
+							}
+						},
+						error : function(){
+							console.log("에러 발생");
 						}
-					},
-					error : function(){
-						console.log("에러 발생");
-					}
-				});
+					});
+				}
 			});
 			$("#userPw").on("keyup",function(){
 	    		$("#userPw").removeClass("required");
-	    		$(".pw-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
+	    		$("#userRePw").removeClass("required");
+	    		//$(".pw-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
 	    		const userPw = $("#userPw").val();
-	    		console.log(userPw);
-	    		const pwReg = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/;
+	    		//console.log(userPw);
+	    		const pwReg = /^(?!((?:[A-Za-z]+)|(?:[~!@#$%^&*()_+=]+)|(?:[0-9]+))$)[A-Za-z\d~!@#$%^&*()_+=]{8,16}$/;
 	    		if(!pwReg.test(userPw)){
-	    			$(".pw-check-msg").text("영문자+숫자+특수문자 조합으로 8~16글자 이내 작성해주세요.");
-					$(".pw-check-msg").addClass("invalid");
+	    			$(".pw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+	    			$(".pw-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+	    			$(".pw-check-msg-invalid").removeClass("none").addClass("invalid");
+	    			$(".repw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+	    			$(".repw-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+	    			$(".repw-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
+	    			$(".repw-check-msg-same").removeClass("none").addClass("invalid");
+	    			$("#userRePw").removeClass("required");
 	    		}else{
-	    			$(".pw-check-msg").text("유효한 비밀번호 입니다.");
-					$(".pw-check-msg").addClass("valid");
+	    			$(".pw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+					$(".pw-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+					$(".pw-check-msg-valid").removeClass("none").addClass("valid");
 					$("#userPw").addClass("required");
+					$(".repw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+	    			$(".repw-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+	    			$(".repw-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
+	    			$(".repw-check-msg-same").removeClass("none").addClass("invalid");
+	    			$("#userRePw").removeClass("required");
 					const pwReValue = $("#userRePw").val();
 					if(userPw === pwReValue){
-						$(".repw-check-msg").text("비밀번호가 일치합니다.");
-						$(".repw-check-msg").addClass("valid").removeClass("invalid");
+						$(".repw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+						$(".repw-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+						$(".repw-check-msg-valid").removeClass("none").addClass("valid");
+						$("#userRePw").addClass("required");
 						$("#userRePw").addClass("required");
 					}
 	    		}
 	    	})
-			$("#userRePw").on("change",function(){
+			$("#userRePw").on("keyup",function(){
 				$("#userRePw").removeClass("required");
-				$(".repw-check-msg").removeClass("none");
+				//$(".repw-check-msg").removeClass("none");
 				const pwValue = $("#userPw").val();
 				const pwReValue = $("#userRePw").val();
 				if(pwValue === pwReValue){
-					$(".repw-check-msg").text("비밀번호가 일치합니다.");
-					$(".repw-check-msg").addClass("valid").removeClass("invalid");
+					$(".repw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+					$(".repw-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+					$(".repw-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
+					$(".repw-check-msg-valid").removeClass("none").addClass("valid");
 					$("#userRePw").addClass("required");
 				}else{
-					$(".repw-check-msg").text("비밀번호가 일치하지 않습니다.");
-					$(".repw-check-msg").addClass("invalid");				
+					$(".repw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+	    			$(".repw-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+	    			$(".repw-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
+	    			$(".repw-check-msg-invalid").removeClass("none").addClass("invalid");
 				}
 			});
 			
@@ -249,11 +323,13 @@
 	    	$(".update").on("click",function(){
 	    		const required = $(".required").length;
 	    		console.log(required);
-	    		const check = $("[name=check]");
-	    		const checkInput = check.filter(":checked");
-	    		console.log(checkInput.length);
 	    		if(required != 3){
-	    			alert("입력값을 확인해주세요"); 			
+	    			swal({
+	    		        title: "입력값 확인",
+	    		        text: "입력값을 확인해주세요.",
+	    		        icon: "warning",
+	    		        closeOnClickOutside : false
+	    		      });		
 	    			event.preventDefault(); //이벤트 방지 submit 안 넘어가고
 	    		}else {    			
 	    			location.href = "/user/mypage";
