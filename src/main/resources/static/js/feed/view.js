@@ -105,7 +105,3 @@ $('.toggle-icon').on("click",function(){
       $(this).text(newIcon);
 });
 
-
-$('.chat-icon').on("click", function() {
-    $('.inputCommentBox').toggleClass('hidden');
-  });

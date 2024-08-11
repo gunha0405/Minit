@@ -84,22 +84,24 @@ public class FeedService {
 
 		// 피드 갯수 만큼 for문 돌게
 		int feedNum = feedDao.selectFeedList(start, end, u);
-		for (int i = 0; i < feedNum; i++) {
-			// 리스트에 담을 번호
-			int feedNo = feedDao.searhFeedNo(start, end, u, i + 1);
-			// 리스트 번호로 파일 가져오기
-			String filefath = feedDao.feedFilepath(start, end, u, feedNo);
-			Feed f = new Feed();
-			f.setUserFeedFilepath(filefath);
-			f.setUserFeedNo(feedNo);
-			feedList.add(f);
+		if(feedNum >0) {
+			for (int i = 0; i < feedNum; i++) {
+				// 리스트에 담을 번호
+				int feedNo = feedDao.searhFeedNo(start, end, u, i + 1);
+				// 리스트 번호로 파일 가져오기
+				String filefath = feedDao.feedFilepath(start, end, u, feedNo);
+				Feed f = new Feed();
+				f.setUserFeedFilepath(filefath);
+				f.setUserFeedNo(feedNo);
+				feedList.add(f);
+			}
 		}
 
 		// 페이지 네비게이션 제작(사용자가 클릭해서 다른 페이지를 요청할 수 있도록 하는 요소 ) 제작
 		// 페이지 네비게이션을 서비스에서 만드는 이유 -> 총 게시물수를 조회해와야 가능하기 떄문
 		// select count(*) from notice;
 		int totalCount = 0;
-		totalCount = feedDao.selectFeedTotalCount();
+		totalCount = feedDao.selectFeedTotalCount(u);
 		// 전체 페이지 수 계산
 		int totalPage = 0;
 		if (totalCount % numPerPage == 0) {
@@ -345,6 +347,23 @@ public class FeedService {
 		}
 		f.setUserList(userList);
 		return f;
+	}
+
+	public int selectFollowBtn(String userFeedWriter, String loginUserId) {
+		int result = feedDao.selectFollowBtn(userFeedWriter, loginUserId);
+		return result;
+	}
+
+	@Transactional
+	public int userFollowCancel(String loginUser, String writerUser) {
+		int result = feedDao.userFollowCancel(loginUser, writerUser);
+		return result;
+	}
+
+	@Transactional
+	public int userFollow(String loginUser, String writerUser) {
+		int result = feedDao.userFollow(loginUser, writerUser);
+		return result;
 	}
 
 
