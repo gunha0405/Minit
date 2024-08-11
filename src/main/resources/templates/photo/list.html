@@ -568,7 +568,8 @@
               comments.forEach(comment => {
                 const commentItem = $("<div>").addClass("comment").data("commentId", comment.photoFeedCommentNo);
                 console.log(comment.photoFeedCommentNo);
-                commentItem.append($("<img>").attr("src", comment.commenterImage).attr("alt", "Avatar").addClass("comment-avatar"));
+                commentItem.append($("<img>").attr("src", "/user/" + comment.photoFeedCommentWriterImg).attr("alt", "Avatar").addClass("comment-avatar"));
+                console.log("이미지"+comment.photoFeedCommentWriterImg);
                 const commentContent = $("<div>").addClass("comment-content");
                 commentContent.append($("<p>").addClass("commenter-name").text(comment.photoFeedCommentWriter));
                 commentContent.append($("<p>").addClass("comment-text").text(comment.photoFeedCommentContent));
