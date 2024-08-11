@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import kr.or.iei.photo.model.dto.Photo;
 import kr.or.iei.photo.model.dto.PhotoComment;
+import kr.or.iei.photo.model.dto.PhotoCommentPhotoRowMapper;
 import kr.or.iei.photo.model.dto.PhotoCommentRowMapper;
 import kr.or.iei.photo.model.dto.PhotoRowMapper;
 import kr.or.iei.text.model.dto.TextFeedComment;
@@ -21,6 +22,8 @@ public class PhotoDao {
     private PhotoRowMapper photoRowMapper;
     @Autowired
     private PhotoCommentRowMapper photoCommentRowMapper;
+    @Autowired
+    private PhotoCommentPhotoRowMapper photoCommentPhotoRowMapper;
 
     public int insertPhoto(Photo p, User user) {
         String query = "INSERT INTO photo_feed VALUES(photo_feed_seq.NEXTVAL,?,?,0,TO_CHAR(SYSDATE,'YYYY-MM-DD'),0)";
@@ -85,9 +88,9 @@ public class PhotoDao {
     }
 
     public List<PhotoComment> getCommentList(int photoFeedNo) {
-        String query = "SELECT * FROM photo_comment_feed WHERE photo_ref=?";
+        String query = "select * from photo_comment_feed join user_tbl on photo_feed_comment_writer = user_id where photo_ref = ?";
         Object[] params = {photoFeedNo};
-        List<PhotoComment> list = jdbc.query(query, photoCommentRowMapper, params);
+        List<PhotoComment> list = jdbc.query(query, photoCommentPhotoRowMapper, params);
         return list;
     }
 
@@ -164,6 +167,19 @@ public class PhotoDao {
         Object[] params = {photoFeedNo, userNo};
         int result = jdbc.update(query, params);
         return result;
+	}
+
+	public int getPhotoFeedCommentNo() {
+		String query = "select max(photo_feed_comment_no) from photo_comment_feed";
+		int photoFeedNo = jdbc.queryForObject(query, Integer.class);
+		return photoFeedNo;
+	}
+
+	public PhotoComment selectOnePhotoFeedComment(int photoFeedCommentNo) {
+		String query = "select * from photo_comment_feed where photo_feed_comment_no = ?";
+		Object[] params = {photoFeedCommentNo};
+		List list = jdbc.query(query, photoCommentRowMapper, params);
+		return (PhotoComment)list.get(0);
 	}
 
 	

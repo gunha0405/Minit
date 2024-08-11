@@ -10,6 +10,7 @@ import kr.or.iei.photo.model.dao.PhotoDao;
 import kr.or.iei.photo.model.dto.Photo;
 import kr.or.iei.photo.model.dto.PhotoComment;
 import kr.or.iei.photo.model.dto.PhotoRowMapper;
+import kr.or.iei.text.model.dto.TextFeedComment;
 import kr.or.iei.user.model.dto.User;
 
 @Service
@@ -127,6 +128,16 @@ public class PhotoService {
 
 	public boolean saveCheck(int photoFeedNo, int userNo) {
 		return photoDao.saveCheck(photoFeedNo, userNo);
+	}
+
+	public int getPhotoFeedCommentNo() {
+		int photoFeedCommentNo = photoDao.getPhotoFeedCommentNo();
+		return photoFeedCommentNo;
+	}
+
+	public PhotoComment selectOnePhotoFeedComment(int photoFeedCommentNo) {
+		PhotoComment photoFeedComment = photoDao.selectOnePhotoFeedComment(photoFeedCommentNo);
+		return photoFeedComment;
 	}
     
 }

@@ -131,9 +131,8 @@ header {
   position: sticky;
   bottom: 15px; /* 아래 간격 15px 설정 */
   width: 70px;
-  height: 70px;
-  bottom: 70px;
-  z-index: 1000;
+  height: 110px;
+  z-index: 1500;
 }
 
 .photoUpload .nav {

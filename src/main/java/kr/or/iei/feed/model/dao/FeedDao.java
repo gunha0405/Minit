@@ -107,9 +107,10 @@ public class FeedDao {
         return totalCount;
 	}
 
-	public int selectFeedTotalCount() {
-		String query = "select count(*) from user_feed_tbl";
-		int totalCount = jdbc.queryForObject(query, Integer.class);
+	public int selectFeedTotalCount(User u) {
+		String query = "select count(*) from user_feed_tbl where user_feed_writer=?";
+		Object[] params = {u.getUserId()};
+		int totalCount = jdbc.queryForObject(query, Integer.class, params);
 		return totalCount;
 	}
 
@@ -278,6 +279,27 @@ public class FeedDao {
 		Object[] params = {userFeedWriter, i};
 		List list = jdbc.query(query, followUserFowMapper, params);
 		return (User)list.get(0);
+	}
+
+	public int selectFollowBtn(String userFeedWriter, String loginUserId) {
+		String query = "SELECT COUNT(*) FROM FOLLOW WHERE USER_ID=? AND FOLLOWING_ID=?";
+		Object[] params = {userFeedWriter, loginUserId};
+		int result = jdbc.queryForObject(query, Integer.class, params);
+		return result;
+	}
+
+	public int userFollowCancel(String loginUser, String writerUser) {
+		String query = "delete from follow where user_id=? and following_id=?";
+		Object[] params = {loginUser, writerUser};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+	public int userFollow(String loginUser, String writerUser) {
+		String query = "insert into follow values (?, ?)";
+		Object[] params = {loginUser, writerUser};
+		int result = jdbc.update(query, params);
+		return result;
 	}
 
 

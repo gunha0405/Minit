@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="/css/feed/feedStyle.css">
 <link rel="stylesheet" href="/css/feed/list.css">
 <link rel="stylesheet" href="/css/feed/followModal.css">
-<script defer src="index.js"></script>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link
    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -164,13 +164,12 @@
 											<button th:if="${session.user != null && session.user.userId == user.userId}" class="button-style" id="storage">
 											보관함
 											</button>
-										</a>
-										<button th:if="${session.user != null && session.user.userId != user.userId}" 
-									        class="button-style" id="follow-btn" th:onclick="userFollow([[${session.user.userId}]], [[${user.userId}]])">
-									   	 팔로우
-									   	 </button>				
-										<button th:if="${session.user == null}" class="button-style" id="follow-btn" th:onclick="userFollow([[${session.user.userId}]],[[${user.userId}]])">팔로우</button>
-										<!-- 팔로우를 누르면 팔로우 취소 버튼으로 ,  -->
+										</a>				
+									   	<button th:if="${session.user.userId != user.userId && followBtn == 0}" th:value="${followBtn}" class="button-style" id="follow-btn" th:onclick="userFollow(this,[[${session.user.userId}]],[[${user.userId}]])">팔로우</button>
+									   	
+									   	<button th:if="${session.user.userId != user.userId && followBtn == 1}" th:value="${followBtn}" class="button-style" id="follow-btn" th:onclick="userFollow(this,[[${session.user.userId}]],[[${user.userId}]])">팔로우취소</button>
+										<button th:if="${followBtn == -1}" class="button-style none-login" id="follow-btn" onclick="noneLogin()">팔로우</button>
+								
 									</div>
 								</li>
 							</ul>
@@ -205,30 +204,63 @@
 	<script src="/js/feed/followModal.js"></script>
 
 	<script>
-	function userFollow(loginUserId, pageUser){
-		
+	function userFollow(button, loginUser, writerUser) {
+		console.log("안녕"+$(button).val());
+	    if ($(button).val() == 1) {
+	        // 팔로우 취소 요청
+	        $.ajax({
+	            url: '/feed/userFollowCancel',
+	            type: 'POST',
+	            data: {
+	            	loginUser: loginUser,
+	            	writerUser: writerUser
+	            },
+	            success: function(response) {
+	            	console.log("잘가"+response);
+	                // 성공 시 버튼 텍스트를 '팔로우'로 변경
+	                $(button).text('팔로우');
+	                // 버튼의 data 속성 값을 0로 변경 (팔로우 상태로 변경)
+	                $(button).data('btn-num', 0);
+	                $(button).val(0);
+	            },
+	            error: function(xhr, status, error) {
+	                console.error('팔로우 취소 요청 실패:', error);
+	            	console.log("안나옴");
+	            }
+	        });
+	    } else if ($(button).val() == 0) {
+	        // 팔로우 요청
+	        $.ajax({
+	            url: '/feed/userFollow',
+	            type: 'POST',
+	            data: {
+	            	loginUser: loginUser,
+	            	writerUser: writerUser
+	            },
+	            success: function(response) {
+		            console.log(response);
+
+	                // 성공 시 버튼 텍스트를 '팔로우 취소'로 변경
+	                $(button).text('팔로우 취소');
+	                // 버튼의 data 속성 값을 1로 변경 (팔로우 취소 상태로 변경)
+	                $(button).data('btn-num', 1);
+	                $(button).val(1);
+	            },
+	            error: function(xhr, status, error) {
+	                console.error('팔로우 요청 실패:', error);
+	            }
+	        });
+	    }
+	}
+
+
+	function noneLogin(){
+	    alert("로그인을 해주세요.");
 	}
 	
-	$('write-feed').on('click', function() {
+	$('.write-feed').on('click', function() {
 		window.location.href = '/feed/writeForm'
 	})
-	
-	$(document).ready(function() {
-    $('#follow-btn').on('click', function() {
-        var $this = $(this);
-
-        // 현재 버튼의 텍스트를 확인하고 상태를 변경합니다.
-        if ($this.text().trim() === '팔로우') {
-            // '팔로우' 상태일 때
-            $this.text('팔로우 취소');
-            window.location.href = '/feed/userFollowCancle'+session.user;
-        } else {
-     	       // '팔로우 취소' 상태일 때
-            $this.text('팔로우');
-            window.location.href = '/feed/userFollow'+session.user;
-      	  }
-  	 	 });
-	});
 </script>
 	  <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -236,5 +268,7 @@
       crossorigin="anonymous"
     ></script>
 	<th:block th:include="common/footer"></th:block>
+	<script src="/js/feed/followModal.js"></script>
+	
 </body>
 </html>

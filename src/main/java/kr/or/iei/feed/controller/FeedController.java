@@ -72,8 +72,19 @@ public class FeedController {
 	}
 
 	@GetMapping(value = "/myPage")
-	public String myPage(Integer reqPage, String userFeedWriter, Model model) {
+	public String myPage(Integer reqPage, String userFeedWriter, Model model, @SessionAttribute User user) {
+		//팔로우 검사 
+		int followBtn = -1; //
+		String loginUserId = user.getUserId();
+		if(userFeedWriter.equals(loginUserId)) { //로그인한 유저 == 피드주인 
+			followBtn = -100;
+		}else if(!userFeedWriter.equals(loginUserId)) { //로그인한 유저 != 피드주인 
+			//팔로우 안했으면 0; 했으면 1;
+			followBtn = feedService.selectFollowBtn(userFeedWriter, loginUserId);
+		}
+		
 		reqPage =  (reqPage != null) ? reqPage : 1;
+		
 		if (userFeedWriter ==null) {
 			model.addAttribute("title", "로그인을 해주세요");
 			model.addAttribute("msg", "서비스 이용이 불가합니다");
@@ -97,21 +108,19 @@ public class FeedController {
 				feed.setUserFeedNo(feedlist.getUserFeedNo()); 
 				filefath.add(feed);
 			}//for
-			//팔로잉, 팔로우 
+			//팔로잉, 팔로우 목록 
 			Feed following = feedService.following(userFeedWriter);
-			Feed follower = feedService.follower(userFeedWriter);
-			List<User> user = following.getUserList();
-			//System.out.println(user.get(0));
-			
+			Feed follower = feedService.follower(userFeedWriter);	
+
 			model.addAttribute("following", following);
 			model.addAttribute("follower", follower);
-			model.addAttribute("followingList", user);
+			model.addAttribute("followingList", following.getUserList());
 			model.addAttribute("followerList", follower.getUserList());
-		
 			model.addAttribute("list", filefath);
 			model.addAttribute("pageNavi", list.getPageNavi());
 			model.addAttribute("totalCount", list.getTotalCount());
 			model.addAttribute("user", u);
+			model.addAttribute("followBtn", followBtn);
 			return "/feed/list";
 		}
 	}
@@ -269,5 +278,20 @@ public class FeedController {
 		FeedComment fc = feedService.insertFeedComment(userId, feedCommentContent, feedRef);
 		return fc;
 	}
+	
+	@ResponseBody
+	@PostMapping(value="/userFollowCancel")
+	public int userFollowCancel(String loginUser, String writerUser) {
+		int num = feedService.userFollowCancel(loginUser, writerUser);
+		System.out.println("userFollowCancel");
+		return num;
+	}
 
+	@ResponseBody
+	@PostMapping(value="/userFollow")
+	public int userFollow(String loginUser, String writerUser) {
+		int num = feedService.userFollow(loginUser, writerUser);
+		System.out.println("userFollow="+num);
+		return num;
+	}
 }
