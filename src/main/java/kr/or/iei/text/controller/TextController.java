@@ -18,7 +18,6 @@ import kr.or.iei.text.model.dto.TextFeedCommentJsonList;
 import kr.or.iei.text.model.dto.TextFeedJsonList;
 import kr.or.iei.text.model.service.TextService;
 import kr.or.iei.user.model.dto.User;
-import kr.or.iei.user.model.dto.UserImg;
 import kr.or.iei.user.model.service.UserService;
 
 

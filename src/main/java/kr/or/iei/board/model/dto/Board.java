@@ -3,8 +3,6 @@ package kr.or.iei.board.model.dto;
 
 
 import java.util.List;
-
-import kr.or.iei.user.model.dto.UserImg;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,6 +44,6 @@ public class Board {
 	private int warningCount;
 	private String createDate;
 	private String updateDate;
-	private List<UserImg> imgList;
+	//private List<UserImg> imgList;
 	
 }

@@ -3,7 +3,7 @@
 @font-face {
     font-family: 'goorm-b';
     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408@1.0/goorm-sans-bold.woff2') format('woff2');
-    font-weight: 500;
+    font-weight: 700;
     font-style: normal;
 }
 @font-face {
@@ -14,7 +14,6 @@
 }
 
 *{
-	font-family: 'goorm-sans';
 	font-size: 15px;
 }
 

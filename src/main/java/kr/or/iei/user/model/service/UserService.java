@@ -9,16 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.iei.text.model.dto.TextFeed;
 import kr.or.iei.user.model.dao.UserDao;
-import kr.or.iei.user.model.dao.UserImgDao;
 import kr.or.iei.user.model.dto.User;
-import kr.or.iei.user.model.dto.UserImg;
 
 @Service
 public class UserService {
 	@Autowired
 	private UserDao userDao;
-	@Autowired
-	private UserImgDao userImgDao;
 	
 	public User selectOneUser(User u) {
 		User user = userDao.selectOneUser(u);
