@@ -205,7 +205,6 @@
 
 	<script>
 	function userFollow(button, loginUser, writerUser) {
-		console.log("안녕"+$(button).val());
 	    if ($(button).val() == 1) {
 	        // 팔로우 취소 요청
 	        $.ajax({
@@ -216,7 +215,6 @@
 	            	writerUser: writerUser
 	            },
 	            success: function(response) {
-	            	console.log("잘가"+response);
 	                // 성공 시 버튼 텍스트를 '팔로우'로 변경
 	                $(button).text('팔로우');
 	                // 버튼의 data 속성 값을 0로 변경 (팔로우 상태로 변경)

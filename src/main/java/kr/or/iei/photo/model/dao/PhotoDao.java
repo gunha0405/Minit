@@ -10,7 +10,10 @@ import kr.or.iei.photo.model.dto.Photo;
 import kr.or.iei.photo.model.dto.PhotoComment;
 import kr.or.iei.photo.model.dto.PhotoCommentPhotoRowMapper;
 import kr.or.iei.photo.model.dto.PhotoCommentRowMapper;
+import kr.or.iei.photo.model.dto.PhotoFeedReportRowMapper;
 import kr.or.iei.photo.model.dto.PhotoRowMapper;
+import kr.or.iei.text.model.dto.TextFeed;
+import kr.or.iei.text.model.dto.TextFeedReportRowMapper;
 import kr.or.iei.user.model.dto.User;
 
 @Repository
@@ -23,6 +26,9 @@ public class PhotoDao {
     private PhotoCommentRowMapper photoCommentRowMapper;
     @Autowired
     private PhotoCommentPhotoRowMapper photoCommentPhotoRowMapper;
+    
+	@Autowired
+	private PhotoFeedReportRowMapper photoFeedReportRowMapper;
 
     public int insertPhoto(Photo p, User user) {
         String query = "INSERT INTO photo_feed VALUES(photo_feed_seq.NEXTVAL,?,?,0,TO_CHAR(SYSDATE,'YYYY-MM-DD'),0)";
@@ -179,6 +185,12 @@ public class PhotoDao {
 		Object[] params = {photoFeedCommentNo};
 		List list = jdbc.query(query, photoCommentRowMapper, params);
 		return (PhotoComment)list.get(0);
+	}
+
+	public List<Photo> selectReportFeed() {
+		String query = "select photo_feed_IMG, photo_feed_no,read_count, user_no, photo_feed_writer, warning_count,reg_date from photo_feed join user_tbl on photo_feed_writer = user_id where photo_feed_status = 1";
+		List<Photo> reportList = jdbc.query(query, photoFeedReportRowMapper);
+		return reportList;
 	}
 
 	

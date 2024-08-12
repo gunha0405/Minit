@@ -14,9 +14,10 @@ public class FollowingBoardRowMapper implements RowMapper<Board> {
 		Board b = new Board();
 		b.setUserFeedNo(rs.getInt("user_feed_No"));
 		b.setUserFeedWriter(rs.getString("user_feed_writer"));
-		b.setUserFeedContnet(rs.getString("user_feed_date"));
+		b.setUserFeedContnet(rs.getString("user_feed_content"));
 		b.setUserFeedDate(rs.getString("user_feed_date"));
 		b.setUserFeedCount(rs.getInt("user_feed_count"));
+		
 		return b;
 	}
 

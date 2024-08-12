@@ -49,13 +49,23 @@ public class FeedController {
 
 	//feed-view 개인 회원 피드 페이지 
 	@GetMapping(value = "/view")
-	public String view(int userFeedNo, Model model, @SessionAttribute User u) {
+	public String view(int userFeedNo, Model model, @SessionAttribute User user) {
 		//해당 글 유저의 정보와 사진 파일리스트
+		int UserNo = user.getUserNo();
+
+		Feed feed = feedService.selectUserOneFeed(userFeedNo, UserNo); 
+		
+		//피드글 신고, 좋아요 여부 
 		int reportCount = -1;
-		if(u != null) {
-			reportCount = feedService.isReport(userFeedNo, u.getUserNo());
+		int likeCount =-1;
+		String userId = user.getUserId();
+		if(user != null) {
+			reportCount = feedService.isReport(userFeedNo, UserNo);
+			likeCount = feedService.isLike(userFeedNo, userId);
 		}
-		Feed feed = feedService.selectUserOneFeed(userFeedNo); 
+		feed.setIsReport(reportCount);
+		feed.setIsLike(likeCount);
+		
 		model.addAttribute("feed", feed);
 		model.addAttribute("list", feed.getFeedList());
 		return "feed/view";
@@ -135,7 +145,7 @@ public class FeedController {
 	public String feedWirte(Feed f, MultipartFile upfile1, MultipartFile upfile2, MultipartFile upfile3, Model model) {
 			String savepath = root + "/feed/";
 			List<FeedFile> fileList = new ArrayList<FeedFile>();
-			MultipartFile[] upfile = { upfile1, upfile2, upfile3 };
+			MultipartFile[] upfile = { upfile1, upfile2, upfile3 }; 
 			for (MultipartFile file : upfile) {
 				if (!file.isEmpty()) {
 					// 파일경로 복사, 중복된 이름 있으면 인덱스 작업
@@ -315,14 +325,59 @@ public class FeedController {
 	}
 	
 	@ResponseBody
-	@PostMapping(value="/reportTextFeed")
-	public int reportTextFeed(int textFeedNo, @SessionAttribute User u) {
-		if(u != null) {
-			return -10;
+	@PostMapping(value="/reportFeed")
+	public int reportFeed(int userFeedNo, @SessionAttribute(required =false) User user) {
+		//System.out.println("userFeedNo"+userFeedNo);
+		 if (user == null) {
+		     return -10; // 로그인하지 않은 경우
 		}else {
-			int result = feedService.reportTextFeed(textFeedNo, u.getUserNo());
+		    int userNo = user.getUserNo();
+		    int result = feedService.reportFeed(userFeedNo, userNo);
+		    return result;
+		}
+	}
+	@ResponseBody
+	@PostMapping(value="/isLike")
+	public int isLike(int userFeedNo, @SessionAttribute(required =false) User user) {
+		if(user == null) {
+			return -1;
+		}else {
+		    String userId = user.getUserId();
+		    int result = feedService.feedLike(userFeedNo, userId);
+		    return result;
+		}
+	}
+	@ResponseBody
+	@PostMapping(value="/isLikeCancel")
+	public int isLikeCancel(int userFeedNo, @SessionAttribute(required =false) User user) {
+		if(user == null) {
+			return -1;
+		}else {
+		    String userId = user.getUserId();
+		    int result = feedService.feedLikeCancel(userFeedNo, userId);
+		    return result;
+		}
+	}
+	@ResponseBody
+	@PostMapping(value="/commentLike")
+	public int commentLike(int feedCommentNo, @SessionAttribute(required =false) User user) {
+		if(user == null) {
+			return -1;
+		}else {
+			int userNo = user.getUserNo();
+			int result = feedService.commentLike(feedCommentNo, userNo);
 			return result;
 		}
-		
+	}
+	@ResponseBody
+	@PostMapping(value="/commentLikeCancel")
+	public int commentLikeCancel(int feedCommentNo, @SessionAttribute(required =false) User user) {
+		if(user == null) {
+			return -1;
+		}else {
+		    int userNo = user.getUserNo();
+		    int result = feedService.feedLikeCancel(feedCommentNo, userNo);
+		    return result;
+		}
 	}
 }

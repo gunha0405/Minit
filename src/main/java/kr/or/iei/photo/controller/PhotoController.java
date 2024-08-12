@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
@@ -28,6 +29,7 @@ import kr.or.iei.photo.model.dto.Photo;
 import kr.or.iei.photo.model.dto.PhotoComment;
 import kr.or.iei.photo.model.etc.dto.Foodad;
 import kr.or.iei.photo.model.service.PhotoService;
+import kr.or.iei.text.model.dto.TextFeed;
 import kr.or.iei.user.model.dto.User;
 import kr.or.iei.user.model.service.UserService;
 import kr.or.iei.util.FileUtils;
@@ -261,25 +263,48 @@ public class PhotoController {
         List<Foodad> list = new ArrayList<>();
 
         try {
-            String result = Jsoup.connect(url).data("serviceKey", serviceKey).data("pageNo", pageNo)
-                    .data("numOfRow", numOfRows).data("resultType", resultType).ignoreContentType(true).get().text();
+            String result = Jsoup.connect(url)
+                                .data("serviceKey", serviceKey)
+                                .data("pageNo", pageNo)
+                                .data("numOfRow", numOfRows)
+                                .data("resultType", resultType)
+                                .ignoreContentType(true)
+                                .get()
+                                .text();
 
             JsonReader reader = new JsonReader(new StringReader(result));
             reader.setLenient(true); // 약간의 JSON 구문 오류를 허용
-            JsonObject object = JsonParser.parseReader(reader).getAsJsonObject();
+            JsonElement rootElement = JsonParser.parseReader(reader);
 
-            JsonObject getFoodKr = object.get("getFoodKr").getAsJsonObject();
-            JsonArray items = getFoodKr.get("item").getAsJsonArray();
-            for (int i = 0; i < items.size(); i++) {
-                JsonObject item = items.get(i).getAsJsonObject();
-                String mainTitle = item.get("MAIN_TITLE").getAsString();
-                String mainImg = item.get("MAIN_IMG_THUMB").getAsString();
-                String address = item.get("ADDR1").getAsString();
-                String tel = item.get("CNTCT_TEL").getAsString();
-                String intro = item.get("ITEMCNTNTS").getAsString();
-                Foodad fa = new Foodad(mainTitle, mainImg, address, tel, intro);
-                list.add(fa);
+            // JSON 응답이 실제로 객체인지 확인
+            if (rootElement.isJsonObject()) {
+                JsonObject object = rootElement.getAsJsonObject();
+
+                // getFoodKr 요소가 실제로 JsonObject인지 확인
+                JsonElement getFoodKrElement = object.get("getFoodKr");
+                if (getFoodKrElement != null && getFoodKrElement.isJsonObject()) {
+                    JsonObject getFoodKr = getFoodKrElement.getAsJsonObject();
+                    JsonArray items = getFoodKr.get("item").getAsJsonArray();
+
+                    for (int i = 0; i < items.size(); i++) {
+                        JsonObject item = items.get(i).getAsJsonObject();
+                        String mainTitle = item.get("MAIN_TITLE").getAsString();
+                        String mainImg = item.get("MAIN_IMG_THUMB").getAsString();
+                        String address = item.get("ADDR1").getAsString();
+                        String tel = item.get("CNTCT_TEL").getAsString();
+                        String intro = item.get("ITEMCNTNTS").getAsString();
+                        Foodad fa = new Foodad(mainTitle, mainImg, address, tel, intro);
+                        list.add(fa);
+                    }
+                } else {
+                    // JSON 데이터가 예상과 다를 때 로그 출력 또는 예외 처리
+                    System.err.println("Expected JsonObject for 'getFoodKr', but found: " + getFoodKrElement);
+                }
+            } else {
+                // JSON 루트가 객체가 아닐 때 로그 출력 또는 예외 처리
+                System.err.println("Expected JsonObject as root element, but found: " + rootElement);
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -291,5 +316,14 @@ public class PhotoController {
     public String ad() {
         return "photo/list";
     }
+    
+    
+    @GetMapping(value="/selectReportFeed")
+    public String selectReportFeed(Model model) {
+    	List<Photo> reportList = photoService.selectReportFeed();
+    	model.addAttribute("reportList", reportList);
+    	return "/admin/warningPhoto";
+    }
+    
 
 }

@@ -64,15 +64,16 @@
 				<tr class="icons-row">
 					<td colspan="2">
 						<div class="left-icons">
-							<span class="material-icons toggle-icon" id="icon">bookmark_border</span>
-							<span class="material-icons toggle-icon" id="icon">favorite_border</span>
+							<span class="material-icons toggle-icon" id="icon">bookmark_border</span>							
+							<span th:if="${session.user.userId != feed.userFeedWriter && feed.isLike == -1}" class="material-icons toggle-icon" id="icon" th:attr="data-is-like=${feed.isLike}"  th:onclick="feedLike(this,[[${feed.userFeedNo}]])">favorite_border</span>
+							<span th:if="${session.user.userId != feed.userFeedWriter && feed.isLike == 0}" class="material-icons toggle-icon" id="icon" th:attr="data-is-like=${feed.isLike}"  th:onclick="feedLike(this,[[${feed.userFeedNo}]])">favorite_border</span>
+							<span th:if="${session.user.userId != feed.userFeedWriter && feed.isLike == 1}" class="material-icons toggle-icon" id="icon" th:attr="data-is-like=${feed.isLike}"  th:onclick="feedLike(this,[[${feed.userFeedNo}]])">favorite</span>		
 						</div>
 					</td>
 					<td>
-					<span th:if="${feed.isReport == -10}" class="material-icons toggle-icon" id="icon" onclick="feedReport(this,[[${feed.userFeedNo}]])">report_gmailerrorred</span>
-					<span th:if="${feed.isReport == 0}" class="material-icons toggle-icon" id="icon" th:value="${feed.isReport}" onclick="feedReport(this,[[${feed.userFeedNo}]])">report_gmailerrorred</span>
-					<span th:if="${feed.isReport == 1}" class="material-icons toggle-icon" id="icon" th:value="${feed.isReport}" onclick="feedReport(this,[[${feed.userFeedNo}]])">report</span>
-					
+					<span th:if="${feed.isReport == -10}" class="material-icons toggle-icon" id="icon"  th:onclick="feedReport(this,[[${feed.userFeedNo}]])">report_gmailerrorred</span>
+					<span th:if="${session.user.userId != feed.userFeedWriter && feed.isReport == 0}" class="material-icons toggle-icon" id="icon" th:value="${feed.isReport}" th:onclick="feedReport(this,[[${feed.userFeedNo}]])">report_gmailerrorred</span>
+					<span th:if="${session.user.userId != feed.userFeedWriter && feed.isReport == 1}" class="material-icons toggle-icon" id="icon" th:value="${feed.isReport}" th:onclick="feedReport(this,[[${feed.userFeedNo}]])">report</span>
 					</td>
 				</tr>
 				<tr class="peed-content">
@@ -117,27 +118,34 @@
 						<span th:text="${fc.feedCommentContent}"></span>
 					</td>
 					<td style="width: 15%;">
+						<th:block th:if="${session.user.userId} == null">
+							<span class="material-icons toggle-icon" id="icon-favorite" onclick="noneLoginComment()">favorite_border</span>						
+						</th:block>
 						<th:block th:if="${fc.feedCommentWriter} != ${session.user.userId}">
-							<span class="material-icons toggle-icon" id="icon-favorite">favorite_border</span>
-							<span class="material-icons toggle-icon" id="icon-report">report_gmailerrorred</span>
+							<span th:if="${fc.isLike} == 1" class="material-icons toggle-icon" id="icon-favorite" th:attr="data-is-like=$ {fc.isLike}" th:onclick=commentLike(this,[[${fc.feedCommentNo}]])>favorite</span>						
+							<span th:if="${fc.isLike} == 0" class="material-icons toggle-icon" id="icon-favorite" th:attr="data-is-like=${fc.isLike}" th:onclick=commentLike(this,[[${fc.feedCommentNo}]])>favorite_border</span>							
 						</th:block>
 						<th:block th:if="${fc.feedCommentWriter} == ${session.user.userId}">
-						<span class="material-icons" onclick="updateHidden(this)" >edit_document</span> 
-						<span class="material-icons" th:onclick="feedCommentDelete(this,[[${fc.feedCommentNo}]])">folder_delete</span>
+							<span class="material-icons" onclick="updateHidden(this)" >edit_document</span> 
+							<span class="material-icons" th:onclick="feedCommentDelete(this,[[${fc.feedCommentNo}]])">folder_delete</span>
 						</th:block>
 					</td>
 				</tr>	
 				<tr class="edit-comment-box hidden" >
-            		<td colspan="2" style="width: 50%;">
+            		<td colspan="1" style="width: 70%;">
             			 <textarea name="feedCommentContent" class="feedCommentContent" th:utext="${fc.feedCommentContent}"></textarea>
                		</td>
-               		<td colspan="2" style="width: 50%;">
+               		<td colspan="1" style="width: 15%;">
                			 <button class="btn-primary" th:onclick="commentUpdateBtn(this, [[${fc.feedCommentNo}]])">저장</button>
+               		</td>
+               		<td colspan="1" style="width: 15%;">
                			 <button class="btn-primary" onclick="commentUpdateCancleBtn(this)">취소</button>
                		</td>
 				</tr>
 			</table>
 		</th:block>			
+		</div>
+	</div>
 		</div>
 		<!-- 수정 / 삭제 버튼 : 로그인한 유저의 글에만 보임-->
 		<div class="btn-wrap">
@@ -150,73 +158,180 @@
 				</li>
 			</ul>
 		</div>
-		</div>
 	</div>
 
-
-	<script src="/js/feed/view.js"></script>
 	<script>
+	function commentLike(element, feedCommentNo){
+		const isLike = $(element).data('is-like');
+		console.log(isLike);
+	    if(isLike == 1){
+	         $.ajax({
+	              url: "/feed/commentLikeCancel",
+	              type: "post",
+	              data: {
+	            	  feedCommentNo: feedCommentNo
+	              },
+	              success: function(data) {
+	                   $(element).text('favorite_border');
+	                   $(element).data('is-like', 0); // 실제 HTML의 data-is-like 속성 업데이트
+	              },
+	              error: function() {
+	                   swal({
+	                      title: "서버 연결 실패",
+	                      text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+	                      icon: "warning"
+	                   });
+	                }
+	         });
+	    } else if(isLike == 0){
+	    	 $.ajax({
+	              url: "/feed/commentLike",
+	              type: "post",
+	              data: {
+	            	  feedCommentNo: feedCommentNo
+	              },
+	              success: function(data) {
+	                   $(element).text('favorite');
+	                   $(element).data('is-like', 1); // 실제 HTML의 data-is-like 속성 업데이트
+	                },
+	               error: function() {
+	                   swal({
+	                      title: "서버 연결 실패",
+	                      text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+	                      icon: "warning"
+	                   });
+	                }
+	         });
+	    }
+	}
+	function feedLike(element,userFeedNo){
+		const isLike = $(element).data('is-like');
+		console.log(isLike);
+	    if (isLike == -1) {
+	        swal({
+	        	 title: "로그인 필요",
+                 text: "로그인 후 이용해 주세요",
+                 icon: "info"
+	        });
+	    } else if(isLike == 1){
+	         $.ajax({
+	              url: "/feed/isLikeCancel",
+	              type: "post",
+	              data: {
+	                  userFeedNo: userFeedNo
+	              },
+	              success: function(data) {
+	                   $(element).text('favorite_border');
+	                   $(element).data('is-like', 0); // 실제 HTML의 data-is-like 속성 업데이트
+	              },
+	              error: function() {
+	                   swal({
+	                      title: "서버 연결 실패",
+	                      text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+	                      icon: "warning"
+	                   });
+	                }
+	         });
+	    } else if(isLike == 0){
+	    	 $.ajax({
+	              url: "/feed/isLike",
+	              type: "post",
+	              data: {
+	                  userFeedNo: userFeedNo
+	              },
+	              success: function(data) {
+	                   $(element).text('favorite');
+	                   $(element).data('is-like', 1); // 실제 HTML의 data-is-like 속성 업데이트
+	                },
+	               error: function() {
+	                   swal({
+	                      title: "서버 연결 실패",
+	                      text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+	                      icon: "warning"
+	                   });
+	                }
+	         });
+	    }
+	}
+	
 	function feedReport(element,userFeedNo){
-		    swal({
-		        title: "게시물 신고",
-		        text: "이 게시물을 신고하시겠습니까?",
-		        icon: "warning",
-		        buttons: {
-		            cancel: {
-		                text: "취소",
-		                value: false,
-		                visible: true,
-		                className: "btn-secondary",
-		                closeModal: true
-		            },
-		            confirm: {
-		                text: "신고",
-		                value: true,
-		                visible: true,
-		                className: "btn-point",
-		                closeModal: true
-		            }
-		        }
-		    }).then(function(isConfirm) {
-		        if (isConfirm) {
-		            $.ajax({
-		                url: "/feed/reportTextFeed",
-		                type: "post",
-		                data: {
-		                    textFeedNo: textFeedNo
-		                },
-		                success: function(data) {
-		                    if (data == -10) {
-		                        swal({
-		                            title: "로그인 필요",
-		                            text: "로그인 후 이용해 주세요",
-		                            icon: "info"
-		                        });
-		                    } else if (data == 1) {
-		                        swal({
-		                            title: "신고 성공",
-		                            text: "신고가 접수되었습니다.",
-		                            icon: "success"
-		                        });
-		                        $(element).text(report);
-		                    } else {
-		                        swal({
-		                            title: "신고 실패",
-		                            text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
-		                            icon: "warning"
-		                        });
-		                    }
-		                },
-		                error: function() {
-		                    swal({
-		                        title: "서버 연결 실패",
-		                        text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
-		                        icon: "warning"
-		                    });
-		                }
-		            });
-		        } 
-		    });
+		const isReport = $(element).val();
+	    if (isReport == 1) {
+	        swal({
+	            title: "이미 신고된 게시물입니다.",
+	            text: "신고 조치중 입니다. 잠시만 기다려 주세요.",
+	            icon: "warning"
+	        });
+	    } else if(isReport == -1) {
+	    	swal({
+	            title: "이미 신고된 게시물입니다.",
+	            text: "신고 조치중 입니다. 잠시만 기다려 주세요.",
+	            icon: "warning"
+	        });
+	    }
+	    else {
+	        swal({
+	            title: "신고",
+	            text: "해당 게시물을 신고하시겠습니까?",
+	            icon: "warning",
+	            buttons: {
+	                cancel: {
+	                    text: "취소",
+	                    value: false,
+	                    visible: true,
+	                    className: "btn-secondary",
+	                    closeModal: true
+	                },
+	                confirm: {
+	                    text: "신고",
+	                    value: true,
+	                    visible: true,
+	                    className: "btn-point",
+	                    closeModal: true
+	                }
+	            }
+	        }).then(function(isConfirm) {
+	            if (isConfirm) {
+	                $.ajax({
+	                    url: "/feed/reportFeed",
+	                    type: "post",
+	                    data: {
+	                        userFeedNo: userFeedNo
+	                    },
+	                    success: function(data) {
+	                        if (data == -10) {
+	                            swal({
+	                                title: "로그인 필요",
+	                                text: "로그인 후 이용해 주세요",
+	                                icon: "info"
+	                            });
+	                        } else if (data == 1) {
+	                            swal({
+	                                title: "신고 성공",
+	                                text: "신고가 접수되었습니다.",
+	                                icon: "success"
+	                            });
+	                            $(element).text('report');
+	                            $(element).val(1);
+	                        } else {
+	                            swal({
+	                                title: "신고 실패",
+	                                text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+	                                icon: "warning"
+	                            });
+	                        }
+	                    },
+	                    error: function() {
+	                        swal({
+	                            title: "서버 연결 실패",
+	                            text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+	                            icon: "warning"
+	                        });
+	                    }
+	                });
+	            }
+	        });
+	    }
 	}
 	
 	function commentUpdateBtn(element, feedCommentNo){
@@ -314,8 +429,7 @@
 							</td>
 							<td>
 								<div id="icon-container" class="hidden">
-									<span class="material-icons">edit_document</span> <span
-										class="material-icons">folder_delete</span>
+								<span class="material-icons">folder_delete</span>
 								</div>
 							</td>
 						</tr>
@@ -337,7 +451,6 @@
 		      }
 		 })
 	});
-	
 	function feedUpdate(userFeedNo, userFeedWriter){
 		swal({
             title:"게시글 수정",
