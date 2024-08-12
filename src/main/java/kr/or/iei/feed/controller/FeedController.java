@@ -72,33 +72,22 @@ public class FeedController {
 		model.addAttribute("list", feed.getFeedList());
 		return "feed/view";
 	}
-
-	@GetMapping(value = "/userFollow") // 피드.리스트 완성후 작업예정
-	public void follow() {
-
-	}
-
-	@GetMapping(value = "/userFollowCnacle") // 피드.리스트완성후 작업예정
-	public void userFollowCnacle() {
-
-	}
-
-	@GetMapping(value = "/userStorage")
-	public String userStorage() {
-		return "/#";
+	@ResponseBody
+	@PostMapping(value="/userStorage")
+	public List<Feed> userStorage(String userId, @SessionAttribute(required =false) User user, Model model) {
+		int userNo = user.getUserNo();
+		List<Feed> feedList = feedService.userStorage(userNo);
+		//int totalCount = feedService.userStorage(userNo);
+		return feedList;
 	}
 
 	@GetMapping(value = "/myPage")
 	public String myPage(Integer reqPage, String userFeedWriter, Model model, @SessionAttribute(required =false) User user) {
 		//팔로우 검사 
 		int followBtn = -1; //
-		if(user == null) {
-			followBtn = -1;
-		}else {
+		if(user != null) {
 			String loginUserId = user.getUserId();
-			if(userFeedWriter.equals(loginUserId)) { //로그인한 유저 == 피드주인 
-				followBtn = -1;
-			}else if(!userFeedWriter.equals(loginUserId)) { //로그인한 유저 != 피드주인 
+			if(!userFeedWriter.equals(loginUserId)) { //로그인한 유저 != 피드주인 
 				//팔로우 안했으면 0; 했으면 1;
 				followBtn = feedService.selectFollowBtn(userFeedWriter, loginUserId);
 			}			
@@ -107,44 +96,37 @@ public class FeedController {
 		
 		reqPage =  (reqPage != null) ? reqPage : 1;
 		
-		if (userFeedWriter ==null) {
-			model.addAttribute("title", "로그인을 해주세요");
-			model.addAttribute("msg", "서비스 이용이 불가합니다");
-			model.addAttribute("icon", "warning");
-			model.addAttribute("loc", "/#");
-			return "common/msg";
-		} else {
-			//페이지 주인 정보 불러오기 -> 페이징 작업 
-			User u = feedService.searchUser(userFeedWriter);
-			feedListData list = feedService.selectUserAllFeed(reqPage,  u);
-			List<Feed> feedList = list.getList();
+		//페이지 주인 정보 불러오기 -> 페이징 작업 
+		User u = feedService.searchUser(userFeedWriter);
+		feedListData list = feedService.selectUserAllFeed(reqPage,  u);
+		List<Feed> feedList = list.getList();
 			
-			//게시물 마다 1개의 사진 정보 보내기 
-			List<Feed> filefath = new ArrayList<Feed>();
-			for (Feed feedlist : feedList) {
-				String filename = feedlist.getUserFeedFilepath();
-				String savepath = "/feed/";
-				String filepath = savepath + filename;
-				Feed feed = new Feed();
-				feed.setUserFeedFilepath(filepath);
-				feed.setUserFeedNo(feedlist.getUserFeedNo()); 
-				filefath.add(feed);
-			}//for
-			//팔로잉, 팔로우 목록 
-			Feed following = feedService.following(userFeedWriter);
-			Feed follower = feedService.follower(userFeedWriter);	
-
-			model.addAttribute("following", following);
-			model.addAttribute("follower", follower);
-			model.addAttribute("followingList", following.getUserList());
-			model.addAttribute("followerList", follower.getUserList());
-			model.addAttribute("list", filefath);
-			model.addAttribute("pageNavi", list.getPageNavi());
-			model.addAttribute("totalCount", list.getTotalCount());
-			model.addAttribute("user", u);
-			model.addAttribute("followBtn", followBtn);
-			return "/feed/list";
-		}
+		//게시물 마다 1개의 사진 정보 보내기 
+		List<Feed> filefath = new ArrayList<Feed>();
+		for (Feed feedlist : feedList) {
+			String filename = feedlist.getUserFeedFilepath();
+			String savepath = "/feed/";
+			String filepath = savepath + filename;
+			Feed feed = new Feed();
+			feed.setUserFeedFilepath(filepath);
+			feed.setUserFeedNo(feedlist.getUserFeedNo()); 
+			filefath.add(feed);
+		}//for
+		//팔로잉, 팔로우 목록 
+		Feed following = feedService.following(userFeedWriter);
+		Feed follower = feedService.follower(userFeedWriter);	
+	
+		model.addAttribute("following", following);
+		model.addAttribute("follower", follower);
+		model.addAttribute("followingList", following.getUserList());
+		model.addAttribute("followerList", follower.getUserList());
+		model.addAttribute("list", filefath);
+		model.addAttribute("pageNavi", list.getPageNavi());
+		model.addAttribute("totalCount", list.getTotalCount());
+		model.addAttribute("user", u);
+		model.addAttribute("followBtn", followBtn);
+		return "/feed/list";
+		
 	}
 
 	// feed-list-writeBtn
@@ -409,4 +391,11 @@ public class FeedController {
 		    return result;
 		}
 	}
+//	@ResponseBody
+//	@PostMapping(value="/userStorageFeed")
+//	public List<Feed> userStorageFeed(String userId){
+//		List<Feed> feedList = 
+//		return;
+//	}
+
 }

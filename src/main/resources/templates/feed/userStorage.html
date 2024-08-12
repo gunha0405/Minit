@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+<link rel="stylesheet" href="/css/feed/feedStyle.css">
+<link rel="stylesheet" href="/css/feed/list.css">
+<link rel="stylesheet" href="/css/feed/followModal.css">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link
+   href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+   rel="stylesheet"
+   integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+   crossorigin="anonymous"
+/>
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
+<style>
+.feed-list {
+	margin-top: 100px;
+}
+
+.feed-list-wrap {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4개의 열 생성 */
+    gap: 5px; /* 칸 사이의 간격 */
+}
+
+.feed-list-wrap img {
+    width: 270px;
+    height: 270px;
+    display: block;
+}
+</style>
+
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block th:include="common/header"></th:block>
+
+
+<!-- 
+페이지에서 받아야 하는 정보 
+페이지 주인의 넘버, 유저의 아이디, 유저의 닉네임, 유저의 자기소개, 팔로워, 팔로잉, 게시물 갯수
+페이지 넘겨줄때 페이지 주인의 아이디 / 1페이지 
+ -->
+
+	<main class="content">
+		<section class="section feed-list">
+
+			<div class="user-profile">
+				<ul>
+
+					<li class="user-profile-photo">
+						<div>
+							<img src="/image/feed/profilePhoto.jfif" class="profile-image">
+						</div>
+					</li>
+					<li>
+						<div class="user-introduce">
+							<ul>
+								<li><span class="user-introduce-id" th:text="${user.userId}"></span></li> 
+						
+								<li><span class="user-introduce-nick" th:text="${user.userNick}"></span></li>
+								<li><span class="user-introduce-content" th:text=${user.userInfo}></span></li>
+							<!-- 
+								<li><span th:text="${user.userId}" class="user-introduce-id"></span></li>
+								<li><span th:text="${user.userNick}" class="user-introduce-nick"></span></li>
+								<li><span th:text="${user.userInfo}" class="user-introduce-content"></span></li>
+							 -->
+							</ul>
+						</div>
+					</li>
+
+					<li class="user-content">
+						<div>
+							<ul>
+								<li>
+									<div class="user-content-no">
+										<ul>
+											<li>
+												<ul class="content-no">
+													<li><span class="content-total-no" th:text="${totalCount}"></span></li>
+													<li>게시물</li>
+												</ul>
+											</li>
+											<li>
+												<ul class="content-no">
+													<a href="#" id="openFollowModal">
+													<li>
+													<span class="follow-total-no" th:text="${follower.userFeedCount}"></span>
+													</li>
+													<li>팔로워</li>
+													</a>
+												</ul>
+											</li>
+											<li>
+												<ul class="content-no">
+													<a href="#" id="openFollowingModal">
+													<li>
+													<span class="following-total-no" th:text="${following.userFeedCount}"></span>
+													</li>
+													<li>팔로잉</li>
+													</a>
+												</ul>
+											</li>
+										</ul>
+									</div> <!-- 팔로워 모달 -->
+									<div id="followModal" class="modal">
+										<div class="modal-content">   
+											<span class="close" id="closeFollowModal">&times;</span>
+											<div class="modal-header">팔로워 목록</div>
+											<div class="modal-body" id="followList">
+												<!-- 팔로워 리스트 항목들 -->
+												<th:block th:each="item : ${followerList}">
+													<p>
+														<a th:href="@{/feed/myPage(userFeedWriter=${item.userId})}">
+															<img src="/user/${item.userImg}">
+															<span class="user-id" th:text="${item.userId}"></span>
+														</a>
+													</p>
+												</th:block>
+											
+											</div>
+										</div>
+									</div> <!-- 팔로잉 모달 -->
+									<div id="followingModal" class="modal">
+										<div class="modal-content">
+											<span class="close" id="closeFollowingModal">&times;</span>
+											<div class="modal-header">팔로잉 목록</div>
+											<div class="modal-body" id="followingList">
+												<!-- 팔로잉 리스트 항목들 -->
+												<th:block th:each="item : ${followingList}">
+													<p>
+														<a th:href="@{/feed/myPage(userFeedWriter=${item.userId})}">
+															<img src="/user/${item.userImg}">
+															<span class="user-id" th:text="${item.userId}"></span>
+														</a>	
+													</p>
+												</th:block>
+											</div>
+										</div>
+									</div>
+								</li>
+
+								<li class="user-content-repository">
+									<div>							 	<!-- th:if="${session.user != null && session.user.userNo == u.userNo}" -->
+										<a href="@{/feed/list(userFeedWriter=${session.user.userId})}">
+											<button th:if="${session.user != null}" class="button-style" id="storage">
+											개인페이지
+											</button>
+										</a>				
+									</div>
+								</li>
+							</ul>
+						</div>
+
+					</li>
+
+				</ul>
+			</div>
+			
+			<div class="feed-list-wrap">
+
+
+			</div>
+			
+
+		</section>
+	
+	</main>
+	<script src="/js/feed/followModal.js"></script>
+
+	<script>
+	function userFollow(button, loginUser, writerUser) {
+	    if ($(button).val() == 1) {
+	        // 팔로우 취소 요청
+	        $.ajax({
+	            url: '/feed/userFollowCancel',
+	            type: 'POST',
+	            data: {
+	            	loginUser: loginUser,
+	            	writerUser: writerUser
+	            },
+	            success: function(response) {
+	                // 성공 시 버튼 텍스트를 '팔로우'로 변경
+	                $(button).text('팔로우');
+	                // 버튼의 data 속성 값을 0로 변경 (팔로우 상태로 변경)
+	                $(button).data('btn-num', 0);
+	                $(button).val(0);
+	            },
+	            error: function(xhr, status, error) {
+	                console.error('팔로우 취소 요청 실패:', error);
+	            	console.log("안나옴");
+	            }
+	        });
+	    } else if ($(button).val() == 0) {
+	        // 팔로우 요청
+	        $.ajax({
+	            url: '/feed/userFollow',
+	            type: 'POST',
+	            data: {
+	            	loginUser: loginUser,
+	            	writerUser: writerUser
+	            },
+	            success: function(response) {
+		            console.log(response);
+
+	                // 성공 시 버튼 텍스트를 '팔로우 취소'로 변경
+	                $(button).text('팔로우 취소');
+	                // 버튼의 data 속성 값을 1로 변경 (팔로우 취소 상태로 변경)
+	                $(button).data('btn-num', 1);
+	                $(button).val(1);
+	            },
+	            error: function(xhr, status, error) {
+	                console.error('팔로우 요청 실패:', error);
+	            }
+	        });
+	    }
+	}
+
+
+	function noneLogin(){
+	    alert("로그인을 해주세요.");
+	}
+	
+	$('.write-feed').on('click', function() {
+		window.location.href = '/feed/writeForm'
+	})
+</script>
+	  <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+	<th:block th:include="common/footer"></th:block>
+	<script src="/js/feed/followModal.js"></script>
+	
+</body>
+</html>

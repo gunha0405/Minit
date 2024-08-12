@@ -12,6 +12,7 @@ import kr.or.iei.feed.model.dto.FeedComment;
 import kr.or.iei.feed.model.dto.FeedCommentRowMapper;
 import kr.or.iei.feed.model.dto.FeedFile;
 import kr.or.iei.feed.model.dto.FeedFileRowMapper;
+import kr.or.iei.feed.model.dto.FeedRepoRowMapper;
 import kr.or.iei.feed.model.dto.FeedRowMapper;
 import kr.or.iei.feed.model.dto.FollowUserRowMapper;
 import kr.or.iei.feed.model.dto.UserFeedNaviList;
@@ -34,6 +35,8 @@ public class FeedDao {
 	private String root;
 	@Autowired
 	FeedCommentRowMapper feedCommentRowMapper = new FeedCommentRowMapper();
+	@Autowired
+	FeedRepoRowMapper feedRepoRowMapper = new FeedRepoRowMapper();
 	
 	public UserFeedNaviList userList(String userId) {
 		String query = "select user_id, user_info, USER_FEED_WRITER, USER_FEED_CONTENT,USER_FEED_DATE\r\n" + 
@@ -283,7 +286,7 @@ public class FeedDao {
 
 	public int selectFollowBtn(String userFeedWriter, String loginUserId) {
 		String query = "SELECT COUNT(*) FROM FOLLOW WHERE USER_ID=? AND FOLLOWING_ID=?";
-		Object[] params = {userFeedWriter, loginUserId};
+		Object[] params = {loginUserId, userFeedWriter};
 		int result = jdbc.queryForObject(query, Integer.class, params);
 		return result;
 	}
@@ -400,6 +403,36 @@ public class FeedDao {
 		String qeury = "delete from repository where REPOSITORY_USER_NO=? and REPOSITORY_FEED_NO=?";
 		Object[] params = {userNo, userFeedNo};
 		return jdbc.update(qeury, params);
+	}
+
+	public int storageTotal(int userNo) {
+		String query = "select count(*) from repository where REPOSITORY_USER_NO=?";
+		Object[] params = {userNo};
+		return jdbc.queryForObject(query, Integer.class, params);
+	}
+
+	public int storageFeedNo(int userNo, int i) {
+		String query = "select repository_feed_no from\r\n" + 
+				"(select rownum as rnum, n.* from \r\n" + 
+				"(select *from repository where REPOSITORY_USER_NO=? order by repository_feed_no)n) where rnum =?";
+		Object[] params = {userNo, i};
+		return jdbc.queryForObject(query, Integer.class, params);
+	}
+
+	public Feed getStorageFeed(int feedNo) {
+		String query = "select user_feed_no, user_feed_writer, user_feed_content, user_feed_filepath from\r\n" + 
+				"(select rownum as rnum, n.*from\r\n" + 
+				"(select\r\n" + 
+				"user_feed_no, user_feed_writer, user_feed_content, user_feed_filepath\r\n" + 
+				"from\r\n" + 
+				"(select * from user_feed_tbl\r\n" + 
+				"join user_tbl on (user_feed_writer= user_id)\r\n" + 
+				"join user_feed_file using (user_feed_no)\r\n" + 
+				"where user_feed_no =?))n)\r\n" + 
+				"where rnum =1";
+		Object[] params = {feedNo};
+		List list = jdbc.query(query, feedRepoRowMapper, params);
+		return (Feed)list.get(0);
 	}
 
 
