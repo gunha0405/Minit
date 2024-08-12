@@ -49,13 +49,16 @@ public class FeedController {
 
 	//feed-view 개인 회원 피드 페이지 
 	@GetMapping(value = "/view")
-	public String view(int userFeedNo, Model model, @SessionAttribute User u) {
+	public String view(int userFeedNo, Model model, @SessionAttribute User user) {
 		//해당 글 유저의 정보와 사진 파일리스트
 		int reportCount = -1;
-		if(u != null) {
-			reportCount = feedService.isReport(userFeedNo, u.getUserNo());
+		int UserNo = user.getUserNo();
+		String userId = user.getUserId();
+		if(userId != null) {
+			reportCount = feedService.isReport(userFeedNo, UserNo);
 		}
 		Feed feed = feedService.selectUserOneFeed(userFeedNo); 
+		feed.setIsReport(reportCount);
 		model.addAttribute("feed", feed);
 		model.addAttribute("list", feed.getFeedList());
 		return "feed/view";
@@ -135,7 +138,7 @@ public class FeedController {
 	public String feedWirte(Feed f, MultipartFile upfile1, MultipartFile upfile2, MultipartFile upfile3, Model model) {
 			String savepath = root + "/feed/";
 			List<FeedFile> fileList = new ArrayList<FeedFile>();
-			MultipartFile[] upfile = { upfile1, upfile2, upfile3 };
+			MultipartFile[] upfile = { upfile1, upfile2, upfile3 }; 
 			for (MultipartFile file : upfile) {
 				if (!file.isEmpty()) {
 					// 파일경로 복사, 중복된 이름 있으면 인덱스 작업
@@ -315,14 +318,15 @@ public class FeedController {
 	}
 	
 	@ResponseBody
-	@PostMapping(value="/reportTextFeed")
-	public int reportTextFeed(int textFeedNo, @SessionAttribute User u) {
-		if(u != null) {
-			return -10;
+	@PostMapping(value="/reportFeed")
+	public int reportFeed(Integer userFeedNo, @SessionAttribute(required =false) User user) {
+		//System.out.println("userFeedNo"+userFeedNo);
+		 if (user == null) {
+		     return -10; // 로그인하지 않은 경우
 		}else {
-			int result = feedService.reportTextFeed(textFeedNo, u.getUserNo());
-			return result;
+		    int userNo = user.getUserNo();
+		    int result = feedService.reportFeed(userFeedNo, userNo);
+		    return result;
 		}
-		
 	}
 }
