@@ -51,21 +51,23 @@ public class FeedController {
 	@GetMapping(value = "/view")
 	public String view(int userFeedNo, Model model, @SessionAttribute User user) {
 		//해당 글 유저의 정보와 사진 파일리스트
-		int UserNo = user.getUserNo();
+		int userNo = user.getUserNo();
 
-		Feed feed = feedService.selectUserOneFeed(userFeedNo, UserNo); 
+		Feed feed = feedService.selectUserOneFeed(userFeedNo, userNo); 
 		
-		//피드글 신고, 좋아요 여부 
+		//피드글 신고, 좋아요 보관함 여부 
 		int reportCount = -1;
 		int likeCount =-1;
+		int repoCount = -1;
 		String userId = user.getUserId();
 		if(user != null) {
-			reportCount = feedService.isReport(userFeedNo, UserNo);
+			reportCount = feedService.isReport(userFeedNo, userNo);
 			likeCount = feedService.isLike(userFeedNo, userId);
+			repoCount = feedService.isRepository(userFeedNo, userNo);
 		}
 		feed.setIsReport(reportCount);
 		feed.setIsLike(likeCount);
-		
+		feed.setIsRepository(repoCount);
 		model.addAttribute("feed", feed);
 		model.addAttribute("list", feed.getFeedList());
 		return "feed/view";
@@ -87,16 +89,21 @@ public class FeedController {
 	}
 
 	@GetMapping(value = "/myPage")
-	public String myPage(Integer reqPage, String userFeedWriter, Model model, @SessionAttribute User user) {
+	public String myPage(Integer reqPage, String userFeedWriter, Model model, @SessionAttribute(required =false) User user) {
 		//팔로우 검사 
 		int followBtn = -1; //
-		String loginUserId = user.getUserId();
-		if(userFeedWriter.equals(loginUserId)) { //로그인한 유저 == 피드주인 
-			followBtn = -100;
-		}else if(!userFeedWriter.equals(loginUserId)) { //로그인한 유저 != 피드주인 
-			//팔로우 안했으면 0; 했으면 1;
-			followBtn = feedService.selectFollowBtn(userFeedWriter, loginUserId);
+		if(user == null) {
+			followBtn = -1;
+		}else {
+			String loginUserId = user.getUserId();
+			if(userFeedWriter.equals(loginUserId)) { //로그인한 유저 == 피드주인 
+				followBtn = -1;
+			}else if(!userFeedWriter.equals(loginUserId)) { //로그인한 유저 != 피드주인 
+				//팔로우 안했으면 0; 했으면 1;
+				followBtn = feedService.selectFollowBtn(userFeedWriter, loginUserId);
+			}			
 		}
+		
 		
 		reqPage =  (reqPage != null) ? reqPage : 1;
 		
@@ -377,6 +384,28 @@ public class FeedController {
 		}else {
 		    int userNo = user.getUserNo();
 		    int result = feedService.feedLikeCancel(feedCommentNo, userNo);
+		    return result;
+		}
+	}
+	@ResponseBody
+	@PostMapping(value="/repoIn")
+	public int repoIn(int userFeedNo, @SessionAttribute(required =false) User user) {
+		if(user == null) {
+			return -1;
+		}else {
+		    int userNo = user.getUserNo();
+		    int result = feedService.feedRepoIn(userFeedNo, userNo);
+		    return result;
+		}
+	}
+	@ResponseBody
+	@PostMapping(value="/repoOut")
+	public int repoOut(int userFeedNo, @SessionAttribute(required =false) User user) {
+		if(user == null) {
+			return -1;
+		}else {
+		    int userNo = user.getUserNo();
+		    int result = feedService.feedRepoOut(userFeedNo, userNo);
 		    return result;
 		}
 	}

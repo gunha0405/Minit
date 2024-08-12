@@ -438,5 +438,19 @@ public class FeedService {
 		return result;
 	}
 
+	public int isRepository(int userFeedNo, int userNo) {
+		int repoCount = feedDao.isRepository(userFeedNo, userNo);
+		return repoCount;
+	}
+
+	@Transactional
+	public int feedRepoIn(int userFeedNo, int userNo) {
+		return feedDao.feedRepoIn(userFeedNo, userNo);
+	}
+	@Transactional
+	public int feedRepoOut(int userFeedNo, int userNo) {
+		return feedDao.feedRepoOut(userFeedNo, userNo);
+	}
+
 
 }
