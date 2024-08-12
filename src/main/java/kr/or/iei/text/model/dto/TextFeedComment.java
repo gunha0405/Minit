@@ -15,4 +15,5 @@ public class TextFeedComment {
 	private int textFeedCommentRef;
 	private int isLike;
 	private String textFeedCommentWriterImg;
+	private int likeCount;
 }

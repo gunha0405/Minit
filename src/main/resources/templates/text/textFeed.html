@@ -9,6 +9,20 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
+.up-btn {
+	position: fixed;
+	right: 400px;
+	bottom: 250px;
+	width: 50px;
+	height: 50px;
+	text-align: center;
+	line-height: 50px;
+	border-radius: 30px;
+	cursor: pointer;
+	background-color: #6dd19c;
+	z-index : 1500;
+}
+
 .feed-is-report{
 	display: none;
 }
@@ -39,6 +53,7 @@
     <!-- 유저가 로그인했는지 안했는지 확인하기 위한 코드 -->
     <input type="hidden" id="currentUser" th:value="${session.user != null ? 'true' : 'false'}"/> 
         <section class="text-feed">
+        	
             <div th:if="${session.user != null}" class="text-feed-write-box">
                 
                 <div class="text-feed-write-area">
@@ -54,7 +69,7 @@
             
             <div class="text-feed-feeds" id="text-feed-feeds">
 	                <div class="feed" th:each="textFeed : ${textFeedList}">
-	                
+	                	
 	                	<span class="textFeedNo" th:text="${textFeed.textFeedNo}" style="display:none;"></span>
 	                	<span class="feed-is-report" th:text="${textFeed.isReport}"></span>
 	                    <div class="feed-profile-pic">
@@ -67,8 +82,8 @@
 	                        <p class="text-feed-content" th:text="${textFeed.textFeedContent}"></p>
 	                        <div class="feed-actions">
 	                            <i th:if="${textFeed.isLike == 1}" id="feed-like" class="fa fa-heart" th:onclick="likePush(this,[[${textFeed.textFeedNo}]])"></i>
-								<i th:if="${textFeed.isLike == 0}" id="feed-not-like" class="fa fa-regular fa-heart" th:onclick="likePush(this,[[${textFeed.textFeedNo}]])"></i>	
-	                            <i class="fa fa-paper-plane"></i>
+								<i th:if="${textFeed.isLike == 0}" id="feed-not-like" class="fa fa-regular fa-heart" th:onclick="likePush(this,[[${textFeed.textFeedNo}]])"></i>
+								<span class="likeCount" th:text="${textFeed.likeCount}"></span>	
 	                            <i class="fa fa-comment"></i>
 	                            <i class="fa fa-ellipsis-h"  th:if="${session.user != null}"></i>
 	                            <div class="feed-options">
@@ -100,11 +115,11 @@
 							            <div class="comment-actions">
 							                <i th:if="${comment.isLike == 1}" id="comment-like" class="fa fa-heart" th:onclick="commentLikePush(this,[[${comment.textFeedCommentNo}]])"></i>
 							                <i th:if="${comment.isLike == 0}" id="comment-not-like" class="fa fa-regular fa-heart" th:onclick="commentLikePush(this,[[${comment.textFeedCommentNo}]])"></i>
+							                <span class="likeCount" th:text="${comment.likeCount}"></span>
 							            </div>
 							        </div>
 							        <div class="comment-options">
 							        	<button class="comment-edit-btn" th:if="${session.user != null} and ${session.user.userId} == ${comment.textFeedCommentWriter}"><span class="material-icons">edit</span></button>
-							            <button class="comment-report-btn" th:if="${session.user != null}"><span class="material-icons">report_problem</span></button>
 							            <button class="comment-delete-btn" th:if="${session.user != null} and ${session.user.userId} == ${comment.textFeedCommentWriter}"><span class="material-icons">delete_forever</span></button>
 							            <button class="comment-save-btn" style="display:none;"><span class="material-icons">done</span></button>
 							        </div>
@@ -125,7 +140,10 @@
                 data-bs-toggle="modal"
                 data-bs-target="#loginModal"
                 >로그인 후 더보기</a></button>
-                
+            
+            <div class="up-btn">
+        					<i class="fa-solid fa-arrow-up"></i>
+        				</div>   
         </section>
     </div>
     
@@ -186,6 +204,8 @@
                         $(obj).attr('id', 'feed-not-like').removeClass('fa-heart').addClass('fa-regular fa-heart');
                     }
                 }
+                console.log(data);
+    			$(obj).next().text(data);
             },
             error: function() {
                 alert("서버 연결 실패");
@@ -193,18 +213,19 @@
         });
     }
     
-    function commentLikePush(obj, textFeedCommentNo){
-    	const currentLike = $(obj).attr('id');
-    	const isLike = (currentLike == "comment-not-like") ? 0 : 1 ;
-    	$.ajax({
-    		url : "/text/textFeedCommentLikePush",
-    		type : "post",
-    		data : {
-    			textFeedCommentNo : textFeedCommentNo,
-    			isLike : isLike
-    		},
-    		success : function(data){
-    			if (data == -10) {
+    function commentLikePush(obj, textFeedCommentNo) {
+        const currentLike = $(obj).attr('id');
+        const isLike = (currentLike === "comment-not-like") ? 0 : 1;
+        
+        $.ajax({
+            url: "/text/textFeedCommentLikePush",
+            type: "post",
+            data: {
+                textFeedCommentNo: textFeedCommentNo,
+                isLike: isLike
+            },
+            success: function(data) {
+                if (data == -10) {
                     swal({
                         title: "로그인 필요",
                         text: "로그인 후 이용해 주세요",
@@ -222,12 +243,13 @@
                     } else {
                         $(obj).attr('id', 'comment-not-like').removeClass('fa-heart').addClass('fa-regular fa-heart');
                     }
+                    $(obj).next().text(data);
                 }
-    		},
-    		error : function(){
-    			alert("서버 연결 실패");
-    		}
-    	});
+            },
+            error: function() {
+                alert("서버 연결 실패");
+            }
+        });
     }
     
     function savePush(obj, textFeedNo){
@@ -418,23 +440,20 @@
                 data: { textFeedContent: textFeedContent },
                 dataType: "json",
                 success: function(data) {
-                    console.log(data);
                     const newfeed = data.textFeed;
-                    const user = data.user;
-                    const userImg = newfeed.textFeedWriterImg;
-                    console.log(userImg);
+                    const userImg = newfeed.textFeedWriterImg ? `/user/${newfeed.textFeedWriterImg}` : "/user/minit_logo.png";
                     const feedHtml = `
                         <div class="feed" style="display:none;">
                             <span class="textFeedNo" style="display:none;">${newfeed.textFeedNo}</span>
                             <div class="feed-profile-pic">
-                                <img src="/user/${userImg}" alt="Profile Picture">
+                                <img src="${userImg}" alt="Profile Picture">
                             </div>
                             <div class="feed-content">
                                 <p class="text-feed-writer">${newfeed.textFeedWriter}</p>
                                 <p class="text-feed-content">${newfeed.textFeedContent}</p>
                                 <div class="feed-actions">
-                                    <i id="not-feed-like" class="fa fa-regular fa-heart" onclick="likePush(this, ${newfeed.textFeedNo})"></i>
-                                    <i class="fa fa-paper-plane"></i>
+                                    <i id="feed-not-like" class="fa fa-regular fa-heart" onclick="likePush(this, ${newfeed.textFeedNo})"></i>
+                                    <span class="likeCount">${newfeed.likeCount}</span>
                                     <i class="fa fa-comment"></i>
                                     <i class="fa fa-ellipsis-h"></i>
                                     <div class="feed-options">
@@ -448,9 +467,7 @@
                             <div class="comment-section" style="display: none;">
                                 <textarea id="text-feed-comment" placeholder="댓글을 작성해보세요 !"></textarea>
                                 <button class="submit-comment">댓글 달기</button>
-                                <div class="comments-container">
-                                
-                                </div>
+                                <div class="comments-container"></div>
                             </div>
                         </div>
                     `;
@@ -488,6 +505,7 @@
             const textFeedCommentContent = $(this).siblings("textarea").val();
             const textFeedElement = $(this).closest(".feed");
             const textFeedNo = textFeedElement.find(".textFeedNo").text();
+
             $.ajax({
                 url: "/text/textFeedCommentWrite",
                 type: "post",
@@ -496,42 +514,43 @@
                     textFeedNo: textFeedNo
                 },
                 dataType: "json",
-                success: function(data){
+                success: function(data) {
                     const comment = data.textFeedComment;
-                    const user = data.commentWriterUser;
-                    const userImg = comment.textFeedCommentWriterImg;
+                    const userImg = comment.textFeedCommentWriterImg ? `/user/${comment.textFeedCommentWriterImg}` : "/user/minit_logo.png";
+
                     const commentHtml = `
                         <div class="comment" style="display:none;">
                             <span class="textFeedCommentNo" style="display:none;">${comment.textFeedCommentNo}</span>
                             <div class="comment-profile-pic">
-                                <img src="/user/${userImg}" alt="Profile Picture">
+                                <img src="${userImg}" alt="Profile Picture">
                             </div>
                             <div class="comment-content">
                                 <p class="comment-author">${comment.textFeedCommentWriter}</p>
                                 <p class="comment-text">${comment.textFeedCommentContent}</p>
                                 <textarea class="comment-edit-textarea" style="display:none;">${comment.textFeedCommentContent}</textarea>
                                 <div class="comment-actions">
-                                    <i id="not-comment-like" class="fa fa-regular fa-heart" onclick="commentLikePush(this, ${comment.textFeedCommentNo})"></i>
+                                    <i id="comment-not-like" class="fa fa-regular fa-heart" onclick="commentLikePush(this, ${comment.textFeedCommentNo})"></i>
+                                    <span class="likeCount">0</span>
                                 </div>
                             </div>
                             <div class="comment-options">
                                 <button class="comment-edit-btn"><span class="material-icons">edit</span></button>
-                                <button class="comment-report-btn"><span class="material-icons">report_problem</span></button>
                                 <button class="comment-delete-btn"><span class="material-icons">delete_forever</span></button>
                                 <button class="comment-save-btn" style="display:none;"><span class="material-icons">done</span></button>
                             </div>
                         </div>
                     `;
+
                     const newComment = $(commentHtml);
                     textFeedElement.find(".comments-container").prepend(newComment);
                     newComment.slideDown("slow");
                     textFeedElement.find("textarea").val(""); 
                 },
-                error: function(){
+                error: function() {
                     console.log("데이터 전송 실패");
                 }
-            })
-        });//댓글 작성
+            });
+        });
         
         $(document).on("click", ".comment-delete-btn", function() {
             const textFeedCommentElement = $(this).closest(".comment");
@@ -800,7 +819,40 @@
         
         
         
-        
+        $(document).ready(function() {
+            var $upBtn = $('.up-btn');
+            var $bottomNavBar = $('.bottom-navBar');
+            var fixedBottomPosition = 20; // up-btn의 기본 bottom 위치
+
+            $(window).scroll(function() {
+                var scrollTop = $(this).scrollTop();
+                var windowHeight = $(window).height();
+                var bottomNavBarTop = $bottomNavBar.offset().top;
+                var upBtnBottomPosition = $upBtn.offset().top + $upBtn.outerHeight();
+
+                if (upBtnBottomPosition > bottomNavBarTop) {
+                    // bottom-navBar에 닿으면 고정 위치로 전환
+                    $upBtn.css({
+                        position: 'absolute',
+                        bottom: $(document).height() - bottomNavBarTop + fixedBottomPosition + 'px',
+                        right: '20px'
+                    });
+                } else {
+                    // 여전히 화면에 보이면 fixed로 유지
+                    $upBtn.css({
+                        position: 'fixed',
+                        bottom: fixedBottomPosition + 'px',
+                        right: '20px'
+                    });
+                }
+            });
+
+            // "맨 위로" 버튼 클릭 시 페이지 맨 위로 스크롤
+            $upBtn.click(function() {
+                $('html, body').animate({scrollTop: 0}, 500); // 500ms 동안 스크롤
+                return false;
+            });
+        });
         
         
         

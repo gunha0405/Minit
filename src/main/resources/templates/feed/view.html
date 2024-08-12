@@ -64,7 +64,10 @@
 				<tr class="icons-row">
 					<td colspan="2">
 						<div class="left-icons">
-							<span class="material-icons toggle-icon" id="icon">bookmark_border</span>							
+							<span th:if="${feed.isRepository == -1}" class="material-icons toggle-icon" id="icon" th:attr="data-is-like=${feed.isRepository}" th:onclick="feedRepo(this,[[${feed.userFeedNo}]])">bookmark_border</span>	
+							<span th:if="${session.user.userId != null && feed.isRepository == 0}" class="material-icons toggle-icon" id="icon" th:attr="data-is-like=${feed.isRepository}" th:onclick="feedRepo(this,[[${feed.userFeedNo}]])">bookmark_border</span>							
+							<span th:if="${session.user.userId != null && feed.isRepository == 1}" class="material-icons toggle-icon" id="icon" th:attr="data-is-like=${feed.isRepository}" th:onclick="feedRepo(this,[[${feed.userFeedNo}]])">bookmark</span>							
+													
 							<span th:if="${session.user.userId != feed.userFeedWriter && feed.isLike == -1}" class="material-icons toggle-icon" id="icon" th:attr="data-is-like=${feed.isLike}"  th:onclick="feedLike(this,[[${feed.userFeedNo}]])">favorite_border</span>
 							<span th:if="${session.user.userId != feed.userFeedWriter && feed.isLike == 0}" class="material-icons toggle-icon" id="icon" th:attr="data-is-like=${feed.isLike}"  th:onclick="feedLike(this,[[${feed.userFeedNo}]])">favorite_border</span>
 							<span th:if="${session.user.userId != feed.userFeedWriter && feed.isLike == 1}" class="material-icons toggle-icon" id="icon" th:attr="data-is-like=${feed.isLike}"  th:onclick="feedLike(this,[[${feed.userFeedNo}]])">favorite</span>		
@@ -161,9 +164,111 @@
 	</div>
 
 	<script>
+	function feedRepo(element,userFeedNo){
+		const isrepo = $(element).data('is-like');
+		console.log(isrepo);
+		if(isrepo == 0){
+			swal({
+	            title: "보관함",
+	            text: "보관함에 넣겠습니까?",
+	            icon: "warning",
+	            buttons: {
+	                cancel: {
+	                    text: "취소",
+	                    value: false,
+	                    visible: true,
+	                    className: "btn-secondary",
+	                    closeModal: true
+	                },
+	                confirm: {
+	                    text: "보관",
+	                    value: true,
+	                    visible: true,
+	                    className: "btn-point",
+	                    closeModal: true
+	                }
+	            }
+	        }).then(function(isConfirm) {
+	            if (isConfirm) {
+	            	 if(isrepo == 0){
+	        	    	 $.ajax({
+	        	              url: "/feed/repoIn",
+	        	              type: "post",
+	        	              data: {
+	        	            	  userFeedNo: userFeedNo
+	        	              },
+	        	              success: function(data) {
+	        	                   $(element).text('bookmark');
+	        	                   $(element).data('is-like', 1); // 실제 HTML의 data-is-like 속성 업데이트
+	        	                },
+	        	               error: function() {
+	        	                   swal({
+	        	                      title: "서버 연결 실패",
+	        	                      text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+	        	                      icon: "warning"
+	        	                   });
+	        	                }
+	        	         });
+	        	    }
+	            }
+	        });
+		}else if(isrepo == 1){
+			 swal({
+		            title: "보관함",
+		            text: "보관함 취소 하시겠습니까?",
+		            icon: "warning",
+		            buttons: {
+		                cancel: {
+		                    text: "취소",
+		                    value: false,
+		                    visible: true,
+		                    className: "btn-secondary",
+		                    closeModal: true
+		                },
+		                confirm: {
+		                    text: "보관",
+		                    value: true,
+		                    visible: true,
+		                    className: "btn-point",
+		                    closeModal: true
+		                }
+		            }
+		        }).then(function(isConfirm) {
+		            if (isConfirm) {
+		            	 if(isrepo == 1){
+		        	         $.ajax({
+		        	              url: "/feed/repoOut",
+		        	              type: "post",
+		        	              data: {
+		        	            	  userFeedNo: userFeedNo
+		        	              },
+		        	              success: function(data) {
+		        	                   $(element).text('bookmark_border');
+		        	                   $(element).data('is-like', 0); // 실제 HTML의 data-is-like 속성 업데이트
+		        	              },
+		        	              error: function() {
+		        	                   swal({
+		        	                      title: "서버 연결 실패",
+		        	                      text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+		        	                      icon: "warning"
+		        	                   });
+		        	                }
+		        	         });
+		        	    } 
+		            }
+		        });
+		}else{
+			swal({
+	        	 title: "에러",
+                text: "관리자에게 문의해주세요",
+                icon: "info"
+	        });
+		}
+	    
+	}
 	function commentLike(element, feedCommentNo){
 		const isLike = $(element).data('is-like');
-		console.log(isLike);
+		//console.log(isLike);
 	    if(isLike == 1){
 	         $.ajax({
 	              url: "/feed/commentLikeCancel",
