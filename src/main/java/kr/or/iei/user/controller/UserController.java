@@ -198,32 +198,39 @@ public class UserController {
 	public String sendCode(String receiver) {
 		System.out.println(receiver);
 		User user = userService.selectUserEmail(receiver);
-		if(user == null && !receiver.equals("")) {
-			//인증메일 제목
-			String emailTitle = "MINIT 회원가입 이메일 인증 메일";
-			//인증메일 인증코드
-			Random r = new Random();
-			StringBuffer sb = new StringBuffer();
-			for(int i=0; i<6; i++) {
-				int flag = r.nextInt(3);
-				if(flag == 0) { //숫자사용
-					int randomCode = r.nextInt(10);
-					sb.append(randomCode);
-				}else if(flag == 1) {//대문자사용
-					char randomCode = (char)(r.nextInt(26)+65);
-					sb.append(randomCode);
-				}else if(flag == 2) {//소문자사용
-					char randomCode = (char)(r.nextInt(26)+97);
-					sb.append(randomCode);
+		System.out.println("회원:"+user);
+		if(user == null) {
+			User u = userService.searchDelUserEmail(receiver);
+			System.out.println("탈퇴:"+u);
+			if(u == null && !receiver.equals("")) {
+				//인증메일 제목
+				String emailTitle = "MINIT 회원가입 이메일 인증 메일";
+				//인증메일 인증코드
+				Random r = new Random();
+				StringBuffer sb = new StringBuffer();
+				for(int i=0; i<6; i++) {
+					int flag = r.nextInt(3);
+					if(flag == 0) { //숫자사용
+						int randomCode = r.nextInt(10);
+						sb.append(randomCode);
+					}else if(flag == 1) {//대문자사용
+						char randomCode = (char)(r.nextInt(26)+65);
+						sb.append(randomCode);
+					}else if(flag == 2) {//소문자사용
+						char randomCode = (char)(r.nextInt(26)+97);
+						sb.append(randomCode);
+					}
 				}
+				String emailContent = "<h2>순간을 기록하다, MINIT 입니다.</h2>"
+						+"<h3>귀하의 인증번호는 [ <span style='color:red;'>"
+						+sb.toString()
+						+"</span> ] 입니다.</h3>"
+						+"<h3>대소문자를 꼭 구별하여 인증해주세요!</h3>";
+				emailSender.sendMail(emailTitle, receiver, emailContent);
+				return sb.toString();
+			}else {
+				return null;
 			}
-			String emailContent = "<h2>순간을 기록하다, MINIT 입니다.</h2>"
-					+"<h3>귀하의 인증번호는 [ <span style='color:red;'>"
-					+sb.toString()
-					+"</span> ] 입니다.</h3>"
-					+"<h3>대소문자를 꼭 구별하여 인증해주세요!</h3>";
-			emailSender.sendMail(emailTitle, receiver, emailContent);
-			return sb.toString();
 		}else {
 			return null;
 		}

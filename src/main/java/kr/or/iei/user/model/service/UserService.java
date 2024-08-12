@@ -35,6 +35,11 @@ public class UserService {
 		User user = userDao.selectUserEmail(receiver);
 		return user;
 	}
+
+	public User searchDelUserEmail(String receiver) {
+		User user = userDao.searchDelUserEmail(receiver);
+		return user;
+	}
 	
 	@Transactional
 	public int insertUser(User u) {
@@ -118,6 +123,18 @@ public class UserService {
 		}
 		return result;
 	}
+	@Transactional
+	public int photoChangeCount(User u, int photoFeedNo) {
+		int result = userDao.changeCount(u); //경고 횟수 누적
+		result += userDao.deletePhotoFeed(photoFeedNo); //해당 피드 삭제
+		int warningCount = userDao.warningCount(u); //해당 회원의 경고횟수 받아오기
+		if(warningCount == 5) {
+			result++;
+			result += userDao.updateLevel(u);
+		}
+		return result;
+	}
+
 
 	/*
 	@Transactional

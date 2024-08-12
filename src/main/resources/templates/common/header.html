@@ -56,6 +56,7 @@
             	<th:block th:if="${session.user == null}">
 		              <a
 		                class="nav-link"
+		                id="login-empty"
 		                aria-current="page"
 		                href="#"
 		                data-bs-toggle="modal"
@@ -126,7 +127,6 @@
                         placeholder="비밀번호를 입력하세요!"
                         required >
                     </div>
-                  
                 </div>
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-outline-success">로그인</button>
@@ -203,11 +203,7 @@
                         </div>
                         <div class="input-msg email-check-msg-same none">
                         	<span class="material-icons">info_outline</span>
-                        	<span>이미 가입된 이메일입니다. 다른 이메일을 사용해주세요.</span>                      	
-                        </div>
-                        <div class="input-msg email-check-msg-cancel none">
-                        	<span class="material-icons">info_outline</span>
-                        	<span>탈퇴한지 30일이 지나지 않은 회원의 이메일입니다. 30일이 지나고 다시 찾아와주세요</span>                      	
+                        	<span>이미 가입되어있거나 탈퇴한지 30일이 지나지 않은 회원의 이메일입니다.</span>                      	
                         </div>
                       <div id="auth" class="input-item" style="display:none;">
 						<input type="text" id="authCode" placeholder="인증번호입력">
@@ -332,6 +328,11 @@
         
 
     <script>
+    	$("#login-empty").on("click",function(){
+    		console.log(1);
+    		$("[name=userId]").empty();
+    	});
+    
     	/*이메일인증*/
 	    let mailCode = null;
 		$("#sendBtn").on("click",function(){
