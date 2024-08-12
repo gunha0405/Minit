@@ -18,7 +18,7 @@ public class Board {
 	private String photoFeedWriter;
 	private int readCount;
 	private String regDate;
-	 
+	
 	
 	//유저피드
 	private int userFeedNo;
@@ -32,9 +32,11 @@ public class Board {
 	private String photoFeedLikeWriter;
 	private int totalLikes;
 	
+	
+	
 	//유저정보
 	private int userNo;
-	private String userId;
+	//private String userId; photoFeedWriter과 같다 .
 	private String userPw;
 	private String userName;
 	private String userNick;
@@ -45,5 +47,8 @@ public class Board {
 	private String createDate;
 	private String updateDate;
 	//private List<UserImg> imgList;
+	
+	//검색기능
+	private String keyword;
 	
 }

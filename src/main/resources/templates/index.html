@@ -87,13 +87,15 @@
             </div>
           </div>
         </div>
-      </div>
+      </div>   
       <!--메인 컨텐츠 시작 -->
       <div class="sub1-contents">
         <a href ="javascript:void(0)" id="board">전체게시판</a>
         <a href="javascript:void(0)" id="best">인기게시판</a>
-        <a href="http://192.168.10.40" id="following">친구게시판</a>
+        <a href="javascript:void(0)" id="following">친구게시판</a>
       </div>
+     
+    
     <section>
         <div class="contents">
           <div class="main-contents">
@@ -113,8 +115,9 @@
               </div>
              </div>
             </div>
-        
       </section>
+     
+        
       <div class="sub2-contents">
         <a href="#">이자리는 광고가 들어올예정입니다.</a>
       </div>
@@ -127,7 +130,6 @@
       </div>
     </div>
    
-    
     <!--밑에 네비게이션 바-->
     <div class="bottom-navBar">
       <ul class="nav">
@@ -162,48 +164,36 @@
  $(document).ready(function() {
 	    $("#board").click(function() {
 	        $.ajax({
-	            url: '/index', // 실제 API 엔드포인트
+	            url: '/index',
 	            method: 'GET',
 	            dataType: 'json',
 	            success: function(data) {
-	                $('#postContainer').empty(); // 기존 콘텐츠를 비움
-
-	                // for 루프를 사용하여 데이터 처리
-	                for (let i = 0; i < data.length; i++) {
-	                    const b = data[i]; // 현재 게시물 데이터
-
-	                    // 데이터와 HTML 요소 확인
-	                    console.log('게시물 데이터', b);
-
-	                    // HTML 문자열 생성
-	                    let postHtml = `
-	                        <article class="post">
-	                            <div class="post-header">
-	                                <p class="post-meta">${b.photoFeedWriter} ${b.regDate}</p>
-	                            </div>
-	                            <div class="post-image-container">
-	                                <img src="/photo/${b.photoFeedImg}" alt="이미지" class="post-image">
-	                            </div>
-	                            <div class="post-footer">
-	                                <span class="post-comment">좋아요 ${b.photoFeedLikeNo}</span>
-	                            </div>
-	                        </article>
-	                    `;
-
-	                    // 생성한 HTML을 DOM에 추가
+	                $('#postContainer').empty();
+	                for (let i = 0; i <data.length; i++) {
+	                    const b = data[i];
+	                    let postHtml = `<article class="post">
+	                        <div class="post-header">
+	                            <p class="post-meta">${b.photoFeedWriter} ${b.regDate}</p>
+	                        </div>
+	                        <div class="post-image-container">
+	                            <img src="/photo/${b.photoFeedImg}" alt="이미지" class="post-image">
+	                        </div>
+	                        <div class="post-footer">
+	                            <span class="post-comment">좋아요 ${b.photoFeedLikeNo}</span>
+	                        </div>
+	                    </article>`;
 	                    $('#postContainer').append(postHtml);
 	                    $(".board-write").text("전체게시판");
 	                }
 	            },
 	            error: function(xhr, status, error) {
 	                console.error('AJAX 요청 오류:', status, error);
-	                console.log(xhr.responseText); // 오류 응답 내용 확인
+	                console.log(xhr.responseText);
 	            }
 	        });
 	    });
-        $("#board").click();
- });
-
+	    $("#board").click();
+	});
 
  
  $(document).ready(function() {
@@ -251,7 +241,83 @@
 	    });
 
 	});
+ $(document).ready(function() {
+	    $("#following").click(function() {
+	        $.ajax({
+	            url: '/following',
+	            method: 'GET',
+	            dataType: 'json',
+	            success: function(list) {
+	                $('#postContainer').empty();
+	                for (let i = 0; i < list.length; i++) {
+	                    const b = list[i];
+	                    let postHtml = `
+	                    <article class="post">
+	                        <div class="post-header">
+	                            <p class="post-meta">${b.userFeedWriter} ${b.userFeedDate}</p>
+	                        </div>
+	                        <div class="post-image-container">
+	                            <img src="/photo/${b.photoFeedImg}" alt="이미지" class="post-image">
+	                            <span class="post-content">${b.userfeedContent}</span>
+	                        </div>
+	                        <div class="post-footer">
+	                            <span class="post-comment">좋아요 ${b.totalLikes}</span>
+	                        </div>
+	                    </article>`;
+	                    $('#postContainer').append(postHtml);
+	                    $(".board-write").text("친구게시판");
+	                }
+	            },
+	            error: function() {
+	                console.log("서버 실패");
+	            }
+	        });
+	    });
+	});
 
+ $(document).ready(function() {
+	 $("#searchButton").click(function() {
+	     let userId = $("#searchList").val();
+	     let searchInput = $("#searchList").val();
+	     console.log("search"+searchInput);
+	     $.ajax({
+	         url: '/searchList',
+	         method: 'get',
+	         data: { userId : userId},
+	         dataType: 'json',
+	         success: function(list) {
+	        	 console.log(1);
+	        	 $('#postContainer').empty();
+	             console.log(list);
+	             for (let i = 0; i < list.length; i++) {
+	                 const b = list[i];
+	                 
+	                 console.log(i)
+	                 let postHtml = `
+	                 	<article class="post">
+	                     <div class="post-header">
+	                         <p class="post-meta">${b.userFeedWriter} ${b.regDate}</p>
+	                     </div>
+	                     <div class="post-image-container">
+	                         <img src="/photo/${b.photoFeedImg}" alt="이미지" class="post-image">
+	                         
+	                     </div>
+	                     <div class="post-footer">
+	                         <span class="post-comment">좋아요 ${b.totalLikes}</span>
+	                     </div>
+	                 </article>
+	                 `;
+	                 $('#postContainer').append(postHtml);   
+	                 $(".board-write").text("검색결과");
+	             }
+	         },
+	         error: function() {
+	             console.error('오류용');
+	         }
+	     });
+	 });    
+ });
+ 
     </script>
  
   

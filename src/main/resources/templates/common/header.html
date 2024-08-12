@@ -26,17 +26,20 @@
               width="150"
               class="d-inline-block align-text-top"/>
           </a>
-          <form
+          <div
+          	
             class="d-flex mx-auto"
             role="search"
             style="max-width: 400px; flex-grow: 1">
             <input
               class="form-control me-2"
               type="search"
+              id="searchList"
               placeholder="검색"
-              aria-label="Search"/>
-            <button class="btn btn-outline-success" type="submit">검색</button>
-          </form>
+              aria-label="Search"
+              />
+            <button class="btn btn-outline-success" type="button" id="searchButton">검색</button>
+          </div>
           <button
             class="navbar-toggler"
             type="button"
@@ -135,6 +138,7 @@
               </div>
             </div>
           </div>
+         
     
           <!--회원가입 모달창-->
           <div
@@ -316,6 +320,8 @@
             </div>
           </div>
         </div>
+         
+        
         
 
     <script>
@@ -567,6 +573,11 @@
     			location.href = "/user/join";
     		}
     	})
+    	
+    	//검색기능 구현
+    
+		
+	
     </script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
