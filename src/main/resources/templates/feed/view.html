@@ -68,7 +68,11 @@
 							<span class="material-icons toggle-icon" id="icon">favorite_border</span>
 						</div>
 					</td>
-					<td><span class="material-icons toggle-icon" id="icon">report_gmailerrorred</span>
+					<td>
+					<span th:if="${feed.isReport == -10}" class="material-icons toggle-icon" id="icon" onclick="feedReport(this,[[${feed.userFeedNo}]])">report_gmailerrorred</span>
+					<span th:if="${feed.isReport == 0}" class="material-icons toggle-icon" id="icon" th:value="${feed.isReport}" onclick="feedReport(this,[[${feed.userFeedNo}]])">report_gmailerrorred</span>
+					<span th:if="${feed.isReport == 1}" class="material-icons toggle-icon" id="icon" th:value="${feed.isReport}" onclick="feedReport(this,[[${feed.userFeedNo}]])">report</span>
+					
 					</td>
 				</tr>
 				<tr class="peed-content">
@@ -152,6 +156,69 @@
 
 	<script src="/js/feed/view.js"></script>
 	<script>
+	function feedReport(element,userFeedNo){
+		    swal({
+		        title: "게시물 신고",
+		        text: "이 게시물을 신고하시겠습니까?",
+		        icon: "warning",
+		        buttons: {
+		            cancel: {
+		                text: "취소",
+		                value: false,
+		                visible: true,
+		                className: "btn-secondary",
+		                closeModal: true
+		            },
+		            confirm: {
+		                text: "신고",
+		                value: true,
+		                visible: true,
+		                className: "btn-point",
+		                closeModal: true
+		            }
+		        }
+		    }).then(function(isConfirm) {
+		        if (isConfirm) {
+		            $.ajax({
+		                url: "/feed/reportTextFeed",
+		                type: "post",
+		                data: {
+		                    textFeedNo: textFeedNo
+		                },
+		                success: function(data) {
+		                    if (data == -10) {
+		                        swal({
+		                            title: "로그인 필요",
+		                            text: "로그인 후 이용해 주세요",
+		                            icon: "info"
+		                        });
+		                    } else if (data == 1) {
+		                        swal({
+		                            title: "신고 성공",
+		                            text: "신고가 접수되었습니다.",
+		                            icon: "success"
+		                        });
+		                        $(element).text(report);
+		                    } else {
+		                        swal({
+		                            title: "신고 실패",
+		                            text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+		                            icon: "warning"
+		                        });
+		                    }
+		                },
+		                error: function() {
+		                    swal({
+		                        title: "서버 연결 실패",
+		                        text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+		                        icon: "warning"
+		                    });
+		                }
+		            });
+		        } 
+		    });
+	}
+	
 	function commentUpdateBtn(element, feedCommentNo){
 	    const updatedContent = $(element).closest('tr').find('.feedCommentContent').val();
 		 $.ajax({

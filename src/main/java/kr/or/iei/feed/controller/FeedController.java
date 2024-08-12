@@ -49,8 +49,12 @@ public class FeedController {
 
 	//feed-view 개인 회원 피드 페이지 
 	@GetMapping(value = "/view")
-	public String view(int userFeedNo, Model model) {
+	public String view(int userFeedNo, Model model, @SessionAttribute User u) {
 		//해당 글 유저의 정보와 사진 파일리스트
+		int reportCount = -1;
+		if(u != null) {
+			reportCount = feedService.isReport(userFeedNo, u.getUserNo());
+		}
 		Feed feed = feedService.selectUserOneFeed(userFeedNo); 
 		model.addAttribute("feed", feed);
 		model.addAttribute("list", feed.getFeedList());
@@ -308,5 +312,17 @@ public class FeedController {
 	public int commentUpdate(int feedCommentNo, String updatedContent ) {
 		int result = feedService.feedCommentUpdate(feedCommentNo, updatedContent);
 		return result;
+	}
+	
+	@ResponseBody
+	@PostMapping(value="/reportTextFeed")
+	public int reportTextFeed(int textFeedNo, @SessionAttribute User u) {
+		if(u != null) {
+			return -10;
+		}else {
+			int result = feedService.reportTextFeed(textFeedNo, u.getUserNo());
+			return result;
+		}
+		
 	}
 }

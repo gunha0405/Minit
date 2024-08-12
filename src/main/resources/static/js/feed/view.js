@@ -10,10 +10,6 @@ $('.toggle-icon').on("click",function(){
         newIcon = 'favorite';
       } else if(currentIcon === 'favorite') {
         newIcon = 'favorite_border';
-      } else if(currentIcon === 'report_gmailerrorred') {
-        newIcon = 'report';
-      } else if(currentIcon === 'report') {
-        newIcon = 'report_gmailerrorred';
       } 
       $(this).text(newIcon);
 });

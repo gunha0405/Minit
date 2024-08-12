@@ -377,5 +377,16 @@ public class FeedService {
 		return result;
 	}
 
+	@Transactional
+	public int reportTextFeed(int textFeedNo, int userNo) {
+		int result = feedDao.reportTextFeed(textFeedNo, userNo);
+		return result;
+	}
+
+	public int isReport(int userFeedNo, int userNo) {
+		int reportCount = feedDao.isReport(userFeedNo, userNo);
+		return reportCount;
+	}
+
 
 }
