@@ -52,13 +52,16 @@ public class FeedController {
 	public String view(int userFeedNo, Model model, @SessionAttribute User user) {
 		//해당 글 유저의 정보와 사진 파일리스트
 		int reportCount = -1;
+		int likeCount =-1;
 		int UserNo = user.getUserNo();
 		String userId = user.getUserId();
-		if(userId != null) {
+		if(user != null) {
 			reportCount = feedService.isReport(userFeedNo, UserNo);
+			likeCount = feedService.isLike(userFeedNo, userId);
 		}
 		Feed feed = feedService.selectUserOneFeed(userFeedNo); 
 		feed.setIsReport(reportCount);
+		feed.setIsLike(likeCount);
 		model.addAttribute("feed", feed);
 		model.addAttribute("list", feed.getFeedList());
 		return "feed/view";
@@ -319,13 +322,35 @@ public class FeedController {
 	
 	@ResponseBody
 	@PostMapping(value="/reportFeed")
-	public int reportFeed(Integer userFeedNo, @SessionAttribute(required =false) User user) {
+	public int reportFeed(int userFeedNo, @SessionAttribute(required =false) User user) {
 		//System.out.println("userFeedNo"+userFeedNo);
 		 if (user == null) {
 		     return -10; // 로그인하지 않은 경우
 		}else {
 		    int userNo = user.getUserNo();
 		    int result = feedService.reportFeed(userFeedNo, userNo);
+		    return result;
+		}
+	}
+	@ResponseBody
+	@PostMapping(value="/isLike")
+	public int isLike(int userFeedNo, @SessionAttribute(required =false) User user) {
+		if(user == null) {
+			return -1;
+		}else {
+		    String userId = user.getUserId();
+		    int result = feedService.feedLike(userFeedNo, userId);
+		    return result;
+		}
+	}
+	@ResponseBody
+	@PostMapping(value="/isLikeCancel")
+	public int isLikeCancel(int userFeedNo, @SessionAttribute(required =false) User user) {
+		if(user == null) {
+			return -1;
+		}else {
+		    String userId = user.getUserId();
+		    int result = feedService.feedLikeCancel(userFeedNo, userId);
 		    return result;
 		}
 	}

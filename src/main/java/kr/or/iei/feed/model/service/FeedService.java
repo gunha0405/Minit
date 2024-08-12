@@ -388,5 +388,21 @@ public class FeedService {
 		return reportCount;
 	}
 
+	public int isLike(int userFeedNo, String userId) {
+		int likeCount = feedDao.isLike(userFeedNo, userId);
+		return likeCount;
+	}
+
+	@Transactional
+	public int feedLike(int userFeedNo, String userId) {
+		int result = feedDao.feedLike(userFeedNo, userId);
+		return result;
+	}
+
+	public int feedLikeCancel(int userFeedNo, String userId) {
+		int result = feedDao.feedLikeCancel(userFeedNo, userId);
+		return result;
+	}
+
 
 }

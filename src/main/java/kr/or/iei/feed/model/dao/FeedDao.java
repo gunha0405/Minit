@@ -330,5 +330,26 @@ public class FeedDao {
 		return reportCount;
 	}
 
+	public int isLike(int userFeedNo, String userId) {
+		String query = "select count(*) from USER_FEED_LIKE where user_id =? and FEED_NO=?";
+		Object[] params = {userId, userFeedNo};
+		int likeCount = jdbc.queryForObject(query, Integer.class, params);
+		return likeCount;
+	}
+
+	public int feedLike(int userFeedNo, String userId) {
+		String query ="insert into user_feed_like values(?,?)";
+		Object[] params = {userId, userFeedNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+	public int feedLikeCancel(int userFeedNo, String userId) {
+		String query = "delete from user_feed_like where user_id =? and feed_no=?";
+		Object[] params = {userId, userFeedNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
 
 }
