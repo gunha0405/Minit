@@ -3,6 +3,9 @@ package kr.or.iei.board.model.dto;
 
 
 import java.util.List;
+
+import kr.or.iei.feed.model.dto.Feed;
+import kr.or.iei.photo.model.dto.Photo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -50,5 +53,12 @@ public class Board {
 	
 	//검색기능
 	private String keyword;
-	
+	//팔로잉 아이디
+	private String followingId;
+	private String userId;
+	//여러개 담을수있는것
+	private List<Photo> photolist;
+	private List<Feed>	feedlist;
+	private String feedWriter;
+	private String userFeedFilePath;
 }
