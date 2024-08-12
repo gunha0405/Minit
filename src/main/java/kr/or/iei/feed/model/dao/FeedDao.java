@@ -383,5 +383,24 @@ public class FeedDao {
 		return result;
 	}
 
+	public int isRepository(int userFeedNo, int userNo) {
+		String query = "select count(*) from REPOSITORY where REPOSITORY_USER_NO=? and REPOSITORY_FEED_NO=?";
+		Object[] params = {userNo, userFeedNo};
+		int repoCount = jdbc.queryForObject(query, Integer.class, params);
+		return repoCount;
+	}
+
+	public int feedRepoIn(int userFeedNo, int userNo) {
+		String query = "insert into REPOSITORY values (REPOSITORY_seq.nextval,?,?,null,null)";
+		Object[] params = {userNo, userFeedNo};
+		return jdbc.update(query, params);
+	}
+
+	public int feedRepoOut(int userFeedNo, int userNo) {
+		String qeury = "delete from repository where REPOSITORY_USER_NO=? and REPOSITORY_FEED_NO=?";
+		Object[] params = {userNo, userFeedNo};
+		return jdbc.update(qeury, params);
+	}
+
 
 }

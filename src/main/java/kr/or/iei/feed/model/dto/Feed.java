@@ -26,4 +26,5 @@ public class Feed {
 	private List<User> userList;
 	private int isLike;
 	private int isReport;
+	private int isRepository;
 }
