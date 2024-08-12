@@ -7,18 +7,18 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FollowingBoardRowMapper implements RowMapper<Board> {
+public class SearchFeedRowMapper implements RowMapper<Board>{
 
 	@Override
 	public Board mapRow(ResultSet rs, int rowNum) throws SQLException {
 		Board b = new Board();
-
 		b.setUserFeedWriter(rs.getString("user_feed_writer"));
+		b.setUserFeedDate(rs.getString("user_feed_date"));	
 		b.setUserFeedContnet(rs.getString("user_feed_content"));
-		b.setUserFeedDate(rs.getString("user_feed_Date"));
-		b.setTotalLikes(rs.getInt("total_likes"));
-		
+		b.setUserFeedNo(rs.getInt("user_feed_file_no"));
+		b.setUserFeedFilePath(rs.getString("user_feed_filepath"));
 		return b;
 	}
+	
 
 }

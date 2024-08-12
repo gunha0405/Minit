@@ -17,8 +17,8 @@ public class SearchIdRowMapper implements RowMapper<Board> {
 		b.setUserFeedWriter(rs.getString("photo_feed_writer"));
 		b.setRegDate(rs.getString("reg_date"));
 		b.setPhotoFeedImg(rs.getString("photo_feed_img"));	
-		b.setPhotoFeedNo(rs.getInt("photo_feed_no"));	
-		//b.setUserFeedContnet(rs.getString("user_feed_content"));
+		b.setPhotoFeedNo(rs.getInt("photo_feed_no"));
+
 		//b.setTotalLikes(rs.getInt("total_likes"));
 		
 		return b;

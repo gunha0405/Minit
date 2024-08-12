@@ -23,12 +23,13 @@
 }
 
 .post-image {
-    width: 65%;
+    width: 80%;
     height: auto;
     max-height: 300px;
     object-fit: none;
     display: block;
 }
+
 </style>
 </head>
 <body>
@@ -116,6 +117,7 @@
              </div>
             </div>
       </section>
+      <button id="loadMore" class="btn btn-primary">더보기</button>
      
         
       <div class="sub2-contents">
@@ -162,39 +164,59 @@
 
  <script th:inline="javascript">
  $(document).ready(function() {
-	    $("#board").click(function() {
+	    let offset = 0;
+	    const limit = 8;
+	    let allPostsLoaded = false;
+	    function loadPosts() {
+	        if (allPostsLoaded) return;
 	        $.ajax({
 	            url: '/index',
 	            method: 'GET',
 	            dataType: 'json',
+	            data: { offset: offset, limit: limit },
 	            success: function(data) {
+	                console.log(data); // 서버에서 반환된 데이터를 확인
+	                // 사진 리스트와 피드 리스트를 결합하고, 특정 개수만큼 잘라서 표시
+	                const combinedList = [...data.photolist, ...data.feedlist];
+	                const limitedList = combinedList.slice(0, limit);
+
 	                $('#postContainer').empty();
-	                for (let i = 0; i <data.length; i++) {
-	                    const b = data[i];
-	                    let postHtml = `<article class="post">
+
+	                limitedList.forEach(b => {
+	                    const userFeedWriter = b.userFeedWriter || b.photoFeedWriter;
+	                    const writerLink = `/feed/myPage?userFeedWriter=${encodeURIComponent(userFeedWriter)}`;
+	                    const postHtml = `
+	                    <article class="post">
 	                        <div class="post-header">
-	                            <p class="post-meta">${b.photoFeedWriter} ${b.regDate}</p>
+	                            <a href="${writerLink}" class="post-meta-link">
+	                                ${b.photoFeedWriter || b.userFeedWriter} ${b.regDate || b.createDate}
+	                            </a>
 	                        </div>
 	                        <div class="post-image-container">
-	                            <img src="/photo/${b.photoFeedImg}" alt="이미지" class="post-image">
-	                        </div>
-	                        <div class="post-footer">
-	                            <span class="post-comment">좋아요 ${b.photoFeedLikeNo}</span>
+	                            <img src="/photo/${b.photoFeedImg || b.userFeedFilepath}" alt="이미지" class="post-image">
 	                        </div>
 	                    </article>`;
+
 	                    $('#postContainer').append(postHtml);
-	                    $(".board-write").text("전체게시판");
-	                }
+	                });
+
+	                offset += limit;
+	                $(".board-write").text("전체게시판");
 	            },
 	            error: function(xhr, status, error) {
 	                console.error('AJAX 요청 오류:', status, error);
-	                console.log(xhr.responseText);
 	            }
 	        });
-	    });
-	    $("#board").click();
-	});
+	    }
 
+	    // 더보기 버튼 클릭 시 게시물 로딩
+	    $('#loadMore').click(function() {
+        $('#loginModal').modal('show');
+    });
+
+	    // 페이지 로드 시 초기 게시물 로딩
+	    loadPosts();
+	});
  
  $(document).ready(function() {
 	    $("#best").click(function() {
@@ -203,16 +225,12 @@
 	            method: 'GET',
 	            dataType: 'json',
 	            success: function(list) {
-	            	console.log(list);
+	            	
 	                $('#postContainer').empty(); // 기존 콘텐츠를 비움
 
 	                // for 루프를 사용하여 데이터 처리
 	                for (let i = 0; i < list.length; i++) {
 	                    const b = list[i]; // 현재 게시물 데이터
-
-	                    // 데이터와 HTML 요소 확인
-	                    console.log('게시물 데이터', b);
-
 	                    // HTML 문자열 생성
 	                    let postHtml = `
 	                    	 
@@ -243,14 +261,16 @@
 	});
  $(document).ready(function() {
 	    $("#following").click(function() {
+
 	        $.ajax({
 	            url: '/following',
 	            method: 'GET',
-	            dataType: 'json',
+	            dataType: 'json',            
 	            success: function(list) {
 	                $('#postContainer').empty();
 	                for (let i = 0; i < list.length; i++) {
 	                    const b = list[i];
+	                    console.log(list);
 	                    let postHtml = `
 	                    <article class="post">
 	                        <div class="post-header">
@@ -258,7 +278,7 @@
 	                        </div>
 	                        <div class="post-image-container">
 	                            <img src="/photo/${b.photoFeedImg}" alt="이미지" class="post-image">
-	                            <span class="post-content">${b.userfeedContent}</span>
+	                            <span class="post-content">${b.userFeedContent}</span>
 	                        </div>
 	                        <div class="post-footer">
 	                            <span class="post-comment">좋아요 ${b.totalLikes}</span>
@@ -286,34 +306,33 @@
 	         data: { userId : userId},
 	         dataType: 'json',
 	         success: function(list) {
-	        	 console.log(1);
+	        	 console.log(list);
 	        	 $('#postContainer').empty();
-	             console.log(list);
-	             for (let i = 0; i < list.length; i++) {
-	                 const b = list[i];
-	                 
-	                 console.log(i)
-	                 let postHtml = `
-	                 	<article class="post">
-	                     <div class="post-header">
-	                         <p class="post-meta">${b.userFeedWriter} ${b.regDate}</p>
-	                     </div>
-	                     <div class="post-image-container">
-	                         <img src="/photo/${b.photoFeedImg}" alt="이미지" class="post-image">
-	                         
-	                     </div>
-	                     <div class="post-footer">
-	                         <span class="post-comment">좋아요 ${b.totalLikes}</span>
-	                     </div>
-	                 </article>
-	                 `;
-	                 $('#postContainer').append(postHtml);   
-	                 $(".board-write").text("검색결과");
-	             }
-	         },
-	         error: function() {
-	             console.error('오류용');
-	         }
+	        	// 데이터 랜덤화
+	                const combinedList = [...list.photolist, ...list.feedlist];
+	                combinedList.sort(() => Math.random() - 0.5); 
+	             
+combinedList.forEach(b => {
+	                    
+	                    let postHtml = `
+	                    <article class="post">
+	                        <div class="post-header">
+	                            <p class="post-meta">${b.photoFeedWriter || b.userFeedWriter} ${b.regDate || b.createDate}</p>
+	                        </div>
+	                        <div class="post-image-container">
+	                            <img src="/photo/${b.photoFeedImg || b.userFeedFilepath}" alt="이미지" class="post-image">
+	                        </div>
+
+	                    </article>`;
+	                    
+	                    $('#postContainer').append(postHtml);
+	                });
+
+	                $(".board-write").text("검색결과");
+	            },
+	            error: function(xhr, status, error) {
+	                console.error('AJAX 요청 오류:', status, error);
+	            }
 	     });
 	 });    
  });
