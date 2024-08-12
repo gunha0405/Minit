@@ -100,6 +100,13 @@ public class UserDao {
 		return result;
 	}
 
+	public int delInsertUser(User user) {
+		String query = "insert into user_del_tbl values(?,?,?,?,?,?,to_char(sysdate,'yyyy-mm-dd'))";
+		Object[] params = {user.getUserNo(),user.getUserId(),user.getUserPw(),user.getUserName(),user.getUserEmail(),user.getCreateDate()};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+	
 	public int deleteUser(User user) {
 		String query = "delete from user_tbl where user_id = ?";
 		Object[] params = {user.getUserId()};
@@ -183,5 +190,6 @@ public class UserDao {
 		System.out.println("삭제 처리값 :" +result);
 		return result;
 	}
+
 
 }
