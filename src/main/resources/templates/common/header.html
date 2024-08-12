@@ -56,7 +56,6 @@
             	<th:block th:if="${session.user == null}">
 		              <a
 		                class="nav-link"
-		                id="login-empty"
 		                aria-current="page"
 		                href="#"
 		                data-bs-toggle="modal"
@@ -328,10 +327,6 @@
         
 
     <script>
-    	$("#login-empty").on("click",function(){
-    		console.log(1);
-    		$("[name=userId]").empty();
-    	});
     
     	/*이메일인증*/
 	    let mailCode = null;
