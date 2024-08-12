@@ -112,8 +112,9 @@ public class TextController {
     		return -10;
     	}else {
     		int userNo = user.getUserNo();
-    		int result = textService.textFeedLikePush(textFeedNo, isLike, userNo);
-    		return result;
+    		int likeCount = textService.textFeedLikePush(textFeedNo, isLike, userNo);
+    		//int likeCount = textService.likeCount(textFeedNo);
+    		return likeCount;
     	}
     }
     
@@ -124,8 +125,8 @@ public class TextController {
     		return -10;
     	}else {
     		int userNo = user.getUserNo();
-    		int result = textService.textFeedCommentLikePush(textFeedCommentNo, isLike, userNo);
-    		return result;
+    		int likeCount = textService.textFeedCommentLikePush(textFeedCommentNo, isLike, userNo);
+    		return likeCount;
     	}    	
     }
     

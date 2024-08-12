@@ -22,16 +22,19 @@ public class TextService {
         	List<TextFeedComment> comments = textDao.selectTextFeedComment(textFeed.getTextFeedNo());
         	for(TextFeedComment textFeedComment : comments) {
         		int isLike = textDao.selectTextFeedCommentLikeStatus(textFeedComment.getTextFeedCommentNo(), userNo);
+        		int likeCount = textDao.countCommentLike(textFeedComment.getTextFeedCommentNo());
         		textFeedComment.setIsLike(isLike);
+         		textFeedComment.setLikeCount(likeCount);
         	}
             textFeed.setTextFeedCommentList(comments);
         	int isLike = textDao.selectTextFeedLikeStatus(textFeed.getTextFeedNo(), userNo);
         	int isReport = textDao.selectTextFeedReportStatus(textFeed.getTextFeedNo(), userNo);
         	int isSave = textDao.selectTextFeedSaveStatus(textFeed.getTextFeedNo(), userNo);
+        	int likeCount = textDao.countLike(textFeed.getTextFeedNo());
             textFeed.setIsLike(isLike);
             textFeed.setIsReport(isReport);
             textFeed.setIsSave(isSave);
-            System.out.println(textFeed.getTextFeedWriterImg());
+            textFeed.setLikeCount(likeCount);
         }
         return textFeedList;
     }
@@ -103,7 +106,12 @@ public class TextService {
 	        // 좋아요가 눌러진 상태
 	        result = textDao.deleteTextFeedLike(textFeedNo, userNo);
 	    }
-	    return result;
+	    if(result > 0) {
+	    	int likeCount = textDao.countLike(textFeedNo);
+	    	return likeCount;
+	    }else {
+	    	return -1;
+	    }
 	}
 	@Transactional
 	public int textFeedCommentLikePush(int textFeedCommentNo, int isLike, int userNo) {
@@ -115,7 +123,12 @@ public class TextService {
 		} else if(isLike == 1) {
 			result = textDao.deleteTextFeedCommentLike(textFeedCommentNo,userNo);
 		}
-		return result;
+		if(result>0) {
+			int likeCount = textDao.countCommentLike(textFeedCommentNo);
+			return likeCount;
+		}else {
+			return -1;
+		}
 	}
 	
 	@Transactional
@@ -157,5 +170,12 @@ public class TextService {
 		List<TextFeed> reportList = textDao.selectReportFeed();
 		return reportList;
 	}
+
+	public int likeCount(int textFeedNo) {
+		int likeCount = textDao.countLike(textFeedNo);
+		return likeCount;
+	}
+	
+	
 	
 }
