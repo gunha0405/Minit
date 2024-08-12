@@ -188,7 +188,7 @@ public class PhotoDao {
 	}
 
 	public List<Photo> selectReportFeed() {
-		String query = "select photo_feed_content, photo_feed_no, user_no, photo_feed_writer, warning_count,reg_date from photo_feed join user_tbl on pohoto_feed_writer = user_id where pohoto_feed_status = 1";
+		String query = "select photo_feed_IMG, photo_feed_no,read_count, user_no, photo_feed_writer, warning_count,reg_date from photo_feed join user_tbl on photo_feed_writer = user_id where photo_feed_status = 1";
 		List<Photo> reportList = jdbc.query(query, photoFeedReportRowMapper);
 		return reportList;
 	}

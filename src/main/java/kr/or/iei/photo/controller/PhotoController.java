@@ -322,7 +322,7 @@ public class PhotoController {
     public String selectReportFeed(Model model) {
     	List<Photo> reportList = photoService.selectReportFeed();
     	model.addAttribute("reportList", reportList);
-    	return "/admin/warningText";
+    	return "/admin/warningPhoto";
     }
     
 
