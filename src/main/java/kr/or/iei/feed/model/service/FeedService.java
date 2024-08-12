@@ -452,5 +452,17 @@ public class FeedService {
 		return feedDao.feedRepoOut(userFeedNo, userNo);
 	}
 
+	public List<Feed>  userStorage(int userNo) {
+		int storageTotal = feedDao.storageTotal(userNo);
+		List<Feed> feedList = new ArrayList<Feed>();
+		for(int i = 0; i < storageTotal; i++) {
+			int feedNo = feedDao.storageFeedNo(userNo, i+1);
+			Feed feed = feedDao.getStorageFeed(feedNo);
+			feedList.add(feed);
+		}
+		return feedList;
+	}
 
+
+	
 }

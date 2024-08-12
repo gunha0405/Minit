@@ -121,10 +121,10 @@
 						<span th:text="${fc.feedCommentContent}"></span>
 					</td>
 					<td style="width: 15%;">
-						<th:block th:if="${session.user.userId} == null">
+						<th:block th:if="${session.user.userId == null}">
 							<span class="material-icons toggle-icon" id="icon-favorite" onclick="noneLoginComment()">favorite_border</span>						
 						</th:block>
-						<th:block th:if="${fc.feedCommentWriter} != ${session.user.userId}">
+						<th:block th:if="${fc.feedCommentWriter != session.user.userId}">
 							<span th:if="${fc.isLike} == 1" class="material-icons toggle-icon" id="icon-favorite" th:attr="data-is-like=$ {fc.isLike}" th:onclick=commentLike(this,[[${fc.feedCommentNo}]])>favorite</span>						
 							<span th:if="${fc.isLike} == 0" class="material-icons toggle-icon" id="icon-favorite" th:attr="data-is-like=${fc.isLike}" th:onclick=commentLike(this,[[${fc.feedCommentNo}]])>favorite_border</span>							
 						</th:block>

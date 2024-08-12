@@ -142,11 +142,6 @@
 														</a>	
 													</p>
 												</th:block>
-												<p>
-													<img src="/image/feed/profilePhoto.jfif" alt=""> <span
-														class="user-id">유저아이디</span>
-													<button class="modal-del">삭제</button> ??
-												</p>
 											</div>
 										</div>
 									</div>
@@ -160,18 +155,16 @@
 											피드작성
 											</button>
 										</a>
-										<a href="/feed/userStorage">
-											<button th:if="${session.user != null && session.user.userId == user.userId}" class="button-style" id="storage">
+											<button th:if="${session.user != null && session.user.userId == user.userId}" class="button-style" id="storage" th:onclick="storage(this,[[${user.userId}]])">
 											보관함
 											</button>
-										</a>				
 									   	<button th:if="${session.user.userId != user.userId && followBtn == 0}" th:value="${followBtn}" class="button-style" id="follow-btn" th:onclick="userFollow(this,[[${session.user.userId}]],[[${user.userId}]])">팔로우</button>
 									   	
 									   	<button th:if="${session.user.userId != user.userId && followBtn == 1}" th:value="${followBtn}" class="button-style" id="follow-btn" th:onclick="userFollow(this,[[${session.user.userId}]],[[${user.userId}]])">팔로우취소</button>
-										<button th:if="${followBtn == -1}" class="button-style none-login" id="follow-btn" onclick="noneLogin()">팔로우</button>
+										<button th:if="${session.user.userId != user.userId && followBtn == -1}" class="button-style none-login" id="follow-btn" onclick="noneLogin()">팔로우</button>
 								
-									</div>
-								</li>
+								</div>
+									</li>
 							</ul>
 						</div>
 
@@ -194,16 +187,204 @@
 			</th:block>
 			</div>
 			
+			
+            
+            <div class="more-button-container" id="more-button-container">
+                <ul class="more-feed">
+                </ul>
+            </div>
 			<div class="list-navi" th:utext="${pageNavi}"></div>
-			
-			
+			<button class="button-style hidden" id="more" onclick="loadStoredPhotos([[${user.userId}]])">더보기</button>
+			<input type="hidden" class="totalCount"></
 
 		</section>
 	
 	</main>
 	<script src="/js/feed/followModal.js"></script>
 
+<script th:inline="javascript">
+
+
+    function storage(element, userId) {
+        $.ajax({
+            url: '/feed/userStorage',
+            type: 'post',
+            data: { userId: userId },
+            dataType : "json",
+            success: function(data) {
+                console.log("성공성공");
+                // 기존 버튼을 히든으로 변경
+                $(element).hide(); // 기존 버튼을 히든으로 설정
+
+                // 새로운 버튼을 추가
+                $(element).after('<a href="/feed/myPage?userFeedWriter=' + userId + '"><button class="button-style">개인피드이동</button></a>');
+                // 기존 사진과 내비게이션을 제거
+                $('.feed-list-wrap').children().remove();
+                $('.list-navi').remove();
+				$('#more').removeClass('hidden');
+                // 보관함에서 저장된 사진을 불러옴
+     			for(let i = 0; i < data.length; i++){
+     				const p = data[i];
+     				const li = $("<li>");
+					li.addClass("posting-item");
+					//<li class="posting-item"></li>
+					
+					const imgDiv = $("<div>");
+					imgDiv.addClass("posting-img");
+					//<div class="posting-img"></div>
+					
+					const img = $("<img>");
+					img.attr("src","/feed/"+p.userFeedFilepath);
+					//<img src="db로 조회한 이미지경로">
+					
+					 imgDiv.append(img);
+					 /*
+					 <div class="posting-img">
+					 	<img src="db로 조회한 이미지경로">
+					 </div>
+					 */
+					 
+					 const infoDiv = $("<div>");
+					 infoDiv.addClass("posting-info");
+					 //<div class="posting-info"></div>
+					 
+					 const titleDiv =$("<div>");
+					 titleDiv.addClass("posting-title");
+					 titleDiv.text(p.userFeedContent);
+					 //<div class="posting-title"><db로 조회한 제목</div>
+					 
+					 const subInfoDiv = $("<div>");
+					 subInfoDiv.addClass("posting-sub-info");
+					 //<div class="posting-sub-info"></div>
+					 
+    				 const writerSpan = $("<span>");
+					 writerSpan.text(p.userFeedWriter);
+					 //<span>db로 조회한 작성자</span>
+					 
+					 subInfoDiv.append(writerSpan);
+					 /*
+					 <div class="posting-sub-info">
+					 		<span>db로 조회한 작성자</span>
+					 </div>
+					 */
+					 infoDiv.append(titleDiv).append(subInfoDiv);
+					 /*
+					 <div class="posting-info">
+					 		<div class="posting-title"><db로 조회한 제목</div>
+					 		<div class="posting-sub-info">
+						 		<span>db로 조회한 작성자</span>
+							</div>
+					 </div>
+					 */
+					 li.append(imgDiv).append(infoDiv);
+					 /*
+					 <li class="posting-item">
+					 	 <div class="posting-img">
+					 		 <img src="db로 조회한 이미지경로">
+						 </div>
+						 <div class="posting-info">
+					 		 <div class="posting-title"><db로 조회한 제목</div>
+					 		 <div class="posting-sub-info">
+						 	     <span>db로 조회한 작성자</span>
+							 </div>
+						 </div>
+					 </li>
+					 */
+					 $(".more-feed").append(li);
+			
+     			}
+                //loadStoredPhotos(userId);
+            },
+            error: function() {
+                console.log("에러에러");
+            }
+        });
+    }
+
+    function loadStoredPhotos (userId, totalCount) {
+        $.ajax({
+            url: '/feed/userStorageFeed', 
+            type: 'get',
+            data: { userId: userId },
+            success: function(data) {
+                console.log(data);
+                if (data.length === 0) {
+                    // 사진이 없으면 '더보기' 버튼을 숨김
+                    $('#more-btn').hide();
+                }
+
+                const photoWrapper = $('.feed-list-wrap');
+                for (let i = 0; i < data.length; i++) {
+                    const p = data[i];
+                    const li = $('<li>').addClass('posting-item');
+                    
+                    const imgDiv = $('<div>').addClass('posting-img');
+                    const img = $('<img>').attr('src', '/photo/' + p.photoImg);
+                    imgDiv.append(img);
+
+                    const infoDiv = $('<div>').addClass('posting-info');
+                    const titleDiv = $('<div>').addClass('posting-title').text(p.photoTitle);
+                    const subInfoDiv = $('<div>').addClass('posting-sub-info');
+                    const writerSpan = $('<span>').text(p.photoWriter);
+                    subInfoDiv.append(writerSpan);
+                    infoDiv.append(titleDiv).append(subInfoDiv);
+
+                    li.append(imgDiv).append(infoDiv);
+                    photoWrapper.append(li);
+                }
+
+                // '더보기' 버튼의 동작 설정
+                $('#more-btn').show(); // '더보기' 버튼을 다시 보이게 함
+                currentCount = data.length;
+                start = currentCount + 1; // 다음 요청의 시작번호 설정
+            },
+            error: function() {
+                console.log("사진 로딩 실패");
+            }
+        });
+    }
+
+    function userFollow(button, loginUser, writerUser) {
+        if ($(button).val() == 1) {
+            // 팔로우 취소 요청
+            $.ajax({
+                url: '/feed/userFollowCancel',
+                type: 'POST',
+                data: { loginUser: loginUser, writerUser: writerUser },
+                success: function(response) {
+                    $(button).text('팔로우');
+                    $(button).data('btn-num', 0);
+                    $(button).val(0);
+                },
+                error: function(xhr, status, error) {
+                    console.error('팔로우 취소 요청 실패:', error);
+                }
+            });
+        } else if ($(button).val() == 0) {
+            // 팔로우 요청
+            $.ajax({
+                url: '/feed/userFollow',
+                type: 'POST',
+                data: { loginUser: loginUser, writerUser: writerUser },
+                success: function(response) {
+                    $(button).text('팔로우 취소');
+                    $(button).data('btn-num', 1);
+                    $(button).val(1);
+                },
+                error: function(xhr, status, error) {
+                    console.error('팔로우 요청 실패:', error);
+                }
+            });
+        }
+    }
+
+    // '더보기' 버튼 클릭 시 추가 게시물 로드
+ 
+</script>
 	<script>
+
+	
+	
 	function userFollow(button, loginUser, writerUser) {
 	    if ($(button).val() == 1) {
 	        // 팔로우 취소 요청
@@ -250,6 +431,7 @@
 	        });
 	    }
 	}
+	
 
 
 	function noneLogin(){
