@@ -10,6 +10,7 @@ import kr.or.iei.photo.model.dao.PhotoDao;
 import kr.or.iei.photo.model.dto.Photo;
 import kr.or.iei.photo.model.dto.PhotoComment;
 import kr.or.iei.photo.model.dto.PhotoRowMapper;
+import kr.or.iei.text.model.dto.TextFeed;
 import kr.or.iei.text.model.dto.TextFeedComment;
 import kr.or.iei.user.model.dto.User;
 
@@ -139,6 +140,12 @@ public class PhotoService {
 		PhotoComment photoFeedComment = photoDao.selectOnePhotoFeedComment(photoFeedCommentNo);
 		return photoFeedComment;
 	}
+
+	public List<Photo> selectReportFeed() {
+		List<Photo> reportList = photoDao.selectReportFeed();
+		return reportList;
+	}
+
     
 }
 

@@ -76,6 +76,13 @@ header {
   border-bottom: 1px solid lightgrey;
 }
 
+.modal-header{
+	display:flex;
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
+}
+
 .modal-title {
   text-align: center;
 }
