@@ -1,23 +1,22 @@
 @charset "UTF-8";
 
 @font-face {
-    font-family: 'goorm-b';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408@1.0/goorm-sans-bold.woff2') format('woff2');
-    font-weight: 500;
-    font-style: normal;
+  font-family: "goorm-b";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2408@1.0/goorm-sans-bold.woff2")
+    format("woff2");
+  font-weight: 500;
+  font-style: normal;
 }
 @font-face {
-    font-family: 'goorm-sans';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408@1.0/goorm-sans-code.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
+  font-family: "goorm-sans";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2408@1.0/goorm-sans-code.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
 }
 
-*{
-	box-sizing: border-box;
-}
-
-html,body{
+html,
+body {
   padding: 0;
   margin: 0;
   overflow-x: hidden;
@@ -28,70 +27,21 @@ html,body{
   flex-direction: column;
   height: auto;
   min-height: 100vh;
-  padding-top: 60px; /* header 높이 만큼 추가 */
+  padding-top: 60px;
   display: flex;
   align-items: center;
 }
 
 .wrapper section {
-  position: relative; /* section 요소를 상대적으로 배치 */
-  width: 1000px; /* 고정된 너비 설정 */
-  max-width: 1000px;
-  overflow: auto;
-  margin-top: 5px;
-  height: 100%;
-  flex-grow: 1;  /*background-color: antiquewhite;*/
-  /* 부모 요소가 전체 높이를 가지도록 설정 */
-  flex: 1; /* 스크롤바가 생기도록 설정 */
-}
-
-/*
-화면 오류 때문에 잠깐 수정해둠 맞춰야 할 듯
-.wrapper {
-  display: flex;
-  flex-direction: row; /* 수평 방향으로 배치 
-  height: auto;
-  min-height: 100vh;
-  padding-top: 60px; /* header 높이 만큼 추가 
-  justify-content: center; /* 왼쪽 정렬 
-  align-items: flex-start; /* 상단 정렬 
-}
-
-.wrapper section {
-  flex: 1;
   position: relative;
-  width: 1000px;/* sub1-contents의 너비를 제외한 나머지 공간을 차지 
+  width: 1000px;
   max-width: 1000px;
   overflow: auto;
   margin-top: 5px;
   height: 100%;
   flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-*/
-
-
-header {
-  background-color: white;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000; /* header가 다른 요소들 위에 표시되도록 함 */
 }
 
-.navbar-expand-lg {
-  height: 65px;
-  border-bottom: 1px solid lightgrey;
-}
-
-.navbar-nav {
-  font-weight: bold;
-}
-
-/* 메인 콘텐츠 부분 */
 .main-content {
   display: flex;
   max-width: 1200px;
@@ -115,10 +65,6 @@ header {
   font-size: 1.5em;
   margin-bottom: 5px;
 }
-.post-image{
-	width:50px;
-	height:50px;
-}
 
 .post-meta {
   color: #888;
@@ -139,6 +85,7 @@ header {
 .post-stat {
   margin-left: 10px;
 }
+
 .post-content img {
   max-width: 100%;
   height: auto;
@@ -146,7 +93,7 @@ header {
   margin: 0 auto;
 }
 
-.main-contents-box{
+.main-contents-box {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
@@ -160,10 +107,6 @@ header {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-
-
-
-
 .board-write {
   text-align: center;
   font-size: 2rem;
@@ -172,13 +115,12 @@ header {
   padding-bottom: 30px;
 }
 
-
 .contents {
   width: 900px;
-  height: calc(100vh - 60px - 100px); 
+  height: calc(100vh - 60px - 100px);
   padding: 20px;
   box-sizing: border-box;
-  overflow-y: auto; 
+  overflow-y: auto;
 }
 
 .sub1-contents {
@@ -186,51 +128,49 @@ header {
   width: 190px;
   height: 200px;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   justify-content: start;
-  align-items: center; 
+  align-items: center;
   padding: 20px;
   margin-right: 20px;
-  background-color: #75DAA4;
+  background-color: #75daa4;
   border-radius: 20px;
 }
 
 .sub1-contents a {
   color: whitesmoke;
-  text-decoration: none; 
-  font-size: 20px; 
-  padding: 15px; 
-  border-radius: 5px; 
-  text-align: center; 
-  width: 100%; 
+  text-decoration: none;
+  font-size: 20px;
+  padding: 15px;
+  border-radius: 5px;
+  text-align: center;
+  width: 100%;
 }
+
 .sub1-contents a:hover {
-  color:#6dd19c;
+  color: #6dd19c;
 }
 
 .sub2-contents {
   margin-top: 5px;
   width: 190px;
   height: 700px;
-  display: flex; 
-  flex-direction: column; 
-  justify-content: center; 
-  align-items: center; 
-  padding: 20px; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
   margin-left: 20px;
 }
 
 .sub2-contents a {
-  color: white; 
-  text-decoration: none; 
-  font-size: 16px; 
-  margin: 20px 0; 
-  padding: 20px; 
-  border-radius: 5px; 
   color: black;
+  text-decoration: none;
+  font-size: 16px;
+  margin: 20px 0;
+  padding: 20px;
+  border-radius: 5px;
 }
-
-
 
 .photoUpload {
   margin-left: 60%;
@@ -253,7 +193,7 @@ header {
   height: 50px;
   align-items: center;
   background-color: #d9eddf;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 섀도우 추가로 입체감 부여 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .uploadItem {
@@ -274,248 +214,5 @@ header {
   cursor: pointer;
   border-radius: 30px;
   border: 0 solid gray;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 섀도우 추가로 입체감 부여 */
-}
-
-
-/* 메인 콘텐츠 끝 */
-.modal-header{
-  flex-direction: column;
-}
-.bottom-navBar {
-  display: flex;
-  justify-content: center;
-  position: sticky;
-  bottom: 20px; /* 하단에서 15px 간격 */
-  width: 100%;
-  z-index: 1000; /* 하단 내비게이션 바가 다른 요소들 위에 표시되도록 함 */
-}
-
-.bottom-navBar .nav {
-  padding: 10px;
-  border-radius: 30px;
-  border: 0px solid darkgreen;
-  display: flex;
-  justify-content: space-around;
-  width: 55%;
-  height: 50px;
-  align-items: center;
-  background-color: #2cd37a;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 섀도우 추가로 입체감 부여 */
-}
-
-.item {
-  color: #f0f0f0; /* 밝은 회색으로 가독성 향상 */
-  font-size: 19px; /* 텍스트 크기 조절 */
-  text-decoration: none;
-  font-weight: 700;
-}
-
-.item:hover {
-  color: lightseagreen; /* 밝은 회색으로 가독성 향상 */
-  font-size: 19px; /* 텍스트 크기 조절 */
-  border-radius: 30px;
-}
-
-footer {
-  background-color: white;
-  width: 100%;
-  font-size: 13px;
-  border-top: 1px solid lightgrey;
-  display: flex;
-  align-items: center;
-  padding: 20px;
-  position: relative;
-}
-
-footer div {
-  margin-left: 30px;
-  margin-block-end: 30px;
-}
-
-.navbar .mx-auto {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40%;
-  height: 40px;
-}
-
-.btn-outline-success {
-  width: 90px;
-  height: 40px;
-}
-
-@media (max-width: 992px) {
-  .navbar .mx-auto {
-    position: static;
-    transform: none;
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-
-.container-fluid {
-  margin-top: 8px;
-}
-
-.nav-link {
-  border-bottom: 1px solid lightgrey;
-}
-
-.test{
-  width: 100px;
-  height: 100px;
-  background-color: tomato;
-}
-
-
-
-
-
-/*원희 작성*/
-.findaccount-main>*{
-  margin: 0;
-  padding: 0;
-  outline: none;
-}
-
-
-.logo>.logo-img{
-  height: 200px;
-  width: 200px;
-  margin: 50px auto;
-  align-items: center;
-  background-color: aliceblue;
-  text-align: center;
-  line-height: 200px;
-}
-
-.logo>.logo-img>img{
-  width: 100%;
-}
-
-.main>.main-text{
-  text-align: center;
-  margin: 50px auto;
-  font-size: 17px;
-  line-height: 60px;
-}
-
-.link-button{
-  height: 200px;
-  text-align: center;
-}
-
-.find{
-  display: inline-block;
-  height: 50px;
-  line-height: 50px;
-  width: 150px;
-  margin: 30px 30px;
-  background-color: #75daa4;
-  border: none;
-  border-radius: 30px;
-}
-
-
-
-.modal-title{
-  text-align: center;
-}
-.modal-title>img{
-  width: 40%;
-}
-
-.modal-footer>.btn{
-  margin: 0 auto;
-  width: 30%;
-}
-.modal-footer>.findA>.btn{
-	width: 100%
-}
-.modal-footer>.findA{
-	width: 30%
-}
-
-.modal-body form {
-  text-align: left;
-}
-
-
-.btn-point1{
-  background-color: #ffffff;
-  border: 2px solid #75daa4;
-  border-radius: 8px;
-  color: black;
-}
-.btn-point1:hover, .btn-point1:focus{
-  background-color: #75daa4;
-  border: 2px solid #75daa4;
-  border-radius: 8px;
-  color: #ffffff;
-}
-.check{
-  display: flex;
-  justify-content: space-between;
-}
-.check-btn{
-  margin-right: 5px;
-  width: 20%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.my-check-btn{
-  background-color: transparent;
-  border: 1px solid #75daa4;
-  border-radius: 5px;
-  width: 100%;
-  height: 20px;
-  font-size: 13px;
-}
-
-.agree-explain textarea{
-  width: 100%;
-  height: 100px;
-  font-size: 11.5px;
-}
-
-
-
-.valid{
-	display: block;
-	color: #61bb8b;
-}
-.invalid{
-	display: block;
-	color: red;
-}
-.none{
-	display: none;
-}
-.mb-3 .input-msg{
-	height: 24px;
-	line-height: 24px;
-}
-.mb-3 .input-msg .material-icons{
-	width:24px;
-	font-size: 24px;
-	vertical-align: middle;
-}
-.mb-3 .input-msg span{
-	font-size: 13px;
-}
-#authMsg{
-	font-size: 13px;
-}
-
-
-.input-item input{
-    border: none;
-	text-align: center;
-	border-bottom: 1px solid lightgray;
-}
-.input-item input:focus{
-	outline:none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
