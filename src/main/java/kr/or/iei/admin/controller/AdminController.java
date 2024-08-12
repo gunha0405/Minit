@@ -32,12 +32,11 @@ public class AdminController {
 		return "admin/warningMain";
 	}
 	
-	@GetMapping(value="/warningUser")
+	@GetMapping(value="/allUser")
 	public String warningUser(Model model) {
 		List list = userService.selectAllUser();
-		//System.out.println(list);
 		model.addAttribute("list", list);
-		return "admin/warningUser";
+		return "admin/allUser";
 	}
 	
 	@GetMapping(value="/textChangeCount")
