@@ -351,5 +351,37 @@ public class FeedDao {
 		return result;
 	}
 
+	public int feedCommentNo(int userFeedNo, int i) {
+		String query = "select feed_comment_no\r\n" + 
+				"from\r\n" + 
+				"(select rownum as rnum, n. * from ((select * from (select *from user_feed_comment where feed_ref=?) order by feed_comment_no)n))\r\n" + 
+				"join user_tbl on (feed_comment_writer = user_id) \r\n" + 
+				"where rnum = ?";
+		Object[] params = {userFeedNo, i+1};
+		int commentNo = jdbc.queryForObject(query, Integer.class, params);
+		return commentNo;
+	}
+
+	public int feedCommentLikeNum(int feedCommentNo, int userNo) {
+		String query = "select count(*) from USER_FEED_COMMENT_LIKE where user_no=? and feed_comment_no =?";
+		Object[] params = {userNo, feedCommentNo};
+		int isLike = jdbc.queryForObject(query, Integer.class, params);
+		return isLike;
+	}
+
+	public int commentLike(int userFeedNo, int userNo) {
+		String query = "insert into USER_FEED_COMMENT_LIKE values (?,?)";
+		Object[] params = {userFeedNo, userNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+	public int feedLikeCancel(int feedCommentNo, int userNo) {
+		String query = "delete from user_feed_comment_like where user_no=? and feed_comment_no=?";
+		Object[] params = {userNo, feedCommentNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
 
 }
