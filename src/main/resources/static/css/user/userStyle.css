@@ -58,6 +58,13 @@
   border-radius: 8px;
   color: #ffffff;
 }
+
+.my-info-wrap{
+	border: 2px solid #75daa4;
+	border-radius: 20px;
+	padding: 30px;
+	margin-bottom: 10px;
+}
 /*
 .wh-btn a{
   color: black;
@@ -142,7 +149,9 @@
 	width: 100%;
 }
 .info-tbl td>.basic-img>img{
-  width: 40%;
+  width: 200px;
+  height:200px;
+  /* width: 40%;*/
   margin: 0 auto;
 }
 .info-tbl td>#img-viewer>img{
@@ -280,8 +289,13 @@
 }
 .img-show{
 	display: block;
+	width: 100%;
 }
-
+.img-wrapper{
+	width: 200px;
+	height: 200px;
+	margin-left: 210px;
+}
 
 /*유효성 확인 메시지*/
 .valid{
@@ -385,7 +399,7 @@
 }
 
 .link-button{
-  height: 200px;
+  height: 120px;
   text-align: center;
 }
 

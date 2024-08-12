@@ -124,60 +124,37 @@ public class AdminController {
 			return "common/msg";
 		}
 	}
-	/*
-	@GetMapping(value="/changeCount")
+	
+	
+	
+	@GetMapping(value="/changeLevel")
 	public String changeCount(User u, Model model) {
-		int result = userService.changeCount(u);
-		if(result == 2){
-			model.addAttribute("title", "경고 성공");
-			model.addAttribute("msg", "누적 경고가  5회를 달성하여 해당 회원이 정지되었습니다. ");
-			model.addAttribute("icon","warning");
-			model.addAttribute("loc", "/admin/warningUser");
-			return "common/msg";
-		}else if(result == 1){
-			model.addAttribute("title", "경고 성공");
-			model.addAttribute("msg", "경고 횟수가 누적되었습니다.");
-			model.addAttribute("icon","success");
-			model.addAttribute("loc", "/admin/warningUser");
-			return "common/msg";
+		int result = userService.changeLevel(u);
+		if(result>0) {
+			return "redirect:/admin/allUser";
 		}else {
-			model.addAttribute("title", "경고 실패");
-			model.addAttribute("msg", "개발자에게 문의하세요.");
-			model.addAttribute("icon","error");
-			model.addAttribute("loc", "/admin/warningUser");
+			model.addAttribute("title", "등급 변경 실패");
+			model.addAttribute("msg", "개발자에게 문의하세요");
+			model.addAttribute("icon", "warning");
+			model.addAttribute("loc", "admin/allMember");
 			return "common/msg";
 		}
 	}
-	*/
 	
-	
-	
-	/*
-	@GetMapping(value="/checkedChangeCount")
-	public String checkedChangeCount(String no, String count, Model model) {
-		//System.out.println(no);
-		//System.out.println(count);
-		int result = userService.checkedChangeCount(no, count);
-		if(result == 2){
-			model.addAttribute("title", "경고 성공");
-			model.addAttribute("msg", "누적 경고가  5회를 달성하여 정지된 회원이 있습니다. ");
-			model.addAttribute("icon","warning");
-			model.addAttribute("loc", "/admin/warningUser");
-			return "common/msg";
-		}else if(result == 1){
-			model.addAttribute("title", "경고 성공");
-			model.addAttribute("msg", "경고 횟수가 누적되었습니다.");
-			model.addAttribute("icon","success");
-			model.addAttribute("loc", "/admin/warningUser");
-			return "common/msg";
+	@GetMapping(value="/checkedChangeLevel")
+	public String checkedChangeCount(String no, String level, Model model) {
+		boolean result = userService.checkedChangeLevel(no,level);
+		if(result) {
+			return "redirect:/admin/allUser";
 		}else {
-			model.addAttribute("title", "경고 실패");
-			model.addAttribute("msg", "개발자에게 문의하세요.");
-			model.addAttribute("icon","error");
-			model.addAttribute("loc", "/admin/warningUser");
+			model.addAttribute("title", "등급 변경 실패");
+			model.addAttribute("msg", "개발자에게 문의하세요");
+			model.addAttribute("icon", "warning");
+			model.addAttribute("loc", "admin/allMember");
 			return "common/msg";
 		}
 	}
+	
 	/*
 	@GetMapping(value="/checkedChangeCount")
 	public String checkedChangeCount(String no, String count, Model model) {

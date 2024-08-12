@@ -18,13 +18,17 @@
                 <div class="warning-wrapper">
                     <table class="warnnig-tbl">
                         <tr>
-                            <th style="width: 5%"></th>
-                            <th style="width: 10%">회원번호</th>
-                            <th style="width: 25%">아이디</th>
-                            <th style="width: 30%">사용자이름</th>
-                            <th style="width: 15%">경고 횟수</th>
-                            <th style="width: 20%">경고주기</th>
-                        </tr>
+							<th style="width:5%">선택</th>
+							<th style="width:5%">번호</th>
+							<th style="width:10%">아이디</th>
+							<th style="width:10%">이름</th>
+							<th style="width:10%">사용자이름</th>
+							<th style="width:15%">이메일</th>
+							<th style="width:14%">가입일</th>
+							<th style="width:8%">경고</th>
+							<th style="width:10%">회원등급</th>
+							<th style="width:13%">등급변경</th>
+						</tr>
                         <tr th:each="u : ${list}">
                             <td>
                                 <input type="checkbox" class="chk" >
@@ -32,14 +36,36 @@
                             <td th:text="${u.userNo}"></td>
                             <td th:text="${u.userId}"></td>
                             <td th:text="${u.userName}"></td>
+                            <td th:text="${u.userNick}"></td>
+                            <td th:text="${u.userEmail}"></td>
+                            <td th:text="${u.createDate}"></td>
                             <td th:text="${u.warningCount}"></td>
                             <td>
-                            	<button class="warn-btn wh-btn">경고</button>
+                            	<div class="select" th:switch="${u.userLevel}">
+									<select th:case="1">
+										<option value="1" selected>관리자</option>
+										<option value="2">회원</option>
+										<option value="3">정지회원</option>
+									</select>
+									<select th:case="2">
+										<option value="1">관리자</option>
+										<option value="2" selected>회원</option>
+										<option value="3">정지회원</option>
+									</select>
+									<select th:case="3">
+										<option value="1">관리자</option>
+										<option value="2">회원</option>
+										<option value="3" selected>정지회원</option>
+									</select>
+								</div>
                             </td>
+                            <td>
+								<button class="changeLevel-btn wh-btn">등급변경</button>
+							</td>
                         </tr>
                         <tr>
-                            <td colspan="6">
-                                <button class="checked-warn-btn">선택회원경고</button>
+                            <td colspan="10">
+                                <button class="checked-changeLevel-btn btn-point2" style="width: 80%; height: 35px;">선택회원 일괄 등급변경</button>
                             </td>
                         </tr>
                     </table>
@@ -48,33 +74,33 @@
             </section>
           </div>
           <script>
-          	$(".warn-btn").on("click",function(){
+          	$(".changeLevel-btn").on("click",function(){
           		//클릭한 버튼 기준으로 해당 행의 회원 번호를 가지고 오는 작업
         		const userNo = $(this).parent().parent().children().eq(1).text();
-          		//console.log(userNo);
-          		const warningCount = $(this).parent().prev().text();
-          		//console.log(warningCount);
-          		location.href="/admin/changeCount?userNo="+userNo+"&warningCount="+warningCount;
+          		const userLevel = $(this).parent().prev().children().children().val();
+          		console.log(userNo);
+          		console.log(userLevel);
+          		location.href="/admin/changeLevel?userNo="+userNo+"&userLevel="+userLevel;
           		
           	});
-          	$(".checked-warn-btn").on("click",function(){
+          	$(".checked-changeLevel-btn").on("click",function(){
           		const check = $(".chk:checked");
           		//console.log(check.length);
           		if(check.length == 0){
           			return;//선택된 회원 없으면 종료
           		}
           		const no = new Array();//체크회원 번호 모두 저장
-          		const count = new Array();//체크회원 경고횟수 모두 저장
+          		const level = new Array();//체크회원 경고횟수 모두 저장
           		check.each(function(index,item){
           			const userNo = $(item).parent().next().text();
           			no.push(userNo);
-          			const warningCount = $(item).parent().next().next().next().next().text();
-          			count.push(warningCount);
+          			const userLevel = $(item).parent().parent().find("select").val();
+          			level.push(userLevel);
           		});
           		console.log(no);
-          		console.log(count);
+          		console.log(level);
           		
-          		location.href="/admin/checkedChangeCount?no="+no.join("/")+"&count="+count.join("/");
+          		location.href="/admin/checkedChangeLevel?no="+no.join("/")+"&level="+level.join("/");
           	});
           </script>
 	<th:block th:include="common/footer"></th:block>

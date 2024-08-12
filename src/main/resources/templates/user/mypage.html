@@ -23,16 +23,18 @@
                                 <th>프로필 사진</th>
                                 <td width= 530px;>
                                 <input type="hidden" name="imgtype" id="imgtype" value="0">
+                                <div class="img-wrapper">
                                   <div class="basic-img">
                                   	<input type="hidden" name="userImg" th:value="${session.user.userImg}"/>
 	                                <img class="img-show" th:src="${'/user/'+session.user.userImg}">                               
                                   </div>
 	                              <div id="img-viewer" class="img-none">
-	                                <img id="img-view">
+	                                <img class="img-show" id="img-view">
 	                              </div>
 	                              <div class="logo-img img-none">
-	                                <img class="img-show logo" style="width: 40%; margin: 0 auto;"src="/user/minit_logo.png">                               
+	                                <img class="img-show logo" src="/user/minit_logo.png">                               
                                   </div>
+                                </div>
                                 </td>
                                 <td>
                                   <label for="upfile" class="wh-btn img-change-btn">변경
@@ -80,7 +82,7 @@
                                 </th>
                                 <td colspan="2">
                                   <div class="input-item">
-                                    <input type="text" name="userInfo" id="userInfo" th:value="${session.user.userInfo}" placeholder="소개글 입력란">
+                                    <input type="text" name="userInfo" id="userInfo" th:value="${session.user.userInfo}" placeholder="소개글 입력란" style="width: 80%;">
                                   </div>
                                 </td>
                             </tr>
@@ -325,8 +327,8 @@
 	    		console.log(required);
 	    		if(required != 3){
 	    			swal({
-	    		        title: "입력값 확인",
-	    		        text: "입력값을 확인해주세요.",
+	    		        title: "입력값 확인 및 비밀번호 확인란 작성",
+	    		        text: "입력값을 확인하고 비밀번호 확인란까지 작성해주세요.",
 	    		        icon: "warning",
 	    		        closeOnClickOutside : false
 	    		      });		

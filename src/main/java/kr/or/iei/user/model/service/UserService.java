@@ -47,19 +47,6 @@ public class UserService {
 		return result;
 	}
 
-	/*
-	public int selectUserNo(String userId) {
-		int userNo = userDao.selectUserNo(userId);
-		return userNo;
-	}
-	
-	@Transactional
-	public int insertUserImg(int userNo) {
-		int result = userImgDao.insertUserImg(userNo);
-		return result;
-	}
-	*/
-
 	@Transactional
 	public int updateUserAll(User u) {
 		int result = userDao.updateUserAll(u);
@@ -134,6 +121,33 @@ public class UserService {
 		}
 		return result;
 	}
+	
+	@Transactional
+	public int changeLevel(User u) {
+		int result = userDao.changeLevel(u);
+		return result;
+	}
+
+	@Transactional
+	public boolean checkedChangeLevel(String no, String level) {
+		StringTokenizer sT1 = new StringTokenizer(no, "/");
+		StringTokenizer sT2 = new StringTokenizer(level, "/");
+		boolean result = true;
+		while(sT1.hasMoreTokens()) {
+			int userNo = Integer.parseInt(sT1.nextToken());
+			int userLevel = Integer.parseInt(sT2.nextToken());
+			User u = new User();
+			u.setUserNo(userNo);
+			u.setUserLevel(userLevel);
+			int intResult = userDao.changeLevel(u);
+			if(intResult == 0) {
+				result = false;
+				break;
+			}
+		}
+		return result;
+	}
+	
 
 
 	/*

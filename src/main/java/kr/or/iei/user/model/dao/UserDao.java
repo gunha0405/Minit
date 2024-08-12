@@ -214,6 +214,11 @@ public class UserDao {
 		return result;
 	}
 
-
+	public int changeLevel(User u) {
+		String query = "update user_tbl set user_level=? where user_no=?";
+		Object[] params = {u.getUserLevel(),u.getUserNo()};
+		int result = jdbc.update(query,params);
+		return result;
+	}
 
 }
