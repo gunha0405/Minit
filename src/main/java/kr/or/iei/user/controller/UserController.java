@@ -175,7 +175,7 @@ public class UserController {
 	@GetMapping(value="/delete")
 	public String deleteUser(@SessionAttribute User user, Model model) {
 		int result = userService.deleteUser(user);
-		if(result > 0) {
+		if(result == 2) {
 			model.addAttribute("title", "탈퇴완료");
 			model.addAttribute("msg", "그동안 MINIT과 함께 해주셔서 감사했습니다.");
 			model.addAttribute("icon", "success");			

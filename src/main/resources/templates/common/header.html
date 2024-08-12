@@ -100,7 +100,9 @@
                   <div class="modal-title" id="loginModalLabel">
                     <img src="/image/logo/minit_logo.png">
                   </div>
-                  <span>로그인</span>
+                  <div>
+	                  <span>로그인</span>
+                  </div>
                 </div>
                 <div class="modal-body">
                   <form action="/user/login" method="post" autocomplete="off">
@@ -202,6 +204,10 @@
                         <div class="input-msg email-check-msg-same none">
                         	<span class="material-icons">info_outline</span>
                         	<span>이미 가입된 이메일입니다. 다른 이메일을 사용해주세요.</span>                      	
+                        </div>
+                        <div class="input-msg email-check-msg-cancel none">
+                        	<span class="material-icons">info_outline</span>
+                        	<span>탈퇴한지 30일이 지나지 않은 회원의 이메일입니다. 30일이 지나고 다시 찾아와주세요</span>                      	
                         </div>
                       <div id="auth" class="input-item" style="display:none;">
 						<input type="text" id="authCode" placeholder="인증번호입력">

@@ -76,12 +76,8 @@ public class UserService {
 	
 	@Transactional
 	public int deleteUser(User user) {
-		int result = userDao.deleteUser(user);
-		/*
-		UserImg userImgParam = new UserImg();
-		userImgParam.setUserId(user.getUserId());
-		userImgDao.deleteUserImg(userImgParam);
-		*/
+		int result = userDao.delInsertUser(user);
+		result += userDao.deleteUser(user);
 		return result;
 	}
 
