@@ -15,4 +15,5 @@ public class FeedComment {
 	private String feedCommentWriter;//글쓴 유저
 	private String userId;
 	private String userImg;
+	private int isLike;
 }
