@@ -64,11 +64,16 @@
 				<tr class="icons-row">
 					<td colspan="2">
 						<div class="left-icons">
-							<span class="material-icons toggle-icon" id="icon">bookmark_border</span>
-							<span class="material-icons toggle-icon" id="icon">favorite_border</span>
+							<span class="material-icons toggle-icon" id="icon">bookmark_border</span>							
+							<span th:if="${session.user.userId != feed.userFeedWriter && feed.isLike == -1}" class="material-icons toggle-icon" id="icon" th:attr="data-is-like=${feed.isLike}"  th:onclick="feedLike(this,[[${feed.userFeedNo}]])">favorite_border</span>
+							<span th:if="${session.user.userId != feed.userFeedWriter && feed.isLike == 0}" class="material-icons toggle-icon" id="icon" th:attr="data-is-like=${feed.isLike}"  th:onclick="feedLike(this,[[${feed.userFeedNo}]])">favorite_border</span>
+							<span th:if="${session.user.userId != feed.userFeedWriter && feed.isLike == 1}" class="material-icons toggle-icon" id="icon" th:attr="data-is-like=${feed.isLike}"  th:onclick="feedLike(this,[[${feed.userFeedNo}]])">favorite</span>		
 						</div>
 					</td>
-					<td><span class="material-icons toggle-icon" id="icon">report_gmailerrorred</span>
+					<td>
+					<span th:if="${feed.isReport == -10}" class="material-icons toggle-icon" id="icon"  th:onclick="feedReport(this,[[${feed.userFeedNo}]])">report_gmailerrorred</span>
+					<span th:if="${session.user.userId != feed.userFeedWriter && feed.isReport == 0}" class="material-icons toggle-icon" id="icon" th:value="${feed.isReport}" th:onclick="feedReport(this,[[${feed.userFeedNo}]])">report_gmailerrorred</span>
+					<span th:if="${session.user.userId != feed.userFeedWriter && feed.isReport == 1}" class="material-icons toggle-icon" id="icon" th:value="${feed.isReport}" th:onclick="feedReport(this,[[${feed.userFeedNo}]])">report</span>
 					</td>
 				</tr>
 				<tr class="peed-content">
@@ -76,7 +81,7 @@
 				</tr>
 				<tr>
 					<td colspan="3" class="chat-icon">
-					<span class="material-icons" id="icon">add_comment</span></td>
+					<span class="material-icons" id="icon" onclick="toggle(this)">add_comment</span></td>
 				</tr>
 			</table>
 		</div>
@@ -107,34 +112,33 @@
 			<table>
 				<tr>
 					<td style="width: 10%;"><a href="#">
-					<img src="user/${fc.userImg}" alt="${fc.userFeedWriter}" class="comment-user"></a>
+						<img src="user/${fc.userImg}" alt="${fc.userFeedWriter}" class="comment-user"></a>
 					</td>
-					<td style="width: 70%;"><span th:text="${fc.feedCommentContent}"></span></td>
-					<td style="width: 10%;">
-						<th:block th:if="feed.feedCommentWriter != ${session.user.userId}">
-						<span class="material-icons toggle-icon" id="icon-favorite">favorite_border</span>
-						<span class="material-icons toggle-icon" id="icon-report">report_gmailerrorred</span>
-						</th:block>
-						<th:block th:if="feed.feedCommentWriter == ${session.user.userId}">
-						<span class="material-icons toggle-icon" id="icon-more">more_vert</span>
-						</th:block>
+					<td  colspan="2" style="width: 75%;">
+						<span th:text="${fc.feedCommentContent}"></span>
 					</td>
-					<td style="width: 10%;">
-					<!-- 로그인한 유저에게만 보이기  -->
-						<div>
-							<span class="material-icons">edit_document</span> 
-							<span class="material-icons">folder_delete</span>
-						</div>
+					<td style="width: 15%;">
+						<th:block th:if="${fc.feedCommentWriter} != ${session.user.userId}">
+							<span class="material-icons toggle-icon" id="icon-favorite" >favorite_border</span>						</th:block>
+						<th:block th:if="${fc.feedCommentWriter} == ${session.user.userId}">
+						<span class="material-icons" onclick="updateHidden(this)" >edit_document</span> 
+						<span class="material-icons" th:onclick="feedCommentDelete(this,[[${fc.feedCommentNo}]])">folder_delete</span>
+						</th:block>
 					</td>
 				</tr>	
-				<tr class="edit-comment-box">
-            		<td colspan="4">
-               			 <textarea class="edit-comment-input" th:utext="${fc.feedCommentContent}"></textarea>
-               			 <button class="btn-update">저장</button>
-               			 <button class="btn-delete">취소</button>
-           			 </td>
+				<tr class="edit-comment-box hidden" >
+            		<td colspan="1" style="width: 70%;">
+            			 <textarea name="feedCommentContent" class="feedCommentContent" th:utext="${fc.feedCommentContent}"></textarea>
+               		</td>
+               		<td colspan="1" style="width: 15%;">
+               			 <button class="btn-primary" th:onclick="commentUpdateBtn(this, [[${fc.feedCommentNo}]])">저장</button>
+               		</td>
+               		<td colspan="1" style="width: 15%;">
+               			 <button class="btn-primary" onclick="commentUpdateCancleBtn(this)">취소</button>
+               		</td>
 				</tr>
 			</table>
+		</th:block>			
 		</div>
 		<!-- 수정 / 삭제 버튼 : 로그인한 유저의 글에만 보임-->
 		<div class="btn-wrap">
@@ -143,8 +147,7 @@
 					<button class="button-style" th:if="${session.user.userId == feed.userFeedWriter}" th:onclick="feedUpdate([[${feed.userFeedNo}]],[[${feed.userFeedWriter}]])">수정</button> 
 				</li>
 				<li>
-					<button class="button-style"
-						th:if="${session.user.userId == feed.userFeedWriter}" th:onclick="feedDelete([[${feed.userFeedNo}]])">삭제</button>
+					<button class="button-style" th:if="${session.user.userId == feed.userFeedWriter}" th:onclick="feedDelete([[${feed.userFeedNo}]])">삭제</button>
 				</li>
 			</ul>
 		</div>
@@ -152,14 +155,192 @@
 	</div>
 
 
-	<script src="/js/feed/view.js"></script>
 	<script>
-	$(".btn-delete").on("click", function(){
-		$()
-	})
-	$("#icon-more").on("click", function() {
-	    $('#icon-container').toggleClass('hidden');
-	});
+	function feedLike(element,userFeedNo){
+		const isLike = $(element).data('is-like');
+		console.log(isLike);
+	    if (isLike == -1) {
+	        swal({
+	        	 title: "로그인 필요",
+                 text: "로그인 후 이용해 주세요",
+                 icon: "info"
+	        });
+	    } else if(isLike == 1){
+	         $.ajax({
+	              url: "/feed/isLikeCancel",
+	              type: "post",
+	              data: {
+	                  userFeedNo: userFeedNo
+	              },
+	              success: function(data) {
+	                   $(element).text('favorite_border');
+	                   $(element).data('is-like', 0); // 실제 HTML의 data-is-like 속성 업데이트
+	              },
+	              error: function() {
+	                   swal({
+	                      title: "서버 연결 실패",
+	                      text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+	                      icon: "warning"
+	                   });
+	                }
+	         });
+	    } else if(isLike == 0){
+	    	 $.ajax({
+	              url: "/feed/isLike",
+	              type: "post",
+	              data: {
+	                  userFeedNo: userFeedNo
+	              },
+	              success: function(data) {
+	                   $(element).text('favorite');
+	                   $(element).data('is-like', 1); // 실제 HTML의 data-is-like 속성 업데이트
+	                },
+	               error: function() {
+	                   swal({
+	                      title: "서버 연결 실패",
+	                      text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+	                      icon: "warning"
+	                   });
+	                }
+	         });
+	    }
+	}
+	
+	function feedReport(element,userFeedNo){
+		const isReport = $(element).val();
+	    if (isReport == 1) {
+	        swal({
+	            title: "이미 신고된 게시물입니다.",
+	            text: "신고 조치중 입니다. 잠시만 기다려 주세요.",
+	            icon: "warning"
+	        });
+	    } else if(isReport == -1) {
+	    	swal({
+	            title: "이미 신고된 게시물입니다.",
+	            text: "신고 조치중 입니다. 잠시만 기다려 주세요.",
+	            icon: "warning"
+	        });
+	    }
+	    else {
+	        swal({
+	            title: "신고",
+	            text: "해당 게시물을 신고하시겠습니까?",
+	            icon: "warning",
+	            buttons: {
+	                cancel: {
+	                    text: "취소",
+	                    value: false,
+	                    visible: true,
+	                    className: "btn-secondary",
+	                    closeModal: true
+	                },
+	                confirm: {
+	                    text: "신고",
+	                    value: true,
+	                    visible: true,
+	                    className: "btn-point",
+	                    closeModal: true
+	                }
+	            }
+	        }).then(function(isConfirm) {
+	            if (isConfirm) {
+	                $.ajax({
+	                    url: "/feed/reportFeed",
+	                    type: "post",
+	                    data: {
+	                        userFeedNo: userFeedNo
+	                    },
+	                    success: function(data) {
+	                        if (data == -10) {
+	                            swal({
+	                                title: "로그인 필요",
+	                                text: "로그인 후 이용해 주세요",
+	                                icon: "info"
+	                            });
+	                        } else if (data == 1) {
+	                            swal({
+	                                title: "신고 성공",
+	                                text: "신고가 접수되었습니다.",
+	                                icon: "success"
+	                            });
+	                            $(element).text('report');
+	                            $(element).val(1);
+	                        } else {
+	                            swal({
+	                                title: "신고 실패",
+	                                text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+	                                icon: "warning"
+	                            });
+	                        }
+	                    },
+	                    error: function() {
+	                        swal({
+	                            title: "서버 연결 실패",
+	                            text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+	                            icon: "warning"
+	                        });
+	                    }
+	                });
+	            }
+	        });
+	    }
+	}
+	
+	function commentUpdateBtn(element, feedCommentNo){
+	    const updatedContent = $(element).closest('tr').find('.feedCommentContent').val();
+		 $.ajax({
+		      url: '/feed/commentUpdate', // 서버의 댓글 처리 URL 
+		      type: 'post',
+		      data: {
+		    	  feedCommentNo : feedCommentNo,
+		    	  updatedContent : updatedContent
+		      },
+		      success: function(data) {
+		    	  const commentRow = element.closest('tr');
+		          const targetRow = commentRow.previousElementSibling;
+		          const spanToUpdate = targetRow.querySelector('span');
+		          spanToUpdate.textContent = updatedContent;
+		            $(element).closest('tr').addClass('hidden'); // 수정창 숨기기
+		      },
+		      error: function() {
+		          alert('댓글수정 실패. 관리자에게 문의 해주세요.');
+		      }
+		});
+	}
+	function feedCommentDelete(element, feedCommentNo){
+		//console.log(feedCommentNo);
+		 $.ajax({
+		      url: '/feed/feedCommentDelete', // 서버의 댓글 처리 URL 
+		      type: 'post',
+		      data: {
+		    	  feedCommentNo : feedCommentNo
+		      },
+		      success: function(data) {
+				$(element).parent().parent().parent().remove();
+		      },
+		      error: function() {
+		          alert('댓글수정 실패. 관리자에게 문의 해주세요.');
+		      }
+		});
+	}
+	
+	function updateHidden(element){
+		   // 클릭한 버튼의 상위 tr 요소를 찾습니다.
+	    const commentRow = $(element).closest('tr');
+
+	    // 그 tr 요소의 다음 tr 요소에서 edit-comment-box 클래스를 가진 첫 번째 요소를 찾습니다.
+	    const editCommentBox = commentRow.nextAll('.edit-comment-box').first();
+
+	    // 수정창을 토글합니다.
+	    editCommentBox.toggleClass('hidden');
+	}
+	function commentUpdateCancleBtn(element) {
+	    $(element).parent().parent().toggleClass("hidden");
+	}
+	
+	function toggle(element) {
+	    $(".inputCommentBox").toggleClass("hidden");
+	}
 	
 	$(document).on("click", ".sendComment", function(){
 		  const feedCommentContent = $(".feedCommentContent").val();
@@ -187,25 +368,33 @@
 		          // 성공적으로 댓글이 저장된 후 댓글 목록을 갱신하거나, 댓글을 추가
 		          $(".comment-wrap").prepend(`
 		        		  <tr>
-							<td style="width: 10%;"><a href="/feed/myPage/userFeedWriter=${data.feedCommentWriter}">
-							<img src="/user/${data.userImg}" alt="" class="comment-user"></a>
+							<td style="width: 10%;">
+								<a href="/feed/myPage/userFeedWriter=${data.feedCommentWriter}">
+								<img src="/user/${data.userImg}" alt="" class="comment-user"></a>
 							</td>
-							<td style="width: 70%;"><span>${data.feedCommentContent}</span></td>
-							<td style="width: 20%;"><span
-								class="material-icons toggle-icon" id="icon-favorite">favorite_border</span>
-								<!--댓글 주인이 아닌 유저에게는 신고하기 버튼--> <!-- <span class="material-icons toggle-icon" id="icon-report">report_gmailerrorred</span> -->
-								<!-- 댓글 주인에게는 수정/삭제 버튼 점세개 누르면 옆으로 나오게 --> <span
-								class="material-icons toggle-icon" id="icon-more">more_vert</span>
+							<td style="width: 75%;">
+								<span>${data.feedCommentContent}</span>
+							</td>
+							<td style="width: 15%;">
+								<span class="material-icons" onclick="updateHidden(this)" >edit_document</span> 
+								<span class="material-icons" th:onclick="feedCommentDelete(this,${data.feedCommentNo})">folder_delete</span>
 							</td>
 							<td>
 								<div id="icon-container" class="hidden">
-									<span class="material-icons">edit_document</span> <span
-										class="material-icons">folder_delete</span>
+								<span class="material-icons">folder_delete</span>
 								</div>
-
-							</td>
 							</td>
 						</tr>
+						<tr class="edit-comment-box hidden" >
+	            			<td colspan="2" style="width: 50%;">
+	            				 <textarea name="feedCommentContent" class="feedCommentContent" th:utext="${data.feedCommentContent}"></textarea>
+	               			</td>
+	               			<td colspan="2" style="width: 50%;">
+	               				 <button class="btn-primary" th:onclick="commentUpdateBtn(this,${data.feedCommentNo})">저장</button>
+	               				 <button class="btn-primary" onclick="commentUpdateCancleBtn(this)">취소</button>
+	               			</td>
+						</tr>
+						
 		          `);
 		          $(".feedCommentContent").val(''); // 댓글 입력 필드 비우기
 		      },
@@ -214,6 +403,93 @@
 		      }
 		 })
 	});
+	function feedUpdate(userFeedNo, userFeedWriter){
+		swal({
+            title:"게시글 수정",
+            text :"게시글을 수정하시겠습니까?",
+            icon :"info",
+            buttons:{
+                cancel:{
+                    text:"취소",
+                    value:false,
+                    visible:true,
+                    className:"btn-secondary",
+                    closeModal:true
+                },
+                confirm:{
+                    text:"확인",
+                    value:true,
+                    visible:true,
+                    className:"btn-point",
+                    closeModal:true
+                }
+            }
+        }).then(function(isConfirm){
+            if(isConfirm){
+            	console.log(userFeedNo);
+            	console.log(userFeedWriter);
+                location.href="/feed/updateFrm?userFeedWriter="+userFeedWriter+"&userFeedNo="+userFeedNo;
+            }   
+        });
+	}
+	
+	function feedDelete(userFeedNo) {
+		swal({
+            title:"게시글 삭제",
+            text :"게시글을 삭제하시겠습니까?",
+            icon :"warning",
+            buttons:{
+                cancel:{
+                    text:"취소",
+                    value:false,
+                    visible:true,
+                    className:"btn-secondary",
+                    closeModal:true
+                },
+                confirm:{
+                    text:"삭제",
+                    value:true,
+                    visible:true,
+                    className:"btn-point",
+                    closeModal:true
+                }
+            }
+        }).then(function(isConfirm){
+            if(isConfirm){
+                location.href="/feed/delete?userFeedNo="+userFeedNo;
+            }   
+        });
+	}
+	
+document.addEventListener('DOMContentLoaded', () => {
+    const slides = document.querySelector('.slides-img');
+    const slideCount = document.querySelectorAll('.slide-img').length;
+    let index = 0;
+
+    function showSlide(newIndex) {
+        if (newIndex >= slideCount) {
+            index = 0;
+        } else if (newIndex < 0) {
+            index = slideCount - 1;
+        } else {
+            index = newIndex;
+        }
+        slides.style.transform = `translateX(${-index * 100}%)`;
+    }
+
+    function prevSlide() {
+        showSlide(index - 1);
+    }
+
+    function nextSlide() {
+        showSlide(index + 1);
+    }
+
+    // Assign functions to buttons
+    document.querySelector('.prev-img').addEventListener('click', prevSlide);
+    document.querySelector('.next-img').addEventListener('click', nextSlide);
+});
+
 	</script>
 	<th:block th:include="common/footer"></th:block>
 </body>

@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,9 +49,19 @@ public class FeedController {
 
 	//feed-view 개인 회원 피드 페이지 
 	@GetMapping(value = "/view")
-	public String view(int userFeedNo, Model model) {
+	public String view(int userFeedNo, Model model, @SessionAttribute User user) {
 		//해당 글 유저의 정보와 사진 파일리스트
+		int reportCount = -1;
+		int likeCount =-1;
+		int UserNo = user.getUserNo();
+		String userId = user.getUserId();
+		if(user != null) {
+			reportCount = feedService.isReport(userFeedNo, UserNo);
+			likeCount = feedService.isLike(userFeedNo, userId);
+		}
 		Feed feed = feedService.selectUserOneFeed(userFeedNo); 
+		feed.setIsReport(reportCount);
+		feed.setIsLike(likeCount);
 		model.addAttribute("feed", feed);
 		model.addAttribute("list", feed.getFeedList());
 		return "feed/view";
@@ -130,7 +141,7 @@ public class FeedController {
 	public String feedWirte(Feed f, MultipartFile upfile1, MultipartFile upfile2, MultipartFile upfile3, Model model) {
 			String savepath = root + "/feed/";
 			List<FeedFile> fileList = new ArrayList<FeedFile>();
-			MultipartFile[] upfile = { upfile1, upfile2, upfile3 };
+			MultipartFile[] upfile = { upfile1, upfile2, upfile3 }; 
 			for (MultipartFile file : upfile) {
 				if (!file.isEmpty()) {
 					// 파일경로 복사, 중복된 이름 있으면 인덱스 작업
@@ -283,7 +294,7 @@ public class FeedController {
 	@PostMapping(value="/userFollowCancel")
 	public int userFollowCancel(String loginUser, String writerUser) {
 		int num = feedService.userFollowCancel(loginUser, writerUser);
-		System.out.println("userFollowCancel");
+		//System.out.println("userFollowCancel");
 		return num;
 	}
 
@@ -291,7 +302,56 @@ public class FeedController {
 	@PostMapping(value="/userFollow")
 	public int userFollow(String loginUser, String writerUser) {
 		int num = feedService.userFollow(loginUser, writerUser);
-		System.out.println("userFollow="+num);
+		//System.out.println("userFollow="+num);
 		return num;
+	}
+	
+	@ResponseBody
+	@PostMapping(value="/feedCommentDelete")
+	public int feedCommentDelete(int feedCommentNo) {
+		System.out.println(feedCommentNo);
+		int result = feedService.feedCommentDelete(feedCommentNo);
+		return result;
+	}
+	@ResponseBody
+	@PostMapping(value="/commentUpdate")
+	public int commentUpdate(int feedCommentNo, String updatedContent ) {
+		int result = feedService.feedCommentUpdate(feedCommentNo, updatedContent);
+		return result;
+	}
+	
+	@ResponseBody
+	@PostMapping(value="/reportFeed")
+	public int reportFeed(int userFeedNo, @SessionAttribute(required =false) User user) {
+		//System.out.println("userFeedNo"+userFeedNo);
+		 if (user == null) {
+		     return -10; // 로그인하지 않은 경우
+		}else {
+		    int userNo = user.getUserNo();
+		    int result = feedService.reportFeed(userFeedNo, userNo);
+		    return result;
+		}
+	}
+	@ResponseBody
+	@PostMapping(value="/isLike")
+	public int isLike(int userFeedNo, @SessionAttribute(required =false) User user) {
+		if(user == null) {
+			return -1;
+		}else {
+		    String userId = user.getUserId();
+		    int result = feedService.feedLike(userFeedNo, userId);
+		    return result;
+		}
+	}
+	@ResponseBody
+	@PostMapping(value="/isLikeCancel")
+	public int isLikeCancel(int userFeedNo, @SessionAttribute(required =false) User user) {
+		if(user == null) {
+			return -1;
+		}else {
+		    String userId = user.getUserId();
+		    int result = feedService.feedLikeCancel(userFeedNo, userId);
+		    return result;
+		}
 	}
 }

@@ -23,7 +23,7 @@ body {
 .wrapper section {
   flex: 1;
   position: relative; /* section 요소를 상대적으로 배치 */
-  width: 1100px; /* 고정된 너비 설정 */
+  width: 100%;
   max-width: 1100px;
   overflow: auto;
   margin-top: 5px;
@@ -33,8 +33,6 @@ body {
   align-items: center;
   flex-direction: column;
   flex-grow: 1;
-  /* 부모 요소가 전체 높이를 가지도록 설정 */
-  flex: 1; /* 스크롤바가 생기도록 설정 */
 }
 
 header {
@@ -43,11 +41,6 @@ header {
   top: 0;
   width: 100%;
   z-index: 1000; /* header가 다른 요소들 위에 표시되도록 함 */
-}
-
-.dropDownMenu {
-  margin-top: 10px;
-  background-color: white;
 }
 
 .navbar-expand-lg {
@@ -76,26 +69,16 @@ header {
 #columns figure img {
   width: 100%;
 }
-#columns figure figcaption {
-  border-top: 1px solid rgba(0, 0, 0, 0.2);
-  padding: 10px;
-  margin-top: 11px;
-}
-
-.carText {
-  font-size: 30px;
-  font-weight: 700;
-}
 
 .article-container {
   max-width: 900px;
-  width: 1200px; /* 고정된 너비 설정 */
+  width: 100%;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   justify-content: center;
   height: 100%;
-  overflow: auto; /* 스크롤바가 생기도록 설정 */
+  overflow: auto;
 }
 
 .card {
@@ -106,11 +89,6 @@ header {
   align-items: center;
   margin: 20px;
   transition: transform 0.3s ease; /* 애니메이션 추가 */
-}
-
-.card a {
-  display: flex;
-  justify-content: center;
 }
 
 .card img {
@@ -138,7 +116,6 @@ header {
 .photoUpload .nav {
   padding: 10px;
   border-radius: 30px;
-  border: 0 solid darkgreen;
   display: flex;
   justify-content: space-around;
   width: 80%;
@@ -146,12 +123,6 @@ header {
   align-items: center;
   background-color: #d9eddf;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 섀도우 추가로 입체감 부여 */
-}
-
-.imageIconMenu {
-  display: flex;
-  align-items: center;
-  margin-top: 20px;
 }
 
 .imageRow {
@@ -194,41 +165,6 @@ header {
 }
 
 /* 메인 콘텐츠 끝 */
-.bottom-navBar {
-  display: flex;
-  justify-content: center;
-  position: sticky;
-  bottom: 20px; /* 하단에서 15px 간격 */
-  width: 100%;
-  z-index: 1000; /* 하단 내비게이션 바가 다른 요소들 위에 표시되도록 함 */
-}
-
-.bottom-navBar .nav {
-  padding: 10px;
-  border-radius: 30px;
-  border: 0px solid darkgreen;
-  display: flex;
-  justify-content: space-around;
-  width: 55%;
-  height: 50px;
-  align-items: center;
-  background-color: #2cd37a;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 섀도우 추가로 입체감 부여 */
-}
-
-.item {
-  color: #f0f0f0; /* 밝은 회색으로 가독성 향상 */
-  font-size: 19px; /* 텍스트 크기 조절 */
-  text-decoration: none;
-  font-weight: 700;
-}
-
-.item:hover {
-  color: lightseagreen; /* 밝은 회색으로 가독성 향상 */
-  font-size: 19px; /* 텍스트 크기 조절 */
-  border-radius: 30px;
-}
-
 footer {
   background-color: white;
   width: 100%;
@@ -342,6 +278,11 @@ footer div {
   z-index: 1060;
 }
 
+.image-modal-header {
+  display: flex;
+  flex-direction: row !important;
+}
+
 /* 오션 CSS*/
 
 .ocean {
@@ -386,14 +327,110 @@ footer div {
   }
 }
 
-.hidden {
-  display: none;
-}
-
-
 .ad-card {
     background-color: #f9f9f9;
     padding: 10px;
     border: 1px solid #ccc;
     text-align: center;
+}
+
+/* 반응형 설정 */
+@media (max-width: 1024px) {
+  .wrapper section, .article-container {
+    max-width: 90%;
+    width: 100%;
+  }
+
+  .card {
+    margin: 10px;
+    width: 90%;
+  }
+
+  .photoUpload {
+    width: 50px;
+    height: 80px;
+  }
+
+  .navbar .mx-auto {
+    width: 60%;
+  }
+}
+
+@media (max-width: 768px) {
+  #columns {
+    column-width: 100%;
+  }
+
+  .wrapper {
+    padding-top: 50px;
+  }
+
+  .card {
+    margin: 5px;
+    width: 100%;
+  }
+
+  .photoUpload {
+    width: 40px;
+    height: 60px;
+  }
+
+  .imageIconBox i {
+    font-size: 20px;
+    margin-right: 10px;
+  }
+
+  .imageToggle {
+    font-size: 25px;
+    margin-right: 20px;
+  }
+
+  .comment-avatar {
+    width: 30px;
+    height: 30px;
+  }
+
+  .navbar .mx-auto {
+    width: 80%;
+  }
+
+  .btn-outline-success {
+    width: 70px;
+    height: 35px;
+  }
+}
+
+@media (max-width: 576px) {
+  .wrapper section {
+    padding-top: 40px;
+    max-width: 100%;
+  }
+
+  .photoUpload {
+    display: none;
+  }
+
+  .navbar .mx-auto {
+    width: 90%;
+  }
+
+  .card img {
+    width: 100%;
+    height: auto;
+  }
+
+  .imageToggle {
+    font-size: 20px;
+    margin-right: 15px;
+  }
+
+  .comment-avatar {
+    width: 25px;
+    height: 25px;
+  }
+
+  .btn-outline-success {
+    width: 60px;
+    height: 30px;
+  }
 }

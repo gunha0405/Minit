@@ -1,0 +1,203 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+header {
+  background-color: white;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000; /* header가 다른 요소들 위에 표시되도록 함 */
+}
+
+.navbar-expand-lg {
+  height: 70px;
+  border-bottom: 1px solid lightgrey;
+}
+
+.navbar-nav {
+  font-weight: bold;
+}
+
+.dropDownMenu {
+  margin-top: 10px;
+  background-color: white;
+}
+
+.btn-outline-success {
+  width: 80px;
+  height: 40px;
+}
+
+.nav-link {
+  border-bottom: 1px solid lightgrey;
+}
+
+.navbar .mx-auto {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40%;
+  height: 40px;
+    	display:flex;
+  	justify-content:center;
+  	align-items:center;
+}
+
+@media (max-width: 992px) {
+  .navbar .mx-auto {
+  	display:flex;
+  	justify-content:center;
+  	align-items:center;
+    position: static;
+    transform: none;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.btn-outline-success {
+  width: 90px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+
+
+.nav-link {
+  border-bottom: 1px solid lightgrey;
+}
+
+.modal-title {
+  text-align: center;
+}
+
+.modal-title > img {
+  width: 40%;
+}
+
+.modal-footer > .btn {
+  margin: 0 auto;
+  width: 30%;
+}
+
+.modal-footer > .findA > .btn {
+  width: 100%;
+}
+
+.modal-footer > .findA {
+  width: 30%;
+}
+
+.modal-body form {
+  text-align: left;
+}
+
+.btn-point1 {
+  background-color: #ffffff;
+  border: 2px solid #75daa4;
+  border-radius: 8px;
+  color: black;
+}
+
+.btn-point1:hover,
+.btn-point1:focus {
+  background-color: #75daa4;
+  border: 2px solid #75daa4;
+  border-radius: 8px;
+  color: #ffffff;
+}
+
+.check {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+}
+
+.check-btn {
+  margin-right: 5px;
+  width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.my-check-btn {
+  background-color: transparent;
+  border: 1px solid #75daa4;
+  border-radius: 5px;
+  width: 100%;
+  height: 20px;
+  font-size: 13px;
+}
+
+.agree-explain textarea {
+  width: 100%;
+  height: 100px;
+  font-size: 11.5px;
+}
+
+.valid {
+  display: block;
+  color: #61bb8b;
+}
+
+.invalid {
+  display: block;
+  color: red;
+}
+
+.none {
+  display: none;
+}
+
+.mb-3 .input-msg {
+  height: 24px;
+  line-height: 24px;
+}
+
+.mb-3 .input-msg .material-icons {
+  width: 24px;
+  font-size: 24px;
+  vertical-align: middle;
+}
+
+.mb-3 .input-msg span {
+  font-size: 13px;
+}
+
+#authMsg {
+  font-size: 13px;
+}
+
+.input-item input {
+  border: none;
+  text-align: center;
+  border-bottom: 1px solid lightgray;
+}
+
+.input-item input:focus {
+  outline: none;
+}
+
+
+.navbar-brand {
+	background-color:none;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.container-fluid {
+  padding-top: 0;
+  margin-top: 0;
+}

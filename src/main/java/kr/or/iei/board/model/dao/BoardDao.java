@@ -10,8 +10,10 @@ import kr.or.iei.board.model.dto.BestBoardRowMapper;
 import kr.or.iei.board.model.dto.Board;
 import kr.or.iei.board.model.dto.BoardRowMapper;
 import kr.or.iei.board.model.dto.FollowingBoardRowMapper;
+import kr.or.iei.board.model.dto.SearchIdRowMapper;
 import kr.or.iei.photo.model.dto.Photo;
 import kr.or.iei.photo.model.dto.PhotoRowMapper;
+import kr.or.iei.user.model.dto.User;
 
 
 @Repository
@@ -22,6 +24,10 @@ public class BoardDao {
     private BoardRowMapper boardRowMapper;
     @Autowired
     private BestBoardRowMapper bestBoardRowMapper;
+    @Autowired
+    private FollowingBoardRowMapper followingBoardRowMapper;
+    @Autowired
+    private SearchIdRowMapper searchIdRowMapper;
 
 
 	public List<Photo> PhotoList() {
@@ -43,14 +49,30 @@ public class BoardDao {
 	}
 
 	public List<Board> followingBoards() {
-		String query = "";
-		return null;
+		String query = "select*from user_feed_tbl order by user_feed_date desc";
+		return jdbc.query(query, followingBoardRowMapper);
 	}
 
-	public List<Board> searchIdBoards() {
-		String query = "";
-		return null;
+	public List searchList(User user) {
+		System.out.println("dao : "+user);
+		String query = "select * from (select rownum as rnum, p.* from (select * from photo_feed p2 where photo_feed_writer = (select user_id from user_tbl where user_id = ?) order by reg_date desc)p)";
+		Object[] params = {user.getUserId()};
+		List list = jdbc.query(query, searchIdRowMapper,params);
+		System.out.println("photofeedNO 찾자 시발"+list);
+		return list;
 	}
+	
+	public int BestBoards2(int photoFeedNo) {
+		String query = "select (select count(*) from photo_feed_like where photo_feed_like_no=p.photo_feed_no) as total_likes from (select * from photo_feed where photo_feed_no=?)p order by total_likes desc"; 
+		Object[] params = {photoFeedNo};
+		int totalLikes = jdbc.queryForObject(query, Integer.class,params); 
+		System.out.println(totalLikes);
+		return totalLikes;
+	}
+
+	
+
+	
 
 }
 

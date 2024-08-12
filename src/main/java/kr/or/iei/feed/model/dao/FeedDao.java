@@ -302,5 +302,54 @@ public class FeedDao {
 		return result;
 	}
 
+	public int feedCommentDelete(int feedCommentNo) {
+		String query = "delete from USER_FEED_COMMENT where FEED_COMMENT_NO=?";
+		Object[] params = {feedCommentNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+	public int feedCommentUpdate(int feedCommentNo, String updatedContent) {
+		String query = "update user_feed_comment set FEED_COMMENT_CONTENT=? where FEED_COMMENT_NO=?";
+		Object[] params = {updatedContent, feedCommentNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+	public int reportFeed(int textFeedNo, int userNo) {
+		String query = "insert into USER_FEED_CONTENT_REPORT values(?,?)";
+		Object[] params = {textFeedNo, userNo};
+		int result = jdbc.update(query, params);		
+		return result;
+	}
+
+	public int isReport(int userFeedNo, int userNo) {
+		String query = "select count(*) from user_feed_content_report where user_feed_no =? and user_no=?";
+		Object[] params = {userFeedNo, userNo};
+		int reportCount = jdbc.queryForObject(query, Integer.class, params);
+		return reportCount;
+	}
+
+	public int isLike(int userFeedNo, String userId) {
+		String query = "select count(*) from USER_FEED_LIKE where user_id =? and FEED_NO=?";
+		Object[] params = {userId, userFeedNo};
+		int likeCount = jdbc.queryForObject(query, Integer.class, params);
+		return likeCount;
+	}
+
+	public int feedLike(int userFeedNo, String userId) {
+		String query ="insert into user_feed_like values(?,?)";
+		Object[] params = {userId, userFeedNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
+	public int feedLikeCancel(int userFeedNo, String userId) {
+		String query = "delete from user_feed_like where user_id =? and feed_no=?";
+		Object[] params = {userId, userFeedNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
 
 }

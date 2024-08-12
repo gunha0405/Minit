@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import kr.or.iei.board.model.dao.BoardDao;
 import kr.or.iei.board.model.dto.Board;
+import kr.or.iei.user.model.dto.User;
 
 @Service
 public class BoardService {
@@ -28,11 +29,17 @@ public class BoardService {
 		
 		return boardDao.followingBoards();
 	}
+	public List searchList(User user) {
+        List<Board> list = boardDao.searchList(user);
+        for(Board b : list) {
+        	int totalLikes = boardDao.BestBoards2(b.getPhotoFeedNo());
+        	b.setTotalLikes(totalLikes);
+        }
+        System.out.println(list);
+        return list;
+    }
 
-	public List<Board> searchIdBoards() {
-		
-		return boardDao.searchIdBoards();
-	}
+
 
 
 
