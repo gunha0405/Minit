@@ -29,6 +29,7 @@ import kr.or.iei.photo.model.dto.Photo;
 import kr.or.iei.photo.model.dto.PhotoComment;
 import kr.or.iei.photo.model.etc.dto.Foodad;
 import kr.or.iei.photo.model.service.PhotoService;
+import kr.or.iei.text.model.dto.TextFeed;
 import kr.or.iei.user.model.dto.User;
 import kr.or.iei.user.model.service.UserService;
 import kr.or.iei.util.FileUtils;
@@ -315,5 +316,14 @@ public class PhotoController {
     public String ad() {
         return "photo/list";
     }
+    
+    
+    @GetMapping(value="/selectReportFeed")
+    public String selectReportFeed(Model model) {
+    	List<Photo> reportList = photoService.selectReportFeed();
+    	model.addAttribute("reportList", reportList);
+    	return "/admin/warningText";
+    }
+    
 
 }

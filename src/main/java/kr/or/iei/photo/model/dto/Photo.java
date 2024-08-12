@@ -20,5 +20,8 @@ public class Photo {
 	private int isLike;
 	private int isDec;
 	private int isSave;
+	private int userNo;
+	private int warningCount;
+	private String photoFeedWriterImg;
 	
 }
