@@ -248,6 +248,20 @@ public class TextDao {
 		List<TextFeed> reportList = jdbc.query(query, textFeedReportRowMapper);
 		return reportList;
 	}
+
+	public int countLike(int textFeedNo) {
+		String query = "select count(*) from text_feed_like where text_feed_no = ?";
+		Object[] params = {textFeedNo};
+		int likeCount = jdbc.queryForObject(query, Integer.class , params);
+		return likeCount;
+	}
+ 
+	public int countCommentLike(int textFeedCommentNo) {
+		String query = "select count(*) from text_feed_comment_like where text_feed_comment_no = ?";
+		Object[] params = {textFeedCommentNo};
+		int likeCount = jdbc.queryForObject(query, Integer.class, params);
+		return likeCount;
+	}
 	
 
 	
