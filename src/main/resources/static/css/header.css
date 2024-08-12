@@ -25,6 +25,8 @@ header {
 
 .navbar-nav {
   font-weight: bold;
+  background-color: white;
+  
 }
 
 .dropDownMenu {
@@ -37,9 +39,14 @@ header {
   height: 40px;
 }
 
-.nav-link {
-  border-bottom: 1px solid lightgrey;
+.ms-auto{
+	background-color: white!important;
+	display: flex;
+	align-items: center;
+	margin-top:-4px!important;
+	
 }
+
 
 .navbar .mx-auto {
   position: absolute;
