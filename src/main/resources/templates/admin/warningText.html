@@ -56,19 +56,15 @@
                 <div class="warning-wrapper">
                     <table class="warnnig-tbl">
                         <tr>
-                            <th style="width: 5%"></th>
                             <th style="width: 10%">회원번호</th>
                             <th style="width: 15%">아이디</th>
                             <th style="width: 15%">게시글 번호</th>
-                            <th style="width: 10%">내용 보기</th>
+                            <th style="width: 15%">내용 보기</th>
                             <th style="width: 20%">등록일</th>
                             <th style="width: 10%">경고 횟수</th>
                             <th style="width: 20%">경고주기</th>
                         </tr>
                         <tr th:each="textFeed : ${reportList}">
-                            <td>
-                                <input type="checkbox" class="chk" >
-                            </td>
                             <td th:text="${textFeed.userNo}"></td>
                             <td th:text="${textFeed.textFeedWriter}"></td>
                             <td th:text="${textFeed.textFeedNo}" class="view-content"></td>
@@ -77,11 +73,6 @@
                             <td th:text="${textFeed.warningCount}"></td>
                             <td>
                             	<button type="button" class="warn-btn wh-btn2">경고</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="8">
-                                <button class="warn-btn wh-btn2" style="width: 80%; height: 30px;">선택회원경고</button>
                             </td>
                         </tr>
                     </table>
@@ -117,7 +108,7 @@
 		
 			$(".warn-btn").on("click",function(){
 				//클릭한 버튼 기준으로 해당 행의 회원 번호를 가지고 오는 작업
-				const userNo = $(this).parent().parent().children().eq(1).text();
+				const userNo = $(this).closest("tr").find("td:nth-child(1)").text();
 				console.log(userNo);
 				const textFeedNo = $(this).closest("tr").find(".view-content").text();
 				console.log(textFeedNo);

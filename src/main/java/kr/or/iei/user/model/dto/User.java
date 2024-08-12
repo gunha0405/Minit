@@ -22,4 +22,5 @@ public class User {
 	private String createDate;
 	private String updateDate;
 	private String userImg;
+	private String cancelDate;
 }

@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import kr.or.iei.text.model.dto.TextFeed;
+import kr.or.iei.user.model.dto.DelUserRowMapper;
 import kr.or.iei.user.model.dto.User;
 import kr.or.iei.user.model.dto.UserRowMapper;
 
@@ -16,6 +17,8 @@ public class UserDao {
 	private JdbcTemplate jdbc;
 	@Autowired
 	private UserRowMapper userRowMapper;
+	@Autowired
+	private DelUserRowMapper delUserRowMapper;
 	
 	public User selectOneUser(User u) {
 		String query = "select * from user_tbl where user_id=? and user_pw=?";
@@ -54,6 +57,18 @@ public class UserDao {
 		String query = "select * from user_tbl where user_email=?";
 		Object[] params = {receiver};
 		List list =  jdbc.query(query, userRowMapper, params);
+		if(list.isEmpty()) {
+			return null;
+		}else {
+			return (User)list.get(0);
+		}
+	}
+
+	public User searchDelUserEmail(String receiver) {
+		String query = "select * from user_del_tbl where user_email=?";
+		Object[] params = {receiver};
+		List list =  jdbc.query(query, delUserRowMapper, params);
+		System.out.println(list);
 		if(list.isEmpty()) {
 			return null;
 		}else {
@@ -190,6 +205,15 @@ public class UserDao {
 		System.out.println("삭제 처리값 :" +result);
 		return result;
 	}
+	
+	public int deletePhotoFeed(int photoFeedNo) {
+		String query = "delete from photo_feed where photo_feed_no=?";
+		Object[] params = {photoFeedNo};
+		int result = jdbc.update(query, params);
+		System.out.println("삭제 처리값 :" +result);
+		return result;
+	}
+
 
 
 }
