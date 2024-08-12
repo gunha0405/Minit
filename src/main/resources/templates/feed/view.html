@@ -118,11 +118,16 @@
 						<span th:text="${fc.feedCommentContent}"></span>
 					</td>
 					<td style="width: 15%;">
+						<th:block th:if="${session.user.userId} == null">
+							<span class="material-icons toggle-icon" id="icon-favorite" onclick="noneLoginComment()">favorite_border</span>						
+						</th:block>
 						<th:block th:if="${fc.feedCommentWriter} != ${session.user.userId}">
-							<span class="material-icons toggle-icon" id="icon-favorite" >favorite_border</span>						</th:block>
+							<span th:if="${fc.isLike} == 1" class="material-icons toggle-icon" id="icon-favorite" th:attr="data-is-like=$ {fc.isLike}" th:onclick=commentLike(this,[[${fc.feedCommentNo}]])>favorite</span>						
+							<span th:if="${fc.isLike} == 0" class="material-icons toggle-icon" id="icon-favorite" th:attr="data-is-like=${fc.isLike}" th:onclick=commentLike(this,[[${fc.feedCommentNo}]])>favorite_border</span>							
+						</th:block>
 						<th:block th:if="${fc.feedCommentWriter} == ${session.user.userId}">
-						<span class="material-icons" onclick="updateHidden(this)" >edit_document</span> 
-						<span class="material-icons" th:onclick="feedCommentDelete(this,[[${fc.feedCommentNo}]])">folder_delete</span>
+							<span class="material-icons" onclick="updateHidden(this)" >edit_document</span> 
+							<span class="material-icons" th:onclick="feedCommentDelete(this,[[${fc.feedCommentNo}]])">folder_delete</span>
 						</th:block>
 					</td>
 				</tr>	
@@ -140,6 +145,8 @@
 			</table>
 		</th:block>			
 		</div>
+	</div>
+		</div>
 		<!-- 수정 / 삭제 버튼 : 로그인한 유저의 글에만 보임-->
 		<div class="btn-wrap">
 			<ul>
@@ -151,11 +158,52 @@
 				</li>
 			</ul>
 		</div>
-		</div>
 	</div>
 
-
 	<script>
+	function commentLike(element, feedCommentNo){
+		const isLike = $(element).data('is-like');
+		console.log(isLike);
+	    if(isLike == 1){
+	         $.ajax({
+	              url: "/feed/commentLikeCancel",
+	              type: "post",
+	              data: {
+	            	  feedCommentNo: feedCommentNo
+	              },
+	              success: function(data) {
+	                   $(element).text('favorite_border');
+	                   $(element).data('is-like', 0); // 실제 HTML의 data-is-like 속성 업데이트
+	              },
+	              error: function() {
+	                   swal({
+	                      title: "서버 연결 실패",
+	                      text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+	                      icon: "warning"
+	                   });
+	                }
+	         });
+	    } else if(isLike == 0){
+	    	 $.ajax({
+	              url: "/feed/commentLike",
+	              type: "post",
+	              data: {
+	            	  feedCommentNo: feedCommentNo
+	              },
+	              success: function(data) {
+	                   $(element).text('favorite');
+	                   $(element).data('is-like', 1); // 실제 HTML의 data-is-like 속성 업데이트
+	                },
+	               error: function() {
+	                   swal({
+	                      title: "서버 연결 실패",
+	                      text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+	                      icon: "warning"
+	                   });
+	                }
+	         });
+	    }
+	}
 	function feedLike(element,userFeedNo){
 		const isLike = $(element).data('is-like');
 		console.log(isLike);

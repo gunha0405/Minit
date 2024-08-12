@@ -166,7 +166,7 @@ public class FeedService {
 	}
 	
 	// 피드 게시물 보기 
-	public Feed selectUserOneFeed(int userFeedNo) {
+	public Feed selectUserOneFeed(int userFeedNo, int userNo) {
 		//게시물정보 입력받기
 		Feed feed = feedDao.searchFeedUser(userFeedNo);
 		// 게시물당 사진 게시물 몇개인지
@@ -182,16 +182,39 @@ public class FeedService {
 		}
 		feed.setFeedList(feedList);
 		
+		//댓글 가져오기 
 		List<FeedComment> feedCommentList = new ArrayList<FeedComment>();
 		int commentTotalNum = feedDao.commentTotalNum(userFeedNo);
 		for(int i = 0; i < commentTotalNum; i++) {
 			FeedComment fc = feedDao.selectFeedComment(userFeedNo, i);
+			//피드 좋아요 여부 
+			int feedCommentNo = feedDao.feedCommentNo(userFeedNo, i);
+			int commentLike = feedDao.feedCommentLikeNum(feedCommentNo,userNo);
+			fc.setIsLike(commentLike);
 			feedCommentList.add(fc);
 		}
 		feed.setFeedComment(feedCommentList);
 		return feed;
 	}
+	public Feed selectUserOneFeed(int userFeedNo) {
+		//게시물정보 입력받기
+		Feed feed = feedDao.searchFeedUser(userFeedNo);
+		// 게시물당 사진 게시물 몇개인지
+		int totalImgNo = feedDao.totalImg(userFeedNo);
+		// System.out.println(totalImgNo);
+		// 게시물 갯수만큼 배열만큼 사진저장
+		List<FeedFile> feedList = new ArrayList<FeedFile>();
+		for (int i = 0; i < totalImgNo; i++) {
+			String filepath = feedDao.searchFeedImg(userFeedNo, i);
+			FeedFile fF = new FeedFile();
+			fF.setUserFeedFilepath(filepath);
+			feedList.add(fF);
+		}
+		feed.setFeedList(feedList);
+		return feed;
+	}
 
+	
 	@Transactional
 	public int deleteFeed(int userFeedNo) {
 		int result = feedDao.deleteFeed(userFeedNo);
@@ -371,7 +394,7 @@ public class FeedService {
 		int result = feedDao.feedCommentDelete(feedCommentNo);
 		return result;
 	}
-
+	@Transactional
 	public int feedCommentUpdate(int feedCommentNo, String updatedContent) {
 		int result = feedDao.feedCommentUpdate(feedCommentNo, updatedContent);
 		return result;
@@ -399,8 +422,19 @@ public class FeedService {
 		return result;
 	}
 
+	@Transactional
 	public int feedLikeCancel(int userFeedNo, String userId) {
 		int result = feedDao.feedLikeCancel(userFeedNo, userId);
+		return result;
+	}
+	@Transactional
+	public int commentLike(int userFeedNo, int userNo) {
+		int result = feedDao.commentLike(userFeedNo, userNo);
+		return result;
+	}
+	@Transactional
+	public int feedLikeCancel(int feedCommentNo, int userNo) {
+		int result = feedDao.feedLikeCancel(feedCommentNo, userNo);
 		return result;
 	}
 
