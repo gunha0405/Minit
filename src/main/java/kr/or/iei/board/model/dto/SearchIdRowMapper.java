@@ -14,10 +14,13 @@ public class SearchIdRowMapper implements RowMapper<Board> {
 	@Override
 	public Board mapRow(ResultSet rs, int rowNum) throws SQLException {
 		Board b = new Board();
-		b.setUserNick(rs.getString("user_nick"));
-		b.setPhotoFeedImg(rs.getString("photo_feed_img"));
-		b.setRegDate("reg_date");
-		b.setTotalLikes(rs.getInt("total_likes"));
+		b.setUserFeedWriter(rs.getString("photo_feed_writer"));
+		b.setRegDate(rs.getString("reg_date"));
+		b.setPhotoFeedImg(rs.getString("photo_feed_img"));	
+		b.setPhotoFeedNo(rs.getInt("photo_feed_no"));	
+		//b.setUserFeedContnet(rs.getString("user_feed_content"));
+		//b.setTotalLikes(rs.getInt("total_likes"));
+		
 		return b;
 	}
 	

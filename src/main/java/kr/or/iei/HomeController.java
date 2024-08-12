@@ -9,11 +9,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.or.iei.board.model.dto.Board;
 import kr.or.iei.board.model.service.BoardService;
+import kr.or.iei.user.model.dto.User;
 import kr.or.iei.util.FileUtils;
 
 
@@ -53,13 +55,15 @@ public class HomeController {
     	List<Board> list = boardService.followingBoards();
     	return list;
     }
-    @GetMapping("/search")
-    @ResponseBody
-    public List<Board> searchIdBoards(){
-    	List<Board> list = boardService.searchIdBoards();
-    	return list;
-    }
+   @ResponseBody
+   @GetMapping("/searchList")
+   public List<Board> searchList(User user){
+	   List list = boardService.searchList(user);
+	   
+	   return list;
+   }
+  
+}
    
     
     
-}
