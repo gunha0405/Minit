@@ -74,11 +74,13 @@
 }
 
 .user-profile-photo > div > img {
-    width: 100%;
-    max-width: 250px; /* 최대 너비 설정 */
+    width: 200px;
+    max-width: 100px; /* 최대 너비 설정 */
     height: auto;
     display: block;
     margin-left: 20px;
+    border-radius: 50%;
+    
 }
 
 /* 사용자 소개 스타일 */
