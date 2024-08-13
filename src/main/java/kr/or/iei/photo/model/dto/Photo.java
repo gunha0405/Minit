@@ -18,6 +18,7 @@ public class Photo {
 	private String regDate;
 	private List<PhotoComment> photoCommentList;
 	private int isLike;
+	private int likeCount;
 	private int isDec;
 	private int isSave;
 	private int userNo;
