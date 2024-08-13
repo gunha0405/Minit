@@ -111,10 +111,10 @@
 				const userNo = $(this).closest("tr").find("td:nth-child(1)").text();
 				console.log(userNo);
 				const textFeedNo = $(this).closest("tr").find(".view-content").text();
-				console.log(textFeedNo);
+				console.log(userFeedNo);
 				const warningCount = $(this).parent().prev().text();
 				console.log(warningCount);
-				location.href="/admin/textChangeCount?userNo="+userNo+"&warningCount="+warningCount+"&textFeedNo="+textFeedNo;	
+				location.href="/admin/feedChangeCount?userNo="+userNo+"&warningCount="+warningCount+"&userFeedNo="+userFeedNo;	
 			});
 		</script>
 	<th:block th:include="common/footer"></th:block>

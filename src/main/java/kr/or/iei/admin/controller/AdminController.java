@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import kr.or.iei.feed.model.service.FeedService;
 import kr.or.iei.photo.model.dto.Photo;
 import kr.or.iei.photo.model.service.PhotoService;
 import kr.or.iei.text.model.dto.TextFeed;
@@ -26,6 +27,9 @@ public class AdminController {
 	
 	@Autowired
 	private PhotoService photoService;
+	
+	@Autowired
+	private FeedService feedService;
 	
 	@GetMapping(value="/warningMain")
 	public String warningMain() {
@@ -82,15 +86,15 @@ public class AdminController {
 		}
 	}
 	
-	@GetMapping(value="/photoChangeCount")
-	public String photoChangeCount(int userNo, Model model, int photoFeedNo) {
+	@GetMapping(value="/feedChangeCount")
+	public String feedChangeCount(int userNo, Model model, int userFeedNo) {
 		User u = userService.selectOneUser(userNo);
-		List<Photo> reportList = photoService.selectReportFeed();
+		//List<Photo> reportList = feedService.selectReportFeed();
 		
 		
 		if(u != null) {
-			int result = userService.photoChangeCount(u, photoFeedNo);
-			model.addAttribute("reportList", reportList);
+			int result = userService.feedChangeCount(u, userFeedNo);
+			//model.addAttribute("reportList", reportList);
 			if(result == 4){
 				model.addAttribute("title", "회원정지 및 글삭제 성공");
 				model.addAttribute("msg", "누적 경고가  5회를 달성하여 해당 회원이 정지되었습니다.");

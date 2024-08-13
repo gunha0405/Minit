@@ -213,6 +213,14 @@ public class UserDao {
 		System.out.println("삭제 처리값 :" +result);
 		return result;
 	}
+	
+	public int deleteUserFeed(int userFeedNo) {
+		String query = "delete from user_feed_tbl where user_feed_no=?";
+		Object[] params = {userFeedNo};
+		int result = jdbc.update(query, params);
+		System.out.println("삭제 처리값 :" +result);
+		return result;
+	}
 
 	public int changeLevel(User u) {
 		String query = "update user_tbl set user_level=?, warning_count=0 where user_no=?";
