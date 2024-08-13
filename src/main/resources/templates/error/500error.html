@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>main</title>
+</head>
+<body>
+	<!-- 컴포넌트처럼 헤더를 가지고 올수 있다. -->
+	<th:block th:include="common/header"></th:block>
+	<main class="contents">
+		<section class="section">
+			<div class="page-title">서버에 문제가 생겼습니다.</div>
+		</section>
+	</main>
+	<th:block th:include="common/footer"></th:block>
+</body>
+</html>
