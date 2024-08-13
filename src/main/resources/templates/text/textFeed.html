@@ -98,7 +98,6 @@
 	                    
 	                    <div th:if="${session.user != null}" class="comment-section" style="display:none;">
 	                        <textarea id="text-feed-comment"  placeholder="댓글을 작성해보세요 !"></textarea>
-	                        <div id="text-feed-comment-count" class="char-count">0/50</div>
 	                        <button class="submit-comment">댓글 달기</button>
 	                        <div class="comments-container">
 							    <div class="comment" th:each="comment : ${textFeed.textFeedCommentList}">
@@ -111,7 +110,6 @@
 							            <p class="comment-author" th:text="${comment.textFeedCommentWriter}"></p>
 							            <p class="comment-text" th:text="${comment.textFeedCommentContent}"></p>
 							            <textarea class="comment-edit-textarea" style="display:none;" th:text="${comment.textFeedCommentContent}"></textarea>
-							            <div id="text-feed-comment-count" class="char-count" style="display:none;">글자 수: 0/50</div>
 							            <div class="comment-actions">
 							                <i th:if="${comment.isLike == 1}" id="comment-like" class="fa fa-heart" th:onclick="commentLikePush(this,[[${comment.textFeedCommentNo}]])"></i>
 							                <i th:if="${comment.isLike == 0}" id="comment-not-like" class="fa fa-regular fa-heart" th:onclick="commentLikePush(this,[[${comment.textFeedCommentNo}]])"></i>
@@ -191,6 +189,7 @@
                         text: "로그인 후 이용해 주세요",
                         icon: "info"
                     });
+                    return;
                 } else if (data == -1) {
                     swal({
                         title: "데이터 처리 오류",
@@ -526,7 +525,7 @@
                         <div class="comment" style="display:none;">
                             <span class="textFeedCommentNo" style="display:none;">${comment.textFeedCommentNo}</span>
                             <div class="comment-profile-pic">
-                                <img src="${userImg}" alt="Profile Picture">
+                                <img src="${userImg}" alt="">
                             </div>
                             <div class="comment-content">
                                 <p class="comment-author">${comment.textFeedCommentWriter}</p>

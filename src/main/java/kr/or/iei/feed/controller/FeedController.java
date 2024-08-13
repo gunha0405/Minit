@@ -23,6 +23,7 @@ import kr.or.iei.feed.model.dto.FeedFile;
 import kr.or.iei.feed.model.dto.UserFeedNaviList;
 import kr.or.iei.feed.model.dto.feedListData;
 import kr.or.iei.feed.model.service.FeedService;
+import kr.or.iei.text.model.dto.TextFeed;
 import kr.or.iei.user.model.dto.User;
 import kr.or.iei.user.model.dto.UserRowMapper;
 import kr.or.iei.util.FileUtils;
@@ -450,5 +451,13 @@ public class FeedController {
 //		List<Feed> feedList = 
 //		return;
 //	}
+	
+    @GetMapping(value="/selectReportFeed")
+    public String selectReportFeed(Model model) {
+    	List<Feed> reportList = feedService.selectReportFeed();
+    	
+    	model.addAttribute("reportList", reportList);
+    	return "/admin/warningFeed";
+    }
 
 }

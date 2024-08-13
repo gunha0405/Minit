@@ -49,7 +49,8 @@ public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 			registry.addInterceptor(new LoginInterceptor())
-					.addPathPatterns("/photo/list","/user/logout","/user/mypage","/user/update","/user/delete","/following");
+					.addPathPatterns("/photo/list","/user/logout","/user/mypage","/user/update","/user/delete","/following",
+									 "/feed/writeForm","/feed/userStorage","/feed/feedWrite","/feed/feedUpdate","/feed/delete","/feed//updateFrm");
 			
 			registry.addInterceptor(new AdminInterceptor())
 					.addPathPatterns("/admin/**");
