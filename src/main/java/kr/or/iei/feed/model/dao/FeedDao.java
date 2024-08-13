@@ -467,5 +467,12 @@ public class FeedDao {
 		return filePath;
 	}
 
+	public int updateReportFeed(int feedNo) {
+		String query = "update user_feed_tbl set user_feed_count = +1 where user_feed_no=?";
+		Object[] params = {feedNo};
+		int result = jdbc.update(query, params);
+		return result;
+	}
+
 
 }
