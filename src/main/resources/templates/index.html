@@ -167,6 +167,7 @@
 	    let offset = 0;
 	    const limit = 8;
 	    let allPostsLoaded = false;
+
 	    function loadPosts() {
 	        if (allPostsLoaded) return;
 	        $.ajax({
@@ -176,7 +177,6 @@
 	            data: { offset: offset, limit: limit },
 	            success: function(data) {
 	                console.log(data); // 서버에서 반환된 데이터를 확인
-	                // 사진 리스트와 피드 리스트를 결합하고, 특정 개수만큼 잘라서 표시
 	                const combinedList = [...data.photolist, ...data.feedlist];
 	                const limitedList = combinedList.slice(0, limit);
 
@@ -200,6 +200,10 @@
 	                    $('#postContainer').append(postHtml);
 	                });
 
+	                if (limitedList.length < limit) {
+	                    allPostsLoaded = true; // 모든 게시물이 로드된 경우
+	                }
+
 	                offset += limit;
 	                $(".board-write").text("전체게시판");
 	            },
@@ -211,12 +215,9 @@
 
 	    // 더보기 버튼 클릭 시 게시물 로딩
 	    $('#loadMore').click(function() {
-        $('#loginModal').modal('show');
-    });
-
-	    // 페이지 로드 시 초기 게시물 로딩
-	    loadPosts();
-	});
+	        if (allPostsLoaded) return; // 더 이상 로딩할 게시물이 없는 경우 처리
+	        loadPosts();
+	    });
  
  $(document).ready(function() {
 	    $("#best").click(function() {
@@ -312,7 +313,7 @@
 	                const combinedList = [...list.photolist, ...list.feedlist];
 	                combinedList.sort(() => Math.random() - 0.5); 
 	             
-combinedList.forEach(b => {
+					combinedList.forEach(b => {
 	                    
 	                    let postHtml = `
 	                    <article class="post">
