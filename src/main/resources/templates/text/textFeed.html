@@ -59,7 +59,7 @@
                 <div class="text-feed-write-area">
                     <!-- form 태그 대신 비동기 방식으로 글 작성 -->
                         <textarea name="text-feed-content" id="text-feed-content" placeholder="오늘 무슨일이 있었나요?(100자)"></textarea>
-                        <div id="text-feed-content-count" class="char-count">0/100</div>
+                        <div id="text-feed-content-count" class="char-count feed-char-count">0/100</div>
                         <div class="text-feed-actions">
                             <button type="submit" class="text-feed-button write-btn">작성하기</button>
                         </div>
@@ -98,7 +98,7 @@
 	                    
 	                    <div th:if="${session.user != null}" class="comment-section" style="display:none;">
 	                        <textarea id="text-feed-comment"  placeholder="댓글을 작성해보세요 !"></textarea>
-	                        <div id="text-feed-comment-count" class="char-count">글자 수: 0/50</div>
+	                        <div id="text-feed-comment-count" class="char-count">0/50</div>
 	                        <button class="submit-comment">댓글 달기</button>
 	                        <div class="comments-container">
 							    <div class="comment" th:each="comment : ${textFeed.textFeedCommentList}">
@@ -161,7 +161,7 @@
 	      <div class="modal-body">
 	        <div class="text-feed-write-area">
 	          <textarea name="text-feed-content" id="modal-text-feed-content" placeholder="글 내용 수정하기(100자)"></textarea>
-	          <div id="name-text-feed-content-count" class="char-count">글자 수: 0/100</div>
+	          <div id="name-text-feed-content-count" class="char-count">0/100</div>
 	          <div class="text-feed-actions">
 	            <button type="submit" class="text-feed-button modal-write-btn">수정하기</button>
 	          </div>
@@ -196,6 +196,8 @@
                         title: "데이터 처리 오류",
                         text: "잠시 후 다시 시도해주세요",
                         icon: "warning"
+                    }).then(function() {
+                    	location.reload();
                     });
                 } else {
                     if (isLike == 0) {
@@ -293,6 +295,10 @@
     	
     }
     
+    $(document).on('click', '.feed-bookmark-btn, .feed-bookmark-saved-btn', function() {
+        const textFeedNo = $(this).closest('.feed').find('.textFeedNo').text();
+        savePush(this, textFeedNo);
+    });
     
     $(document).ready(function() {
     	function limitTextWithoutSpaces(input, maxLength, counterId) {
@@ -305,7 +311,7 @@
                     $(this).val(content);
                     contentLength = maxLength;
                 }
-                $(counterId).text(`글자 수: ${contentLength}/${maxLength}`);
+                $(counterId).text(`${contentLength}/${maxLength}`);
             });
         }
 
@@ -474,7 +480,7 @@
                     const newfeedElement = $(feedHtml);
                     $("#text-feed-feeds").prepend(newfeedElement);
                     newfeedElement.slideDown("slow");
-                    
+                    $(".feed-char-count").text("0/100");
                     $("#text-feed-content").val("");
                 },
                 error: function() {
@@ -803,9 +809,9 @@
                 	});
         		}else{
         			swal({
-                        title: "신고 실패",
-                        text: "피드 신고 실패",
-                        icon: "warning"
+                        title: "취소됨",
+                        text: "피드 신고가 취소되었습니다.",
+                        icon: "info"
                     });
         		}
         	})

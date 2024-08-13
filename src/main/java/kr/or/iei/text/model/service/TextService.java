@@ -143,7 +143,7 @@ public class TextService {
 	    }
 	    if (result > 0) {
 	        int reportCount = textDao.selectTextFeedReportCount(textFeedNo);
-	        if (reportCount >= 2) {
+	        if (reportCount >= 5) {
 	            int hideTextFeedResult = textDao.hideTextFeed(textFeedNo);
 
 	            if (hideTextFeedResult>0) {
