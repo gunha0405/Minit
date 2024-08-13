@@ -27,4 +27,5 @@ public class Feed {
 	private int isLike;
 	private int isReport;
 	private int isRepository;
+	private int warningCount;
 }
