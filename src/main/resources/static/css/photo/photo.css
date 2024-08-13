@@ -122,11 +122,11 @@ header {
   padding: 10px;
   border-radius: 30px;
   display: flex;
-  justify-content: space-around;
-  width: 50%;
-  height: 50px;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
   align-items: center;
-  background-color: #a2ffb9b;
+  background-color: #6ae088;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 섀도우 추가로 입체감 부여 */
 }
 
