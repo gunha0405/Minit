@@ -92,7 +92,7 @@ public class AdminController {
 		User u = userService.selectOneUser(userNo);
 		List<Photo> reportList = photoService.selectReportFeed();
 		if(u != null) {
-			int result = userService.feedChangeCount(u, photoFeedNo);
+			int result = userService.photoChangeCount(u, photoFeedNo);
 			model.addAttribute("reportList", reportList);
 			if(result == 4){
 				model.addAttribute("title", "회원정지 및 글삭제 성공");
@@ -135,7 +135,7 @@ public class AdminController {
 		List<Feed> reportList = feedService.selectReportFeed();
 		if(u != null) {
 			int result = userService.feedChangeCount(u, userFeedNo);
-			//model.addAttribute("reportList", reportList);
+			model.addAttribute("reportList", reportList);
 			if(result == 4){
 				model.addAttribute("title", "회원정지 및 글삭제 성공");
 				model.addAttribute("msg", "누적 경고가  5회를 달성하여 해당 회원이 정지되었습니다.");
@@ -198,24 +198,6 @@ public class AdminController {
 			return "common/msg";
 		}
 	}
-	
-	/*
-	@GetMapping(value="/checkedChangeCount")
-	public String checkedChangeCount(String no, String count, Model model) {
-		//System.out.println(no);
-		//System.out.println(count);
-		boolean result = userService.checkedChangeCount(no, count);
-		if(result) {
-			return "redirect:/admin/warningUser";			
-		}else {
-			model.addAttribute("title", "경고 실패");
-			model.addAttribute("msg", "개발자에게 문의하세요.");
-			model.addAttribute("icon","error");
-			model.addAttribute("loc", "/admin/warningUser");
-			return "common/msg";
-		}
-	}
-	*/
 	
 	@GetMapping(value="/warningPhoto")
 	public String warningPhoto(Model model) {

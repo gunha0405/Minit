@@ -16,6 +16,7 @@ public class FollowingIdRowMapper implements RowMapper<Board> {
 		Board b = new Board();
 		b.setUserId(rs.getString("user_id"));
 		b.setFollowingId(rs.getString("following_id"));
+		//b.setTotalLikes(rs.getInt("total_likes"));
 		return b;
 	}
 	
