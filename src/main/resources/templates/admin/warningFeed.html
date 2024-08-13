@@ -64,13 +64,13 @@
                             <th style="width: 10%">경고 횟수</th>
                             <th style="width: 20%">경고주기</th>
                         </tr>
-                        <tr th:each="textFeed : ${reportList}">
-                            <td th:text="${textFeed.userNo}"></td>
-                            <td th:text="${textFeed.textFeedWriter}"></td>
-                            <td th:text="${textFeed.textFeedNo}" class="view-content"></td>
-                            <td id="view-report-content" th:data-content="${textFeed.textFeedContent}"><a>내용 보기</a></td>
-                            <td th:text="${textFeed.textFeedRegDate}"></td>
-                            <td th:text="${textFeed.warningCount}"></td>
+                        <tr th:each="feed : ${feedList}">
+                            <td th:text="${feed.userNo}"></td>
+                            <td th:text="${feed.userFeedWriter}"></td>
+                            <td th:text="${feed.userFeedNo}" class="view-content"></td>
+                            <td id="view-report-content" th:data-content="${feed.userFeedContent}"><a>내용 보기</a></td>
+                            <td th:text="${feed.userFeedDate}"></td>
+                            <td th:text="${feed.warningCount}"></td>
                             <td>
                             	<button type="button" class="warn-btn wh-btn2">경고</button>
                             </td>

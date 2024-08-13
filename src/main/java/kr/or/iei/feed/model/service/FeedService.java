@@ -197,20 +197,28 @@ public class FeedService {
 		return feed;
 	}
 	public Feed selectUserOneFeed(int userFeedNo) {
-		//게시물정보 입력받기
-		Feed feed = feedDao.searchFeedUser(userFeedNo);
+		//피드에 있는 사진 가져오기 
+		//게시물 정보 가져오기 
+		Feed feed = feedDao.getFeed(userFeedNo);
+		List<FeedFile> fileList = new ArrayList<FeedFile>();
+		for(int i = 0; i < 3; i++) { //user_feed_file_no, user_feed_no, user_feed_filepath
+			FeedFile file = feedDao.selectFeedFile(userFeedNo, i+1);
+			fileList.add(file);
+		}
+		
 		// 게시물당 사진 게시물 몇개인지
-		int totalImgNo = feedDao.totalImg(userFeedNo);
+		//int totalImgNo = feedDao.totalImg(userFeedNo);
 		// System.out.println(totalImgNo);
 		// 게시물 갯수만큼 배열만큼 사진저장
-		List<FeedFile> feedList = new ArrayList<FeedFile>();
-		for (int i = 0; i < totalImgNo; i++) {
-			String filepath = feedDao.searchFeedImg(userFeedNo, i);
-			FeedFile fF = new FeedFile();
-			fF.setUserFeedFilepath(filepath);
-			feedList.add(fF);
-		}
-		feed.setFeedList(feedList);
+		//List<FeedFile> feedList = new ArrayList<FeedFile>();
+		//for (int i = 0; i < totalImgNo; i++) {
+		//	String filepath = feedDao.searchFeedImg(userFeedNo, i);
+		//	FeedFile fF = new FeedFile();
+		//	fF.setUserFeedFilepath(filepath);
+		//	feedList.add(fF);
+		//}
+		//feed.setFeedList(feedList);
+		feed.setFeedList(fileList);
 		return feed;
 	}
 
@@ -461,6 +469,19 @@ public class FeedService {
 			feedList.add(feed);
 		}
 		return feedList;
+	}
+
+
+
+
+	public int updateFeedFilepath(int file1, String filepath) {
+		int result = feedDao.updateFeedFilepath(file1, filepath);
+		return result;
+	}
+
+	public int updateFeedFilepathNull(int file) {
+		int result = feedDao.updateFileNull(file);
+		return result;
 	}
 
 
