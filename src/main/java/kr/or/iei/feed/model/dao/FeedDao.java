@@ -480,5 +480,12 @@ public class FeedDao {
 		return feedlist;
 	}
 
+	public int followerNo(String writerUser) {
+		String query = "select count(*) from follow where following_id=?";
+		Object[] params = {writerUser};
+		int followerNo = jdbc.queryForObject(query, Integer.class,params);
+		return followerNo;
+	}
+
 
 }

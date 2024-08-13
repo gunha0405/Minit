@@ -503,6 +503,11 @@ public class FeedService {
 		return feedList;
 	}
 
+	public int followerNo(String writerUser) {
+		int followerNo = feedDao.followerNo(writerUser);
+		return followerNo;
+	}
+
 
 	
 }
