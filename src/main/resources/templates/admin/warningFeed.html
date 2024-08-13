@@ -52,7 +52,7 @@
 	<th:block th:include="common/header"></th:block>
 		<div class="wrapper">
 			<section>
-                <div class="page-title">개인기록장 관리페이지</div>
+                <div class="page-title">피드 관리페이지</div>
                 <div class="warning-wrapper">
                     <table class="warnnig-tbl">
                         <tr>
@@ -64,13 +64,13 @@
                             <th style="width: 10%">경고 횟수</th>
                             <th style="width: 20%">경고주기</th>
                         </tr>
-                        <tr th:each="feed : ${feedList}">
+                        <tr th:each="feed : ${reportList}">
                             <td th:text="${feed.userNo}"></td>
                             <td th:text="${feed.userFeedWriter}"></td>
                             <td th:text="${feed.userFeedNo}" class="view-content"></td>
                             <td id="view-report-content" th:data-content="${feed.userFeedContent}"><a>내용 보기</a></td>
                             <td th:text="${feed.userFeedDate}"></td>
-                            <td th:text="${feed.warningCount}"></td>
+                            <td th:text="${feed.userFeedCount}"></td>
                             <td>
                             	<button type="button" class="warn-btn wh-btn2">경고</button>
                             </td>
