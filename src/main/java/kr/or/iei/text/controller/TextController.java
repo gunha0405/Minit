@@ -49,7 +49,6 @@ public class TextController {
     		TextFeed textFeed = textService.selectOneTextFeed(textFeedNo); 
     		User writerUser = userService.selectOneUser(user);
     		textFeed.setTextFeedWriterImg(writerUser.getUserImg());
-    		System.out.println("유저 이미지 : " + writerUser.getUserImg());
     		TextFeedJsonList textFeedJsonList = new TextFeedJsonList(writerUser, textFeed);
     		return textFeedJsonList;
     	} else {

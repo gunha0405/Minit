@@ -290,5 +290,22 @@ public class UserController {
 		return "common/msg";
 	}
 	
+	@RequestMapping(value="/loginMsg")
+	public String loginMsg(Model model) {
+		model.addAttribute("title", "로그인 확인");
+		model.addAttribute("msg", "로그인 후 이용이 가능합니다,");
+		model.addAttribute("icon", "info");
+		model.addAttribute("loc", "/");
+		return "common/msg";
+	}
+	
+	@RequestMapping(value="/adminMsg")
+	public String adminMsg(Model model) {
+		model.addAttribute("title", "관리자 확인");
+		model.addAttribute("msg", "관리자만 이용이 가능합니다,");
+		model.addAttribute("icon", "info");
+		model.addAttribute("loc", "/");
+		return "common/msg";
+	}
 	
 }
