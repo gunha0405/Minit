@@ -61,7 +61,6 @@ public class TextDao {
 		String query = "select * from text_feed where text_feed_no = ?";
 		Object[] params = {textFeedNo};
 		List list = jdbc.query(query,textFeedRowMapper ,params);
-		System.out.println(list);
 		return (TextFeed)list.get(0);
 	}
 

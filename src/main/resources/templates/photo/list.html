@@ -186,7 +186,6 @@
           url: "/photo/more",
           type: "GET",
           success: function(data) {
-            console.log(data);
             $("#columns").empty();
             let adCounter = 0; // 광고 카운터 초기화
 
@@ -220,7 +219,6 @@
             setCardClickEvents(); // 카드 클릭 이벤트 설정
           },
           error: function(xhr, status, error) {
-            console.log("Error: " + error);
             Swal.fire({
               title: "로드 실패",
               text: "이미지를 로드하는 중 오류가 발생했습니다.",
@@ -266,7 +264,6 @@
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.log("댓글 작성 오류: " + error);
                     Swal.fire({
                         title: "서버 전송 실패",
                         text: "서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.",
@@ -287,9 +284,6 @@
           
           
           
-          console.log("Photo Feed No: " + photoFeedNo);
-          console.log("Session User ID: " + sessionUserId); // 세션 ID 출력
-          console.log("User ID: " + userId); // 이미지 작성자 ID 출력
 
           $("#modalImage").attr("src", imgSrc);
           $("#imageModal").modal("show");
@@ -316,7 +310,6 @@
               }
             },
             error: function(xhr, status, error) {
-              console.log("Error: " + error);
             }
           });
 
@@ -324,9 +317,6 @@
           $("#likeBtn").off("click").on("click", function() {
             checkLoginStatus(function() {
               const isLike = $("#likeBtn").data('liked');
-              console.log("포토번호: " + photoFeedNo);
-              console.log("좋아요 상태: " + isLike);
-              
               
               
               
@@ -358,7 +348,6 @@
                   }
                 },
                 error: function(xhr, status, error) {
-                  console.log("Error: " + error);
                   Swal.fire({
                     title: "서버 전송 실패",
                     text: "서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.",
@@ -382,7 +371,6 @@
               }
             },
             error: function(xhr, status, error) {
-              console.log("Error: " + error);
             }
           });
 
@@ -393,8 +381,6 @@
               if (typeof isSave === "undefined" || isSave === null) {
                 isSave = 0;
               }
-
-              console.log("isSave value being sent: " + isSave);
 
               $.ajax({
                 url: "/photo/save",
@@ -425,7 +411,6 @@
                   }
                 },
                 error: function(xhr, status, error) {
-                  console.log("Error: " + error);
                   Swal.fire({
                     title: "서버 전송 실패",
                     text: "서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.",
@@ -483,7 +468,6 @@
       }
 
       function reportImage(photoFeedNo, isDec) {
-        console.log(isDec);
         $.ajax({
           url: "/photo/report",
           type: "post",

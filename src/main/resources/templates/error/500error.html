@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>main</title>
+</head>
+<style>
+@charset "UTF-8";
+
+
+
+footer {
+  background-color: white;
+  width: 100%;
+  font-size: 13px;
+  border-top: 1px solid lightgrey;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  position: relative;
+}
+
+footer div {
+  margin-left: 30px;
+  margin-block-end: 30px;
+}
+
+.bottom-navBar {
+  display: flex;
+  justify-content: center;
+  position: sticky;
+  bottom: 20px;
+  width: 100%;
+  z-index: 1000;
+}
+
+.bottom-navBar .nav {
+  padding: 10px;
+  border-radius: 30px;
+  border: 0px solid darkgreen;
+  display: flex;
+  justify-content: space-around;
+  width: 55%;
+  height: 50px;
+  align-items: center;
+  background-color: #2cd37a;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.item {
+  color: #f0f0f0;
+  font-size: 19px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.item:hover {
+  color: lightseagreen;
+  font-size: 19px;
+  border-radius: 30px;
+}
+
+
+/* 오션 CSS*/
+
+.ocean {
+  background: #34bd72;
+  height: 10%;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+}
+.wave {
+  background: url("../image/wave.svg") repeat-x;
+  position: absolute;
+  top: -198px;
+  width: 6400px;
+  height: 198px;
+  animation: wave 7s cubic-bezier(0.39, 0.48, 0.66, 0.56) infinite;
+  transform: translate3d(0, 0, 0);
+}
+.wave:nth-of-type(2) {
+  top: -175px;
+  animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) -0.125s infinite,
+    swell 7s ease -1.25s infinite;
+  opacity: 1;
+}
+@keyframes wave {
+  0% {
+    margin-left: 0;
+  }
+  100% {
+    margin-left: -1600px;
+  }
+}
+@keyframes swell {
+  0%,
+  100% {
+    transform: translate3d(0, -25px, 0);
+  }
+  50% {
+    transform: translate3d(0, 5px, 0);
+  }
+}
+.contents{
+	width:500px;
+	height:500px;
+	display:flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	margin:0 auto;
+}
+
+.errorText{
+
+}
+</style>
+<body>
+	<!-- 컴포넌트처럼 헤더를 가지고 올수 있다. -->
+	<th:block th:include="common/header"></th:block>
+	<main class="contents">
+			<div class="errorText">앗! 미닛과의 연결을 확인해보세요!</div>
+	</main>
+		<footer>
+	<div class="ocean">
+        <div class="wave"></div>
+        <div class="wave"></div>
+      </div>
+      <div>
+        <p>상호명 : (주)테크노 </p>
+        <p>소재지 : 서울시 영등포구 선유도 57 이레빌딩 19F</p>
+      </div>
+      <div>
+        <p>고객센터 : 1577-0001[평일 09:00 ~ 17:00]</p>
+        <p>EMAIL : admin@icemall.com</p>
+      </div>
+    </footer>
+</body>
+</html>

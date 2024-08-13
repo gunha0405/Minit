@@ -420,8 +420,11 @@ public class FeedService {
 	}
 
 	@Transactional
-	public int reportFeed(int textFeedNo, int userNo) {
-		int result = feedDao.reportFeed(textFeedNo, userNo);
+	public int reportFeed(int feedNo, int userNo) {
+		int result = feedDao.reportFeed(feedNo, userNo);
+		if(result > 0) { 
+			result = feedDao.updateReportFeed(feedNo);
+		}
 		return result;
 	}
 
@@ -493,6 +496,16 @@ public class FeedService {
 	public int updateFeedFilepathNull(int file) {
 		int result = feedDao.updateFileNull(file);
 		return result;
+	}
+
+	public List<Feed> selectReportFeed() {
+		List<Feed> feedList = feedDao.selectReportFeed();
+		return feedList;
+	}
+
+	public int followerNo(String writerUser) {
+		int followerNo = feedDao.followerNo(writerUser);
+		return followerNo;
 	}
 
 
