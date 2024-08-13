@@ -169,18 +169,28 @@ public class FeedService {
 	public Feed selectUserOneFeed(int userFeedNo, int userNo) {
 		//게시물정보 입력받기
 		Feed feed = feedDao.searchFeedUser(userFeedNo);
+		
+		//사진 게시물 저장 
 		// 게시물당 사진 게시물 몇개인지
 		int totalImgNo = feedDao.totalImg(userFeedNo);
+		List<FeedFile> filepathList = new ArrayList<FeedFile>();
+		for(int i = 0; i < totalImgNo; i ++) {
+			FeedFile f = new FeedFile();
+			String filepath = feedDao.getFilePath(userFeedNo, i+1);
+			f.setUserFeedFilepath("/feed/"+filepath);
+			filepathList.add(f);
+		}
+		feed.setFeedList(filepathList);
 		// System.out.println(totalImgNo);
 		// 게시물 갯수만큼 배열만큼 사진저장
-		List<FeedFile> feedList = new ArrayList<FeedFile>();
-		for (int i = 0; i < totalImgNo; i++) {
-			String filepath = feedDao.searchFeedImg(userFeedNo, i);
-			FeedFile fF = new FeedFile();
-			fF.setUserFeedFilepath(filepath);
-			feedList.add(fF);
-		}
-		feed.setFeedList(feedList);
+		//List<FeedFile> feedList = new ArrayList<FeedFile>();
+		//for (int i = 0; i < totalImgNo; i++) {
+		//	String filepath = feedDao.searchFeedImg(userFeedNo, i);
+		//	FeedFile fF = new FeedFile();
+		//	fF.setUserFeedFilepath(filepath);
+		//	feedList.add(fF);
+		//}
+		//feed.setFeedList(feedList);
 		
 		//댓글 가져오기 
 		List<FeedComment> feedCommentList = new ArrayList<FeedComment>();
@@ -196,6 +206,7 @@ public class FeedService {
 		feed.setFeedComment(feedCommentList);
 		return feed;
 	}
+	
 	public Feed selectUserOneFeed(int userFeedNo) {
 		//피드에 있는 사진 가져오기 
 		//게시물 정보 가져오기 
@@ -409,8 +420,11 @@ public class FeedService {
 	}
 
 	@Transactional
-	public int reportFeed(int textFeedNo, int userNo) {
-		int result = feedDao.reportFeed(textFeedNo, userNo);
+	public int reportFeed(int feedNo, int userNo) {
+		int result = feedDao.reportFeed(feedNo, userNo);
+		if(result > 0) { 
+			result = feedDao.updateReportFeed(feedNo);
+		}
 		return result;
 	}
 
@@ -482,6 +496,11 @@ public class FeedService {
 	public int updateFeedFilepathNull(int file) {
 		int result = feedDao.updateFileNull(file);
 		return result;
+	}
+
+	public List<Feed> selectReportFeed() {
+		List<Feed> feedList = feedDao.selectReportFeed();
+		return feedList;
 	}
 
 

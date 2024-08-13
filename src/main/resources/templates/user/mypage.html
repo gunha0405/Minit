@@ -140,7 +140,12 @@
                               <th>최근 수정일</th>
                               <td colspan="2" th:text="${session.user.updateDate}"></td>
                             </tr>
+                            <tr>                                
+                              <th>경고횟수</th>
+                              <td colspan="2" th:text="${session.user.warningCount}"></td>
+                            </tr>
                         </table>
+						<span>* minit의 쾌적한 커뮤니티 환경을 위해 총 경고횟수가 5에 도달하면 탈퇴처리 됩니다.</span>
                         <input type="hidden" name="userNo" th:value="${session.user.userNo}">
                         <div class="mypage-btn">
                           <button type="submit" class="btn-point2 update">정보수정</button>

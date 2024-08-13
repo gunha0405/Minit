@@ -55,8 +55,10 @@
 									<img class="slide-img" th:src="${item.userFeedFilepath}" alt="photo" />
 								</th:block>
 							</div>
+							<th:block th:if="${list.size > 1}">
 							<button class="nav-button-img prev-img" onclick="prevSlide()">❮</button>
 							<button class="nav-button-img next-img" onclick="nextSlide()">❯</button>
+							</th:block> 
 						</div>
 					</td>
 				</tr>

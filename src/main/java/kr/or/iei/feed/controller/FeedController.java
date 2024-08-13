@@ -54,6 +54,10 @@ public class FeedController {
 		int userNo = user.getUserNo();
 
 		Feed feed = feedService.selectUserOneFeed(userFeedNo, userNo); 
+		System.out.println("filelength="+feed.getFeedList().size());
+//		for(FeedFile file : feed.getFeedList()) {
+//			System.out.println("file="+file.getUserFeedFilepath());
+//		}
 		
 		//피드글 신고, 좋아요 보관함 여부 
 		int reportCount = -1;
@@ -374,6 +378,7 @@ public class FeedController {
 		    return result;
 		}
 	}
+	
 	@ResponseBody
 	@PostMapping(value="/isLike")
 	public int isLike(int userFeedNo, @SessionAttribute(required =false) User user) {

@@ -322,7 +322,13 @@
 	font-size: 13px;
 }
 
-
+.my-info-wrap{
+	text-align: center;
+}
+.my-info-wrap span{
+	color: #61bb8b;
+	font-size: 13px;
+}
 
 
 
