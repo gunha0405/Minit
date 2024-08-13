@@ -84,7 +84,10 @@ public class HomeController {
 	   return b;
    }
 		   
-  
+   @GetMapping("/etc/about")
+   public String showAboutPage() {
+       return "about"; // about.html을 렌더링
+   }
 }
    
     
