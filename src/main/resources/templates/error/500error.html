@@ -102,14 +102,23 @@ footer div {
     transform: translate3d(0, 5px, 0);
   }
 }
+.contents{
+	width:500px;
+	height:500px;
+	display:flex;
+	flex-direction: center;
+	align-items: center;
+	justify-content: center;
+}
+.errorText{
+
+}
 </style>
 <body>
 	<!-- 컴포넌트처럼 헤더를 가지고 올수 있다. -->
 	<th:block th:include="common/header"></th:block>
 	<main class="contents">
-		<section class="section">
-			<div class="page-title">서버가 많이 아파요 ㅠㅠ</div>
-		</section>
+			<div class="errorText">앗! 미닛과의 연결을 확인해보세요!</div>
 	</main>
 		<footer>
 	<div class="ocean">

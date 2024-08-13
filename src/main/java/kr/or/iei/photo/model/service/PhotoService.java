@@ -82,7 +82,6 @@ public class PhotoService {
 
     public int deleteComment(PhotoComment pc) {
         int result = photoDao.deleteComment(pc);
-        System.out.println(result);
         return result;
     }
 
