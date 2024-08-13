@@ -80,7 +80,7 @@ public class FeedDao {
 	}
 
 	public int insertFeed(Feed f) {
-		String query = "insert into user_feed_tbl values(user_feed_tbl_seq.nextval,?,?,to_char(sysdate,'YYYY-MM-DD'),0)";
+		String query = "insert into user_feed_tbl values(user_feed_tbl_seq.nextval,?,?,to_char(sysdate,'YYYY-MM-DD'),0,0)";
 		Object[] params = {f.getUserFeedWriter(), f.getUserFeedContent()};
 		int result = jdbc.update(query, params);
 		return result;
@@ -477,6 +477,7 @@ public class FeedDao {
 	public List<Feed> selectReportFeed() {
 		String query = "select * from user_feed_tbl where user_feed_count > 0";
 		List<Feed> feedlist = jdbc.query(query, feedRowMapper);
+		System.out.println(feedlist);
 		return feedlist;
 	}
 

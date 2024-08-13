@@ -92,7 +92,7 @@ public class AdminController {
 		User u = userService.selectOneUser(userNo);
 		List<Photo> reportList = photoService.selectReportFeed();
 		if(u != null) {
-			int result = userService.feedChangeCount(u, photoFeedNo);
+			int result = userService.photoChangeCount(u, photoFeedNo);
 			model.addAttribute("reportList", reportList);
 			if(result == 4){
 				model.addAttribute("title", "회원정지 및 글삭제 성공");

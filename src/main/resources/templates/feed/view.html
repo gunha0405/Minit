@@ -32,6 +32,10 @@
 	width: 100px;
 	width: 60px;
 }
+.comment-input-container{
+	margin-left : 10px;
+	margin: 0 auto;
+}
 </style>
 </head>
 
@@ -43,7 +47,7 @@
 		<div class="content-info">
 			<table class="content-info-table">
 				<tr class="user-image icon-size">
-					<td><img src="image/profilePhoto.jfif" alt="Profile Photo"></td>
+					<td><img src="@{/user/feed.userFilepath}" alt="Profile Photo"></td>
 					<td class="user-nick" th:text="${feed.userFeedWriter}"></td>
 					<td class="date" th:text="${feed.userFeedDate}"></td>
 				</tr>
@@ -93,11 +97,9 @@
 
 		<!--댓글 창 : chat icon 누르면 열리도록-->
 		<div class="inputCommentBox hidden">
+		<th:block th:if="session.user!=null">
 	    <div class="form-wrap">
 	      <ul>
-	        <li class="comment-user-container">
-	          <img src="image/profilePhoto.jfif" alt="user-image" class="comment-user">
-	        </li>
 	        <li class="comment-input-container">
 	         <!--  <input type="hidden" name="feedCommentWriter" value="아이디"> -->
 	          <input type="hidden" name="feedCommentWriterNo" value="{feed.userFeedNo}">
@@ -111,6 +113,7 @@
 	          <button class="btn-primary sendComment">등록</button>
 	        </li>
 	      </ul>
+	      </th:block>
 		<!-- 댓글 출력 -->
 		<div class="comment-wrap">
 		<th:block th:each="fc : ${feed.feedComment} ">
