@@ -71,7 +71,7 @@ public class UserController {
 	
 	//마이페이지 회원정보 수정
 	@PostMapping(value="/update")
-	public String update(User u, @SessionAttribute User user, MultipartFile[] upfile, int imgtype) {
+	public String update(User u, @SessionAttribute User user, MultipartFile[] upfile, int imgtype, Model model) {
 		//System.out.println(upfile.length);
 		System.out.println(u.getUserImg());
 		System.out.println(u);
@@ -104,7 +104,11 @@ public class UserController {
 			user.setUserInfo(u.getUserInfo());
 			user.setUserPw(u.getUserPw());
 			user.setUserImg(u.getUserImg());
-			return "redirect:/user/mypage";
+			model.addAttribute("title", "정보 수정 완료");
+			model.addAttribute("msg", "정보 수정이 완료되었습니다!");
+			model.addAttribute("icon", "success");			
+			model.addAttribute("loc", "/user/mypage");
+			return "common/msg";
 		}else {
 			return "redirect:/";
 		}
