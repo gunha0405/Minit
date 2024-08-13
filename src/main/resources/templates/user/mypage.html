@@ -141,7 +141,7 @@
                               <td colspan="2" th:text="${session.user.updateDate}"></td>
                             </tr>
                             <tr>                                
-                              <th>경고횟수</th>
+                              <th>누적 경고 횟수</th>
                               <td colspan="2" th:text="${session.user.warningCount}"></td>
                             </tr>
                         </table>
@@ -274,9 +274,7 @@
 			$("#userPw").on("keyup",function(){
 	    		$("#userPw").removeClass("required");
 	    		$("#userRePw").removeClass("required");
-	    		//$(".pw-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
 	    		const userPw = $("#userPw").val();
-	    		//console.log(userPw);
 	    		const pwReg = /^(?!((?:[A-Za-z]+)|(?:[~!@#$%^&*()_+=]+)|(?:[0-9]+))$)[A-Za-z\d~!@#$%^&*()_+=]{8,16}$/;
 	    		if(!pwReg.test(userPw)){
 	    			$(".pw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
@@ -301,8 +299,8 @@
 					if(userPw === pwReValue){
 						$(".repw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
 						$(".repw-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+						$(".repw-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
 						$(".repw-check-msg-valid").removeClass("none").addClass("valid");
-						$("#userRePw").addClass("required");
 						$("#userRePw").addClass("required");
 					}
 	    		}

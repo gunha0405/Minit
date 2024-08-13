@@ -245,6 +245,11 @@
                         	<span class="material-icons">check_circle_outline</span>
                         	<span>비밀번호가 일치합니다.</span>                      	
                         </div>
+			            <div class="input-msg repw-check-msg-same none">
+			                <span class="material-icons">info_outline</span>
+			                <span>비밀번호를 수정하셨습니다. 다시 작성해주세요.</span>                      	
+			            </div>
+                        
                     </div>
                     <div class="mb-3">
                       <label for="userName" class="form-label">성명</label>
@@ -489,11 +494,29 @@
     			$(".pw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
     			$(".pw-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
     			$(".pw-check-msg-invalid").removeClass("none").addClass("invalid");
+    			$(".repw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+    			$(".repw-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+    			$(".repw-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
+    			$(".repw-check-msg-same").removeClass("none").addClass("invalid");
+    			$("#userRePw").removeClass("required");
     		}else{
     			$(".pw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
 				$(".pw-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
 				$(".pw-check-msg-valid").removeClass("none").addClass("valid");
 				$("#userPw").addClass("required");
+				$(".repw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+    			$(".repw-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+    			$(".repw-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
+    			$(".repw-check-msg-same").removeClass("none").addClass("invalid");
+    			$("#userRePw").removeClass("required");
+				const pwReValue = $("#userRePw").val();
+				if(userPw === pwReValue){
+					$(".repw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+					$(".repw-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+					$(".repw-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
+					$(".repw-check-msg-valid").removeClass("none").addClass("valid");
+					$("#userRePw").addClass("required");
+				}
     		}
     	})
     
