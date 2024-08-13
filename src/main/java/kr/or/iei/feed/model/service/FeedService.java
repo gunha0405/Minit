@@ -498,6 +498,11 @@ public class FeedService {
 		return result;
 	}
 
+	public List<Feed> selectReportFeed() {
+		List<Feed> feedList = feedDao.selectReportFeed();
+		return feedList;
+	}
+
 
 	
 }

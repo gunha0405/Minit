@@ -474,5 +474,11 @@ public class FeedDao {
 		return result;
 	}
 
+	public List<Feed> selectReportFeed() {
+		String query = "select * from user_feed_tbl where user_feed_count > 0";
+		List<Feed> feedlist = jdbc.query(query, feedRowMapper);
+		return feedlist;
+	}
+
 
 }

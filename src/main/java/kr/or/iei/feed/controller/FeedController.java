@@ -378,6 +378,7 @@ public class FeedController {
 		    return result;
 		}
 	}
+	
 	@ResponseBody
 	@PostMapping(value="/isLike")
 	public int isLike(int userFeedNo, @SessionAttribute(required =false) User user) {
