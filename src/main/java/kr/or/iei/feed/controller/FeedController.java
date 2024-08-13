@@ -37,10 +37,6 @@ public class FeedController {
 	@Autowired
 	FileUtils fileUtils = new FileUtils();
 
-	@GetMapping(value = "/list")
-	public String list() {
-		return "feed/list"; 
-	}
 	
 	@GetMapping(value = "/writeForm")
 	public String wirteForm() {
@@ -341,6 +337,9 @@ public class FeedController {
 	public int userFollowCancel(String loginUser, String writerUser) {
 		int num = feedService.userFollowCancel(loginUser, writerUser);
 		//System.out.println("userFollowCancel");
+		if(num > 0) {
+			num = feedService.followerNo(writerUser);
+		}
 		return num;
 	}
 
