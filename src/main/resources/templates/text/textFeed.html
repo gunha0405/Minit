@@ -204,7 +204,6 @@
                         $(obj).attr('id', 'feed-not-like').removeClass('fa-heart').addClass('fa-regular fa-heart');
                     }
                 }
-                console.log(data);
     			$(obj).next().text(data);
             },
             error: function() {
@@ -479,7 +478,6 @@
                     $("#text-feed-content").val("");
                 },
                 error: function() {
-                    console.log("서버연결 실패");
                     alert("글 작성 실패");
                 }
             });
@@ -730,8 +728,6 @@
         	const textFeedElement = $(this).closest(".feed");
         	const textFeedNo = textFeedElement.find(".textFeedNo").text();
         	const isReport = textFeedElement.find(".feed-is-report").text();
-        	console.log(isReport);
-        	console.log(textFeedNo);
         	swal({
         		title : "게시물 신고",
         		text : "이 게시물을 신고 하시겠습니까?",

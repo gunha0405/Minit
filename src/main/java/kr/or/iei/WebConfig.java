@@ -8,6 +8,9 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
+import kr.or.iei.util.AdminInterceptor;
+import kr.or.iei.util.LoginInterceptor;
+
 
 //스프링부트 설정파일
 @EnableWebMvc
@@ -43,6 +46,14 @@ public class WebConfig implements WebMvcConfigurer {
 			
 	}
 
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+			registry.addInterceptor(new LoginInterceptor())
+					.addPathPatterns("/photo/list","/user/logout","/user/mypage","/user/update","/user/delete","/following");
+			
+			registry.addInterceptor(new AdminInterceptor())
+					.addPathPatterns("/admin/**");
+	}
 
 	
 }
