@@ -117,7 +117,7 @@
 			<table>
 				<tr>
 					<td style="width: 10%;"><a href="#">
-						<img src="user/${fc.userImg}" alt="${fc.userFeedWriter}" class="comment-user"></a>
+						<img th:src="@{/user/${fc.userFeedFilepath}}" alt="${fc.userFeedWriter}" class="comment-user"></a>
 					</td>
 					<td  colspan="2" style="width: 75%;">
 						<span th:text="${fc.feedCommentContent}"></span>
@@ -143,7 +143,7 @@
                		<td colspan="1" style="width: 15%;">
                			 <button class="btn-primary" th:onclick="commentUpdateBtn(this, [[${fc.feedCommentNo}]])">저장</button>
                		</td>
-               		<td colspan="1" style="width: 15%;">
+               		<td colspan="2" style="width: 15%;">
                			 <button class="btn-primary" onclick="commentUpdateCancleBtn(this)">취소</button>
                		</td>
 				</tr>
