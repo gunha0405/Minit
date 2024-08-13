@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.servlet.http.HttpSession;
 import kr.or.iei.board.model.dto.Board;
 import kr.or.iei.board.model.service.BoardService;
 import kr.or.iei.feed.model.dto.Feed;
@@ -83,12 +85,29 @@ public class HomeController {
 	   b.setFeedlist(list2);
 	   return b;
    }
+   
+   @RestController // controller에 responesbody가 섞인것
+   @RequestMapping("/home/user")
+   public class UserController {
+       @GetMapping("/checkLoginStatus")
+       public boolean checkLoginStatus(HttpSession session) {
+           // 로그인 상태를 확인하는 로직을 여기에 구현
+           User user = (User) session.getAttribute("user");
+           return user != null;
+       }
+   }
+   
+}
+   
+   
 		   
+
    @GetMapping("/etc/about")
    public String showAboutPage() {
        return "about"; // about.html을 렌더링
    }
 }
+
    
     
     
