@@ -254,6 +254,10 @@
                         name="userName"
                         id="userName"
                         placeholder="성명을 입력하세요!"/>
+                        <div class="input-msg name-check-msg-invalid none">
+                        	<span class="material-icons">info_outline</span>  
+                        	<span>주민등록 상 이름을 작성해주세요. (한글 2~6글자 이내)</span>                      	
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="userNick" class="form-label">사용자이름</label>
@@ -327,17 +331,6 @@
         
 
     <script>
-<<<<<<< HEAD
-<<<<<<< HEAD
-    	$("#login-empty").on("click",function(){
-    		console.log(1);
-    		$("[name=userId]").empty();
-    	});
-=======
-    
->>>>>>> taguyoon
-=======
->>>>>>> 836bf0d1dd29a65bd8442716e8dbd89d9b1f5f03
     
     	/*이메일인증*/
 	    let mailCode = null;
@@ -432,11 +425,15 @@
 		
     	$("#userName").on("change",function(){
     		$("#userName").removeClass("required");
+			const nameReg = /^[가-힣]{2,6}$/;
     		const userName = $("#userName").val();
-	    	if(userName != ""){
-	    		$("#userName").addClass("required");
-	    	}else{
+	    	if(!nameReg.test(userName)){
+	    		$(".name-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+    			$(".name-check-msg-invalid").removeClass("none").addClass("invalid");
 	    		$("#userName").removeClass("required");
+	    	}else{
+	    		$(".name-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+	    		$("#userName").addClass("required");
 	    	}
     	});
     	

@@ -22,10 +22,9 @@
 							<th style="width:5%">번호</th>
 							<th style="width:10%">아이디</th>
 							<th style="width:10%">이름</th>
-							<th style="width:10%">사용자이름</th>
-							<th style="width:15%">이메일</th>
+							<th style="width:13%">사용자이름</th>
+							<th style="width:20%">이메일</th>
 							<th style="width:14%">가입일</th>
-							<th style="width:8%">경고</th>
 							<th style="width:10%">회원등급</th>
 							<th style="width:13%">등급변경</th>
 						</tr>
@@ -39,7 +38,6 @@
                             <td th:text="${u.userNick}"></td>
                             <td th:text="${u.userEmail}"></td>
                             <td th:text="${u.createDate}"></td>
-                            <td th:text="${u.warningCount}"></td>
                             <td>
                             	<div class="select" th:switch="${u.userLevel}">
 									<select th:case="1">
@@ -64,7 +62,7 @@
 							</td>
                         </tr>
                         <tr>
-                            <td colspan="10">
+                            <td colspan="9">
                                 <button class="checked-changeLevel-btn btn-point2" style="width: 80%; height: 35px;">선택회원 일괄 등급변경</button>
                             </td>
                         </tr>
