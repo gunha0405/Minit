@@ -528,11 +528,13 @@
 			if(pwValue === pwReValue){
 				$(".repw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
 				$(".repw-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+				$(".repw-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
 				$(".repw-check-msg-valid").removeClass("none").addClass("valid");
 				$("#userRePw").addClass("required");
 			}else{
 				$(".repw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
     			$(".repw-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+    			$(".repw-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
     			$(".repw-check-msg-invalid").removeClass("none").addClass("invalid");				
 			}
 		});
