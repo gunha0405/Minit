@@ -145,7 +145,7 @@ public class FeedDao {
 	}
 
 	public int totalImg(int userFeedNo) {
-		String query = "select count(*) from user_feed_file where user_feed_no=?";
+		String query = "select count(*) from user_feed_file where user_feed_no=? and user_feed_filepath is not null";
 		Object[] params = {userFeedNo};
 		int totalImgNo = jdbc.queryForObject(query, Integer.class, params);
 		return totalImgNo;
@@ -455,6 +455,16 @@ public class FeedDao {
 		Object[] params = {filepath, file};
 		int result = jdbc.update(query, params);
 		return result;
+	}
+
+	public String getFilePath(int userFeedNo, int i) {
+		String query = "select user_feed_filepath from\r\n" + 
+				"(select rownum as rnum, n. * from \r\n" + 
+				"(select * from user_feed_file where user_feed_no=? and user_feed_filepath is not null)n) where rnum = ?";
+		Object[] params = {userFeedNo,i};
+		String filePath = jdbc.queryForObject(query,String.class, params);
+		//System.out.println("filePath"+filePath);
+		return filePath;
 	}
 
 
