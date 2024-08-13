@@ -166,47 +166,95 @@ public class FeedController {
 	}
 
 	@PostMapping(value = "/feedUpdate")
-	public String feedUpdate(Feed f, MultipartFile upfile1, MultipartFile upfile2, MultipartFile upfile3, Model model) {
+	public String feedUpdate(String originFilePath1, String originFilePath2, String originFilePath3, Feed f, int file1, int file2, int file3, MultipartFile upfile1, MultipartFile upfile2, MultipartFile upfile3, Model model) {
 		//수정할 부분 화면에서 사진 경로 같이 숨겨서 보내서 그 부분만 수정하자 
 		//새로운 파일 경로 인덱스 작업 
+		String savepath = root + "/feed/";
 		int result = 0;
+		//미디어 input 파일이 있을 경우 
 		if(!upfile1.isEmpty()) {
-			//System.out.println("여기 있어요1");
+			String filepath = fileUtils.upload(savepath, upfile1);
+			//기존파일과 새로운 파일의 이름이 같으면 업데이트 X
+			if(originFilePath1 == filepath) {
+				result += 0;
+			}else if(originFilePath1 != filepath){
+				//기존파일과 새로운 파일의 이름이 다르면 업데이트
+				result += feedService.updateFeedFilepath(file1, filepath);				
+			}
+		}else {//미디어 input 파일이 없을 경우
+			//originFilePath 값이 없다면 해당 파일 null로 수정
+			if(originFilePath1.equals("filepathNull")) {
+				result = feedService.updateFeedFilepathNull(file1);
+			}else if(!originFilePath1.equals("filepathNull")) {
+				result = +0;
+			}
 		}
+		
+		
 		if(!upfile2.isEmpty()) {
-			//System.out.println("여기 있어요2");
+			String filepath = fileUtils.upload(savepath, upfile2);
+			//기존파일과 새로운 파일의 이름이 같으면 업데이트 X
+			if(originFilePath1 == filepath) {
+				result += 0;
+			}else if(originFilePath2 != filepath){
+				//기존파일과 새로운 파일의 이름이 다르면 업데이트
+				result += feedService.updateFeedFilepath(file2, filepath);				
+			}
+		}else {//미디어 input 파일이 없을 경우
+			//originFilePath 값이 없다면 해당 파일 null로 수정
+			if(originFilePath3.equals("filepathNull")) {
+				result = feedService.updateFeedFilepathNull(file2);
+			}else if(!originFilePath1.equals("filepathNull")) {
+				result = +0;
+			}
 		}
+		
 		if(!upfile3.isEmpty()) {
-			//System.out.println("여기 있어요3");
+			String filepath = fileUtils.upload(savepath, upfile3);
+			//기존파일과 새로운 파일의 이름이 같으면 업데이트 X
+			if(originFilePath3 == filepath) {
+				result += 0;
+			}else if(originFilePath3 != filepath){
+				//기존파일과 새로운 파일의 이름이 다르면 업데이트
+				result += feedService.updateFeedFilepath(file3, filepath);				
+			}
+		}else {//미디어 input 파일이 없을 경우
+			//originFilePath 값이 없다면 해당 파일 null로 수정
+			if(originFilePath3.equals("filepathNull")) {
+				result = feedService.updateFeedFilepathNull(file3);
+			}else if(!originFilePath1.equals("filepathNull")) {
+				result = +0;
+			}
 		}
-		if(!upfile1.isEmpty()||!upfile2.isEmpty()||!upfile3.isEmpty()) {
-			MultipartFile[] newFiles = {upfile1, upfile2, upfile3};
-			String savepath = root + "/feed/";
-			List<FeedFile> newFileList = new ArrayList<FeedFile>();
-			for (MultipartFile file : newFiles) {
-				if (!file.isEmpty()) {
-					// 파일경로 복사, 중복된 이름 검사 
-					String filepath = fileUtils.upload(savepath, file); // ice5_2.png
-					FeedFile feedFile = new FeedFile();
-					feedFile.setUserFeedFilepath(filepath);
-					newFileList.add(feedFile);//새로운 파일 경로 작업
-					
-				}
-			}//for()
+		
+		result = feedService.updateFeedContent(f);
+//		if(!upfile1.isEmpty()||!upfile2.isEmpty()||!upfile3.isEmpty()) {
+//			MultipartFile[] newFiles = {upfile1, upfile2, upfile3};
+//			//String savepath = root + "/feed/";
+//			List<FeedFile> newFileList = new ArrayList<FeedFile>();
+//			for (MultipartFile file : newFiles) {
+//				if (!file.isEmpty()) {
+//					// 파일경로 복사, 중복된 이름 검사 
+//					String filepath = fileUtils.upload(savepath, file); // ice5_2.png
+//					FeedFile feedFile = new FeedFile();
+//					feedFile.setUserFeedFilepath(filepath);
+//					newFileList.add(feedFile);//새로운 파일 경로 작업
+//				}
+//			}//for()
 //			for(FeedFile file : newFileList) {
 //				System.out.println("path="+file.getUserFeedFilepath());
 //			}
-			List<FeedFile> files = new ArrayList<FeedFile>();
-			
-		
-			result = feedService.updateNewFile(f, newFileList);
-				
-			
-		
-			//result = feedService.updatefile(f, newFileList, files);
-		}else {
-			result = feedService.updateFeedContent(f);
-		}
+//			List<FeedFile> files = new ArrayList<FeedFile>();
+//			
+//		
+//			result = feedService.updateNewFile(f, newFileList);
+//				
+//			
+//		
+//			//result = feedService.updatefile(f, newFileList, files);
+//		}else {
+//			
+//		}
 		
 		
 		
@@ -266,11 +314,12 @@ public class FeedController {
 	@GetMapping(value = "/updateFrm")
 	public String updateFrm(String userFeedWriter, int userFeedNo, Model model) {
 		Feed feed = feedService.selectUserOneFeed(userFeedNo);
+		//for(FeedFile ff : feed.getFeedList()) {
+			//System.out.println(ff);
+			
+		//}
 		model.addAttribute("feed", feed);
 		model.addAttribute("list", feed.getFeedList());
-		//for (FeedFile file : feed.getFeedList()) {
-			//System.out.println(file);
-		//}
 		return "/feed/updateFrm";
 	}
 	

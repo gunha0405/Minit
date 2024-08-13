@@ -191,9 +191,9 @@ public class FeedDao {
 		return result;
 	}
 
-	public int updateFileNull(int userFeedNo) {
-		String query ="update user_feed_file set user_feed_filepath=null where user_feed_no=?";
-		Object[] params = {userFeedNo};
+	public int updateFileNull(int file) {
+		String query ="update user_feed_file set user_feed_filepath=null where USER_FEED_FILE_NO=?";
+		Object[] params = {file};
 		int result = jdbc.update(query, params);
 		return result;
 	}
@@ -433,6 +433,28 @@ public class FeedDao {
 		Object[] params = {feedNo};
 		List list = jdbc.query(query, feedRepoRowMapper, params);
 		return (Feed)list.get(0);
+	}
+
+	public FeedFile selectFeedFile(int userFeedNo, int i) {
+		String query = "select user_feed_file_no, user_feed_no, user_feed_filepath from\r\n" + 
+				"(select rownum as rnum, n. *from (select *from user_feed_file where user_feed_no = ?)n) where rnum =?";
+		Object[] params = {userFeedNo, i};
+		List list = jdbc.query(query, feedFileRowMapper, params);		
+		return (FeedFile)list.get(0);
+	}
+
+	public Feed getFeed(int userFeedNo) {
+		String query = "select * from user_feed_tbl where user_feed_no = ?";
+		Object[] params = {userFeedNo};
+		List list = jdbc.query(query, feedRowMapper, params);
+		return (Feed)list.get(0);
+	}
+
+	public int updateFeedFilepath(int file, String filepath) {
+		String query = "update user_feed_file set USER_FEED_FILEPATH=? where USER_FEED_FILE_NO=?";
+		Object[] params = {filepath, file};
+		int result = jdbc.update(query, params);
+		return result;
 	}
 
 
