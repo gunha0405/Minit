@@ -420,8 +420,11 @@ public class FeedService {
 	}
 
 	@Transactional
-	public int reportFeed(int textFeedNo, int userNo) {
-		int result = feedDao.reportFeed(textFeedNo, userNo);
+	public int reportFeed(int feedNo, int userNo) {
+		int result = feedDao.reportFeed(feedNo, userNo);
+		if(result > 0) { 
+			result = feedDao.updateReportFeed(feedNo);
+		}
 		return result;
 	}
 
