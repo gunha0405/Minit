@@ -45,7 +45,7 @@
 	margin-top: 10px !important;
 }
 </style>
-<title>텍스트 피드</title>
+<title>텍스트 기록장</title>
 </head>
 <body>
     <th:block th:include="/common/header"></th:block>
@@ -159,7 +159,7 @@
 	      <div class="modal-body">
 	        <div class="text-feed-write-area">
 	          <textarea name="text-feed-content" id="modal-text-feed-content" placeholder="글 내용 수정하기(100자)"></textarea>
-	          <div id="name-text-feed-content-count" class="char-count">0/100</div>
+	          <div id="name-text-feed-content-count" class="char-count feed-char-count">0/100</div>
 	          <div class="text-feed-actions">
 	            <button type="submit" class="text-feed-button modal-write-btn">수정하기</button>
 	          </div>
@@ -170,7 +170,6 @@
 	</div>
     
     <script>
-    
     function likePush(obj, textFeedNo) {
         const currentLike = $(obj).attr('id');
         const isLike = (currentLike == "feed-not-like") ? 0 : 1;
@@ -316,7 +315,7 @@
 
         limitTextWithoutSpaces('#text-feed-content', 100, '#text-feed-content-count');
         limitTextWithoutSpaces('#text-feed-comment', 50, '#text-feed-comment-count');
-        limitTextWithoutSpaces('textarea[name="text-feed-content"]', 100, '#name-text-feed-content-count');
+        limitTextWithoutSpaces('#modal-text-feed-content', 100, '#name-text-feed-content-count');
     	
         let feeds = $('#text-feed-feeds .feed');
         let numPerPage = 4;
@@ -429,6 +428,7 @@
             const textFeedContent = textFeedElement.find(".text-feed-content").text();
             
             $("#modal-text-feed-content").val(textFeedContent);
+            $("#name-text-feed-content-count").text(`${textFeedContent.replace(/\s/g, '').length}/100`);
             
             const textFeedNo = textFeedElement.find(".textFeedNo").text();
             $(".modal-write-btn").data("textFeedNo", textFeedNo);
@@ -624,57 +624,13 @@
             });
         });//댓글 삭제
         
-        $(document).on("click", ".feed-edit-btn", function() {
-            const textFeedElement = $(this).closest(".feed");
-            const textFeedContent = textFeedElement.find(".text-feed-content").text();
-            
-            $("#modal-text-feed-content").val(textFeedContent);
-            
-            const textFeedNo = textFeedElement.find(".textFeedNo").text();
-            $(".modal-write-btn").data("textFeedNo", textFeedNo);
-        });//피드 수정 버튼 클릭시 모달창 띄우기
-        
-        $(".modal-write-btn").click(function(){
-            const textFeedEditContent = $("#modal-text-feed-content").val();
-            const textFeedEditNo = $(this).data("textFeedNo");
-            
-            $.ajax({
-                url : "/text/editTextFeed",
-                type : "post",
-                data : {
-                    textFeedEditContent : textFeedEditContent,
-                    textFeedEditNo : textFeedEditNo
-                },
-                success : function(result){
-                    if(result === 1){
-                        swal({
-                            title: "수정 성공",
-                            text: "피드 수정 성공",
-                            icon: "success"
-                        });
-                         const textFeedElement = $(".textFeedNo:contains('" + textFeedEditNo + "')").closest(".feed");
-                         textFeedElement.find(".text-feed-content").text(textFeedEditContent);
-                         $("#feed-edit-modal").modal('hide');
-                    } else {
-                        swal({
-                            title: "수정 실패",
-                            text: "피드 수정 실패",
-                            icon: "warning"
-                        });
-                    }
-                },
-                error : function(){
-                    console.log("피드 수정 실패");
-                }
-            });
-        });//피드 수정
-        
-        
-        
         $(document).on("click",".comment-edit-btn",function(){
             const textFeedCommentElement = $(this).closest(".comment");
+            const textFeedCommentContent = textFeedCommentElement.find(".comment-text").text();
+            
+            textFeedCommentElement.find(".comment-edit-textarea").val(textFeedCommentContent).show();
+            limitTextWithoutSpaces(textFeedCommentElement.find(".comment-edit-textarea"), 50, '#text-feed-comment-count');
             textFeedCommentElement.find(".comment-text").hide();
-            textFeedCommentElement.find(".comment-edit-textarea").show();
             textFeedCommentElement.find("#text-feed-comment-count").show();
             textFeedCommentElement.find(".comment-save-btn").show();
             
@@ -683,9 +639,7 @@
             const textFeedCommentNo = textFeedCommentElement.find(".textFeedCommentNo").text();
             textFeedCommentElement.find(".comment-save-btn").data("textFeedCommentNo", textFeedCommentNo);
         });
-        
-        
-        
+
         $(document).on("click", ".comment-save-btn",function(){
             const textFeedCommentElement = $(this).closest(".comment");
             const textFeedCommentEditContent = textFeedCommentElement.find(".comment-edit-textarea").val();
@@ -727,7 +681,6 @@
                 }
             });
         });
-        
         
         $(document).on("click",".feed-report-btn", function(){
         	const textFeedElement = $(this).closest(".feed");
@@ -818,8 +771,6 @@
         	
         });//신고
         
-        
-        
         $(document).ready(function() {
             var $upBtn = $('.up-btn');
             var $bottomNavBar = $('.bottom-navBar');
@@ -854,13 +805,7 @@
                 return false;
             });
         });
-        
-        
-        
-        
     });//ready
-    
-	
 </script>
 <th:block th:include="/common/footer"></th:block>
 </body>
