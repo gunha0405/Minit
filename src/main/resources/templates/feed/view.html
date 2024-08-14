@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>피드 보기</title>
 <script defer src="index.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="/css/feed/feedStyle.css" />
@@ -571,7 +571,7 @@
 							</td>
 							<td style="width: 15%;">
 								<span class="material-icons" onclick="updateHidden(this)" >edit_document</span> 
-								<span class="material-icons" th:onclick="feedCommentDelete(this,${data.feedCommentNo})">folder_delete</span>
+								<span class="material-icons" onclick="feedCommentDelete(this,${data.feedCommentNo})">folder_delete</span>
 							</td>
 							<td>
 								<div id="icon-container" class="hidden">
@@ -581,10 +581,10 @@
 						</tr>
 						<tr class="edit-comment-box hidden" >
 	            			<td colspan="2" style="width: 50%;">
-	            				 <textarea name="feedCommentContent" class="feedCommentContent" th:utext="${data.feedCommentContent}"></textarea>
+	            				 <textarea name="feedCommentContent" class="feedCommentContent" text="${data.feedCommentContent}"></textarea>
 	               			</td>
 	               			<td colspan="2" style="width: 50%;">
-	               				 <button class="btn-primary" th:onclick="commentUpdateBtn(this,${data.feedCommentNo})">저장</button>
+	               				 <button class="btn-primary" onclick="commentUpdateBtn(this,${data.feedCommentNo})">저장</button>
 	               				 <button class="btn-primary" onclick="commentUpdateCancleBtn(this)">취소</button>
 	               			</td>
 						</tr>
