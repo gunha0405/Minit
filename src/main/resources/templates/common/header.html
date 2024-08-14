@@ -36,7 +36,7 @@
               class="form-control me-2"
               type="search"
               id="searchList"
-              placeholder="보고싶은 유저의 ID를 입력해주세요!"
+              placeholder="검색"
               aria-label="Search"
               />
             <button class="btn btn-outline-success" type="button" id="searchButton">검색</button>
@@ -340,6 +340,14 @@
         
 
     <script>
+
+
+    	$("#login-empty").on("click",function(){
+    		console.log(1);
+    		$("[name=userId]").empty();
+    	});
+
+
  
     	/*이메일인증*/
 	    let mailCode = null;
@@ -358,6 +366,7 @@
 				type : "post",
 				success : function(data){
 					if(data != ""){
+						console.log(data);
 						mailCode = data;
 						$("#auth").show();
 						authTime(); //시간 가는 함수
@@ -376,7 +385,7 @@
 	    		        icon: "warning",
 	    		        closeOnClickOutside : false
 	    		      });
-					.log("에러 발생");
+					console.log("에러 발생");
 				}
 				});			
 			}else{
@@ -453,7 +462,9 @@
     	
     	$(".id-check-btn").on("click", function(){
     		$("#userId").removeClass("required");
+			//$(".id-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
 			const userId = $("#userId").val();
+			//console.log(userId);
 			const idReg = /^[a-zA-Z0-9]{4,10}$/;
 			if(idReg.test(userId)){
 				$.ajax({
@@ -481,7 +492,7 @@
 		    		        icon: "warning",
 		    		        closeOnClickOutside : false
 		    		      });
-						//console.log("에러 발생");
+						console.log("에러 발생");
 					}
 				})
 			}else{
@@ -581,7 +592,7 @@
 		    		        icon: "warning",
 		    		        closeOnClickOutside : false
 		    		      });
-						//console.log("에러 발생");
+						console.log("에러 발생");
 					}
 				});
 			}
@@ -590,8 +601,10 @@
 		//다 입력했는지 확인
     	$(".join").on("click",function(){
     		const required = $(".required").length;
+    		console.log(required);
     		const check = $("[name=check]");
     		const checkInput = check.filter(":checked");
+    		console.log(checkInput.length);
     		if(required != 6){
     			swal({
     		        title: "작성 미완료",
