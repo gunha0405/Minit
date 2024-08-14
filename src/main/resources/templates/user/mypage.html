@@ -203,6 +203,7 @@
 		});
 		
 			function loadImg(obj){
+				console.log(obj.files);
 				if(obj.files.length != 0 && obj.files[0] != 0){
 					const reader = new FileReader();
 					reader.readAsDataURL(obj.files[0]);
@@ -210,8 +211,10 @@
 						$(".basic-img").removeClass("img-show").addClass("img-none");
 						$(".logo-img").removeClass("img-show").addClass("img-none");
 						$("#img-viewer").removeClass("img-none").addClass("img-show");
+						console.log(1);
 						$("#img-view").attr("src",e.target.result);
 					}
+					//console.log(2); //이게 먼저
 				}else{
 					$(".basic-img").addClass("img-show").removeClass("img-none");
 					$(".logo-img").removeClass("img-show").addClass("img-none");
@@ -263,6 +266,7 @@
 							}
 						},
 						error : function(){
+							console.log("에러 발생");
 						}
 					});
 				}
@@ -323,6 +327,7 @@
 			//잘못된 정보 있으면 안 넘어가게 
 	    	$(".update").on("click",function(){
 	    		const required = $(".required").length;
+	    		console.log(required);
 	    		if(required != 3){
 	    			swal({
 	    		        title: "입력값 확인 및 비밀번호 확인란 작성",
