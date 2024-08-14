@@ -299,8 +299,8 @@
 					if(userPw === pwReValue){
 						$(".repw-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
 						$(".repw-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
-						$(".repw-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
 						$(".repw-check-msg-valid").removeClass("none").addClass("valid");
+						$(".repw-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
 						$("#userRePw").addClass("required");
 					}
 	    		}
@@ -336,10 +336,10 @@
 	    		        closeOnClickOutside : false
 	    		      });		
 	    			event.preventDefault(); //이벤트 방지 submit 안 넘어가고
-	    		}else {    			
+	    		}else {
 	    			location.href = "/user/mypage";
 	    		}
-	    	})
+	    	});
 		</script>
         
         
