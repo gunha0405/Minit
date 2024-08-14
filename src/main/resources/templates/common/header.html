@@ -251,7 +251,7 @@
                         </div>
 			            <div class="input-msg repw-check-msg-same none">
 			                <span class="material-icons">info_outline</span>
-			                <span>비밀번호를 수정하셨습니다. 다시 작성해주세요.</span>                      	
+			                <span>비밀번호를 수정하셨습니다.</span>                      	
 			            </div>
                         
                     </div>
@@ -340,14 +340,6 @@
         
 
     <script>
-
-
-    	$("#login-empty").on("click",function(){
-    		console.log(1);
-    		$("[name=userId]").empty();
-    	});
-
-
  
     	/*이메일인증*/
 	    let mailCode = null;
@@ -366,7 +358,6 @@
 				type : "post",
 				success : function(data){
 					if(data != ""){
-						console.log(data);
 						mailCode = data;
 						$("#auth").show();
 						authTime(); //시간 가는 함수
@@ -385,7 +376,7 @@
 	    		        icon: "warning",
 	    		        closeOnClickOutside : false
 	    		      });
-					console.log("에러 발생");
+					.log("에러 발생");
 				}
 				});			
 			}else{
@@ -462,9 +453,7 @@
     	
     	$(".id-check-btn").on("click", function(){
     		$("#userId").removeClass("required");
-			//$(".id-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
 			const userId = $("#userId").val();
-			//console.log(userId);
 			const idReg = /^[a-zA-Z0-9]{4,10}$/;
 			if(idReg.test(userId)){
 				$.ajax({
@@ -492,7 +481,7 @@
 		    		        icon: "warning",
 		    		        closeOnClickOutside : false
 		    		      });
-						console.log("에러 발생");
+						//console.log("에러 발생");
 					}
 				})
 			}else{
@@ -592,7 +581,7 @@
 		    		        icon: "warning",
 		    		        closeOnClickOutside : false
 		    		      });
-						console.log("에러 발생");
+						//console.log("에러 발생");
 					}
 				});
 			}
@@ -601,10 +590,8 @@
 		//다 입력했는지 확인
     	$(".join").on("click",function(){
     		const required = $(".required").length;
-    		console.log(required);
     		const check = $("[name=check]");
     		const checkInput = check.filter(":checked");
-    		console.log(checkInput.length);
     		if(required != 6){
     			swal({
     		        title: "작성 미완료",

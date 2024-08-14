@@ -85,7 +85,6 @@
     <div class="contents">
         <div class="main-contents">
             <p class="board-write">전체게시판</p>
-            <div class="searchText"></div>
             <div class="main-contents-box" id="postContainer">
             
                 <article class="post">
@@ -170,6 +169,7 @@
 
 	                    $('#postContainer').append(postHtml);
 		                $(".board-write").text("전체게시판");
+		                $(".searchText").hide();
 	                });
 
 	            },
@@ -212,6 +212,7 @@
                 $('#postContainer').append(postHtml);
             });
             $(".board-write").text("인기게시판");
+            $(".searchText").hide();
         },
         error: function() {
             console.log("서버 실패");
@@ -253,6 +254,7 @@
 	                });
 
 	                $(".board-write").text("친구게시판");
+	                $(".searchText").hide();
 	            },
 	            error: function() {
 	            	swal({
