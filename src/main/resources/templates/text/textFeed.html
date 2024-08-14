@@ -9,10 +9,20 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
-.feed-content p {
-    word-break: break-word;
-    white-space: pre-wrap;
+textarea {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 16px;
+    outline: none;
+    line-height: 1.5;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    overflow: hidden; /* 스크롤 숨기기 */
+    resize: none; /* 사용자가 크기 조절하지 못하도록 설정 */
 }
+
 .up-btn {
 	position: fixed;
 	right: 400px;
@@ -174,16 +184,8 @@
 	</div>
     
 	<script>
-	$(document).ready(function() {
-	    $('textarea').on('input', function() {
-	        $(this).css('height', 'auto');
-	        $(this).height(this.scrollHeight);
-	    });
-
-	    $('textarea').each(function () {
-	        $(this).height(this.scrollHeight);
-	    });
-	});
+	
+	
 	
 	function likePush(obj, textFeedNo) {
 	    const currentLike = $(obj).attr('id');
@@ -447,7 +449,7 @@
 		});
 
 		$(document).on("click", ".modal-write-btn", function() {
-		    const textFeedNo = $(this).data("textFeedNo");
+		    const textFeedEditNo = $(this).data("textFeedNo");
 		    const textFeedEditContent = $("#modal-text-feed-content").val();
 
 		    if (textFeedEditContent.trim().replace(/\s/g, '').length === 0) {
@@ -463,7 +465,7 @@
 		        url: "/text/editTextFeed", // 서버의 수정 처리 URL
 		        type: "post",
 		        data: {
-		            textFeedNo: textFeedNo,
+		            textFeedEditNo: textFeedEditNo,
 		            textFeedEditContent: textFeedEditContent
 		        },
 		        success: function(result) {

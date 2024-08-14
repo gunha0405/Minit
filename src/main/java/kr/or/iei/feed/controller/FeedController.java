@@ -295,6 +295,9 @@ public class FeedController {
 	@PostMapping(value="/userFollow")
 	public int userFollow(String loginUser, String writerUser) {
 		int num = feedService.userFollow(loginUser, writerUser);
+		if(num > 0) {
+			num = feedService.followerNo(writerUser);
+		}
 
 		return num;
 	}
