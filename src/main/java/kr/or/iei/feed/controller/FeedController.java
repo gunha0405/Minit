@@ -23,7 +23,6 @@ import kr.or.iei.feed.model.dto.FeedFile;
 import kr.or.iei.feed.model.dto.UserFeedNaviList;
 import kr.or.iei.feed.model.dto.feedListData;
 import kr.or.iei.feed.model.service.FeedService;
-import kr.or.iei.text.model.dto.TextFeed;
 import kr.or.iei.user.model.dto.User;
 import kr.or.iei.user.model.dto.UserRowMapper;
 import kr.or.iei.util.FileUtils;
@@ -85,6 +84,9 @@ public class FeedController {
 	@GetMapping(value = "/myPage")
 	public String myPage(Integer reqPage, String userFeedWriter, Model model, @SessionAttribute(required =false) User user) {
 		//팔로우 검사 
+		if(user == null) {
+			return"/";
+		}
 		int followBtn = -1; //
 		if(user != null) {
 			String loginUserId = user.getUserId();
@@ -355,7 +357,7 @@ public class FeedController {
 	@ResponseBody
 	@PostMapping(value="/feedCommentDelete")
 	public int feedCommentDelete(int feedCommentNo) {
-		System.out.println(feedCommentNo);
+		//System.out.println(feedCommentNo);
 		int result = feedService.feedCommentDelete(feedCommentNo);
 		return result;
 	}
@@ -451,13 +453,5 @@ public class FeedController {
 //		List<Feed> feedList = 
 //		return;
 //	}
-	
-    @GetMapping(value="/selectReportFeed")
-    public String selectReportFeed(Model model) {
-    	List<Feed> reportList = feedService.selectReportFeed();
-    	
-    	model.addAttribute("reportList", reportList);
-    	return "/admin/warningFeed";
-    }
 
 }

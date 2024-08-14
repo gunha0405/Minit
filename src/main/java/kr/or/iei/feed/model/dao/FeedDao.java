@@ -493,5 +493,13 @@ public class FeedDao {
 		return followerNo;
 	}
 
+	public String totlaImg(int userFeedNo) {
+		String query = "select user_img from user_tbl \r\n" + 
+				"join user_feed_tbl on (user_id = user_feed_writer) where user_feed_no=?";
+		Object[] params = {userFeedNo};
+		String userImg = jdbc.queryForObject(query, String.class, params);
+		return userImg;
+	}
+
 
 }

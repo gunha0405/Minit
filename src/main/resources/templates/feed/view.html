@@ -36,6 +36,35 @@
 	margin-left : 10px;
 	margin: 0 auto;
 }
+/* 댓글을 감싸는 tr 요소에 간격을 추가 */
+.comment-wrap table tr {
+    margin-bottom: 15px; /* 댓글 사이의 간격 조절 */
+}
+/* 댓글 내용에 여백을 추가 */
+.comment-wrap table td {
+    padding-bottom: 10px; /* 댓글 내용과 댓글 사이의 간격 조절 */
+    height: 80px;
+}
+
+/* 댓글 수정/삭제 버튼과 댓글 내용 사이에 여백 추가 */
+.comment-wrap .btn-wrap {
+    margin-top: 10px; /* 버튼과 댓글 내용 사이의 간격 조절 */
+}
+.updatebtn{
+	width: 100px;
+	height: 70px;
+	background-color: #6DD19C;
+	border: none;
+	border-radius: 15%;
+	color : white;
+	margin-right: 1px;
+}
+.comment-user{
+	width: 40px;
+	height: 40px;
+}
+
+
 </style>
 </head>
 
@@ -47,7 +76,11 @@
 		<div class="content-info">
 			<table class="content-info-table">
 				<tr class="user-image icon-size">
-					<td><img src="@{/user/feed.userFilepath}" alt="Profile Photo"></td>
+					<td>
+					<a th:href="@{/feed/myPage(userFeedWriter=${feed.userFeedWriter})}">
+					<img th:src="${feed.userFeedFilepath}" alt="Profile Photo">
+					</a>
+					</td>
 					<td class="user-nick" th:text="${feed.userFeedWriter}"></td>
 					<td class="date" th:text="${feed.userFeedDate}"></td>
 				</tr>
@@ -119,8 +152,10 @@
 		<th:block th:each="fc : ${feed.feedComment} ">
 			<table>
 				<tr>
-					<td style="width: 10%;"><a href="#">
-						<img th:src="@{/user/${fc.userFeedFilepath}}" alt="${fc.userFeedWriter}" class="comment-user"></a>
+					<td style="width: 10%;">
+					<a th:href="@{/feed/myPage(userFeedWriter=${fc.feedCommentWriter})}">
+						<img th:src="@{'/user/' + ${fc.userImg}}" alt="" class="comment-user">
+					</a>
 					</td>
 					<td  colspan="2" style="width: 75%;">
 						<span th:text="${fc.feedCommentContent}"></span>
@@ -140,15 +175,15 @@
 					</td>
 				</tr>	
 				<tr class="edit-comment-box hidden" >
-            		<td colspan="1" style="width: 70%;">
+				
+            		<td colspan="3" style="width: 70%;">
             			 <textarea name="feedCommentContent" class="feedCommentContent" th:utext="${fc.feedCommentContent}"></textarea>
                		</td>
                		<td colspan="1" style="width: 15%;">
-               			 <button class="btn-primary" th:onclick="commentUpdateBtn(this, [[${fc.feedCommentNo}]])">저장</button>
+               			 <button class="updatebtn" th:onclick="commentUpdateBtn(this, [[${fc.feedCommentNo}]])">저장</button>
+               			 <button class="updatebtn" onclick="commentUpdateCancleBtn(this)">취소</button>
                		</td>
-               		<td colspan="2" style="width: 15%;">
-               			 <button class="btn-primary" onclick="commentUpdateCancleBtn(this)">취소</button>
-               		</td>
+ 
 				</tr>
 			</table>
 		</th:block>			
@@ -525,9 +560,10 @@
 		    	  console.log(data);
 		          // 성공적으로 댓글이 저장된 후 댓글 목록을 갱신하거나, 댓글을 추가
 		          $(".comment-wrap").prepend(`
+		        		  <table>
 		        		  <tr>
 							<td style="width: 10%;">
-								<a href="/feed/myPage/userFeedWriter=${data.feedCommentWriter}">
+								<a href="/feed/myPage?userFeedWriter=${data.feedCommentWriter}">
 								<img src="/user/${data.userImg}" alt="" class="comment-user"></a>
 							</td>
 							<td style="width: 75%;">
@@ -552,7 +588,7 @@
 	               				 <button class="btn-primary" onclick="commentUpdateCancleBtn(this)">취소</button>
 	               			</td>
 						</tr>
-						
+						</table>
 		          `);
 		          $(".feedCommentContent").val(''); // 댓글 입력 필드 비우기
 		      },
