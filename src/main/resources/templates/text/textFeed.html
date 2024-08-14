@@ -550,7 +550,11 @@
                     textFeedElement.find("textarea").val(""); 
                 },
                 error: function() {
-                    console.log("데이터 전송 실패");
+                	swal({
+                        title: "데이터 전송 실패",
+                        text: "데이터 전송 실패, 다시 시도해주세요",
+                        icon: "warning"
+                    });
                 }
             });
         });
