@@ -97,7 +97,7 @@ public class PhotoService {
         }
         if (result > 0) {
 	        int reportCount = photoDao.selectTextFeedReportCount(photoFeedNo);
-	        if (reportCount >= 2) {
+	        if (reportCount >= 5) {
 	            int hideTextFeedResult = photoDao.hideTextFeed(photoFeedNo);
 
 	            if (hideTextFeedResult>0) {

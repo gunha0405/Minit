@@ -9,6 +9,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
+.feed-content p {
+    word-break: break-word;
+    white-space: pre-wrap;
+}
 .up-btn {
 	position: fixed;
 	right: 400px;
@@ -169,91 +173,102 @@
 	  </div>
 	</div>
     
-    <script>
-    function likePush(obj, textFeedNo) {
-        const currentLike = $(obj).attr('id');
-        const isLike = (currentLike == "feed-not-like") ? 0 : 1;
+	<script>
+	$(document).ready(function() {
+	    $('textarea').on('input', function() {
+	        $(this).css('height', 'auto');
+	        $(this).height(this.scrollHeight);
+	    });
 
-        $.ajax({
-            url: "/text/textFeedLikePush",
-            type: "post",
-            data: {
-                textFeedNo: textFeedNo,
-                isLike: isLike
-            },
-            success: function(data) {
-                if (data == -10) {
-                    swal({
-                        title: "로그인 필요",
-                        text: "로그인 후 이용해 주세요",
-                        icon: "info"
-                    });
-                    return;
-                } else if (data == -1) {
-                    swal({
-                        title: "데이터 처리 오류",
-                        text: "잠시 후 다시 시도해주세요",
-                        icon: "warning"
-                    }).then(function() {
-                    	location.reload();
-                    });
-                } else {
-                    if (isLike == 0) {
-                        $(obj).attr('id', 'feed-like').removeClass('fa-regular fa-heart').addClass('fa-heart');
-                    } else {
-                        $(obj).attr('id', 'feed-not-like').removeClass('fa-heart').addClass('fa-regular fa-heart');
-                    }
-                }
-    			$(obj).next().text(data);
-            },
-            error: function() {
-                alert("서버 연결 실패");
-            }
-        });
-    }
-    
-    function commentLikePush(obj, textFeedCommentNo) {
-        const currentLike = $(obj).attr('id');
-        const isLike = (currentLike === "comment-not-like") ? 0 : 1;
-        
-        $.ajax({
-            url: "/text/textFeedCommentLikePush",
-            type: "post",
-            data: {
-                textFeedCommentNo: textFeedCommentNo,
-                isLike: isLike
-            },
-            success: function(data) {
-                if (data == -10) {
-                    swal({
-                        title: "로그인 필요",
-                        text: "로그인 후 이용해 주세요",
-                        icon: "info"
-                    });
-                } else if (data == -1) {
-                    swal({
-                        title: "데이터 처리 오류",
-                        text: "잠시 후 다시 시도해주세요",
-                        icon: "warning"
-                    });
-                } else {
-                    if (isLike == 0) {
-                        $(obj).attr('id', 'comment-like').removeClass('fa-regular fa-heart').addClass('fa-heart');
-                    } else {
-                        $(obj).attr('id', 'comment-not-like').removeClass('fa-heart').addClass('fa-regular fa-heart');
-                    }
-                    $(obj).next().text(data);
-                }
-            },
-            error: function() {
-                alert("서버 연결 실패");
-            }
-        });
-    }
-    
-    function savePush(obj, textFeedNo){
-    	const currentSave = $(obj).attr('class');
-    	const isSave = (currentSave == "feed-bookmark-btn") ? 0 : 1;
+	    $('textarea').each(function () {
+	        $(this).height(this.scrollHeight);
+	    });
+	});
+	
+	function likePush(obj, textFeedNo) {
+	    const currentLike = $(obj).attr('id');
+	    const isLike = (currentLike == "feed-not-like") ? 0 : 1;
+	
+	    $.ajax({
+	        url: "/text/textFeedLikePush",
+	        type: "post",
+	        data: {
+	            textFeedNo: textFeedNo,
+	            isLike: isLike
+	        },
+	        success: function(data) {
+	            if (data == -10) {
+	                swal({
+	                    title: "로그인 필요",
+	                    text: "로그인 후 이용해 주세요",
+	                    icon: "info"
+	                });
+	                return;
+	            } else if (data == -1) {
+	                swal({
+	                    title: "데이터 처리 오류",
+	                    text: "잠시 후 다시 시도해주세요",
+	                    icon: "warning"
+	                }).then(function() {
+	                	location.reload();
+	                });
+	            } else {
+	                if (isLike == 0) {
+	                    $(obj).attr('id', 'feed-like').removeClass('fa-regular fa-heart').addClass('fa-heart');
+	                } else {
+	                    $(obj).attr('id', 'feed-not-like').removeClass('fa-heart').addClass('fa-regular fa-heart');
+	                }
+	            }
+				$(obj).next().text(data);
+	        },
+	        error: function() {
+	            alert("서버 연결 실패");
+	        }
+	    });
+	}
+	
+	function commentLikePush(obj, textFeedCommentNo) {
+	    const currentLike = $(obj).attr('id');
+	    const isLike = (currentLike === "comment-not-like") ? 0 : 1;
+	    
+	    $.ajax({
+	        url: "/text/textFeedCommentLikePush",
+	        type: "post",
+	        data: {
+	            textFeedCommentNo: textFeedCommentNo,
+	            isLike: isLike
+	        },
+	        success: function(data) {
+	            if (data == -10) {
+	                swal({
+	                    title: "로그인 필요",
+	                    text: "로그인 후 이용해 주세요",
+	                    icon: "info"
+	                });
+	            } else if (data == -1) {
+	                swal({
+	                    title: "데이터 처리 오류",
+	                    text: "잠시 후 다시 시도해주세요",
+	                    icon: "warning"
+	                });
+	            } else {
+	                if (isLike == 0) {
+	                    $(obj).attr('id', 'comment-like').removeClass('fa-regular fa-heart').addClass('fa-heart');
+	                } else {
+	                    $(obj).attr('id', 'comment-not-like').removeClass('fa-heart').addClass('fa-regular fa-heart');
+	                }
+	                $(obj).next().text(data);
+	            }
+	        },
+	        error: function() {
+	            alert("서버 연결 실패");
+	        }
+	    });
+	}
+	
+	function savePush(obj, textFeedNo){
+		const currentSave = $(obj).attr('class');
+		const isSave = (currentSave == "feed-bookmark-btn") ? 0 : 1;
 		$.ajax({
 			url : "/text/textFeedSave",
 			type : "get",
@@ -264,25 +279,23 @@
 			success : function(data){
 				if(data == -10){
 					swal({
-                        title: "로그인 필요",
-                        text: "로그인 후 이용해 주세요",
-                        icon: "info"
-                    });
+						title: "로그인 필요",
+						text: "로그인 후 이용해 주세요",
+						icon: "info"
+					});
 				}else if(data == -1){
 					swal({
-                        title: "데이터 처리 오류",
-                        text: "잠시 후 다시 시도해주세요",
-                        icon: "warning"
-                    });
+						title: "데이터 처리 오류",
+						text: "잠시 후 다시 시도해주세요",
+						icon: "warning"
+					});
 				}else{
 					if(isSave == 0){
-						// 차있는 북마크로 바꾸기
 						$(obj).removeClass('feed-bookmark-btn').addClass('feed-bookmark-saved-btn');
-					    $(obj).find('span.material-icons').text('bookmark');
+						$(obj).find('span.material-icons').text('bookmark');
 					}else{
-						// 비어있는 북마크로 바꾸기
 						$(obj).removeClass('feed-bookmark-saved-btn').addClass('feed-bookmark-btn');
-					    $(obj).find('span.material-icons').text('bookmark_border');
+						$(obj).find('span.material-icons').text('bookmark_border');
 					}
 				}
 			},
@@ -290,527 +303,599 @@
 				alert("서버 연결 실패");
 			}
 		});
-    	
-    }
-    
-    $(document).on('click', '.feed-bookmark-btn, .feed-bookmark-saved-btn', function() {
-        const textFeedNo = $(this).closest('.feed').find('.textFeedNo').text();
-        savePush(this, textFeedNo);
-    });
-    
-    $(document).ready(function() {
-    	function limitTextWithoutSpaces(input, maxLength, counterId) {
-            $(input).on('input', function() {
-                let content = $(this).val();
-                let contentLength = content.replace(/\s/g, '').length; // 공백을 제외한 길이 계산
+		
+	}
+	
+	$(document).on('click', '.feed-bookmark-btn, .feed-bookmark-saved-btn', function() {
+		const textFeedNo = $(this).closest('.feed').find('.textFeedNo').text();
+		savePush(this, textFeedNo);
+	});
+	
+	$(document).ready(function() {
+		function limitTextWithoutSpaces(input, maxLength, counterId) {
+			$(input).on('input', function() {
+				let content = $(this).val();
+				let contentLength = content.replace(/\s/g, '').length;
+	
+				if (contentLength > maxLength) {
+					content = content.substring(0, maxLength + (content.length - content.replace(/\s/g, '').length));
+					$(this).val(content);
+					contentLength = maxLength;
+				}
+				$(counterId).text(`${contentLength}/${maxLength}`);
+			});
+		}
+	
+		limitTextWithoutSpaces('#text-feed-content', 100, '#text-feed-content-count');
+		limitTextWithoutSpaces('#text-feed-comment', 50, '#text-feed-comment-count');
+		limitTextWithoutSpaces('#modal-text-feed-content', 100, '#name-text-feed-content-count');
+	
+		let feeds = $('#text-feed-feeds .feed');
+		let numPerPage = 4;
+		let currentPage = 1;
+	
+		function showPage(page) {
+			let start = (page - 1) * numPerPage;
+			let end = page * numPerPage;
+			feeds.slice(start, end).fadeIn();
+		}
+	
+		showPage(currentPage);
+	
+		$('#load-more').click(function() {
+			currentPage++;
+			showPage(currentPage);
+		});
+	
+		feeds.hide();
+		showPage(currentPage);
+	
+		function adjustfeedOptionsDimensions() {
+			$('.feed-options').each(function() {
+				const visibleButtons = $(this).find('button:visible').length;
+				const buttonHeight = 30;
+				const buttonWidth = 30;
+				const newHeight = visibleButtons * buttonHeight;
+				$(this).css('height', newHeight + 'px');
+				$(this).css('width', buttonWidth + 'px');
+			});
+		}
+	
+		$(document).on("click", ".fa-ellipsis-h", function() {
+			const feedOptions = $(this).siblings(".feed-options");
+			feedOptions.toggle();
+			adjustfeedOptionsDimensions();
+		});
+	
+		$(document).on("click", ".feed-delete-btn", function() {
+			const textFeedElement = $(this).closest(".feed");
+			const textFeedNo = textFeedElement.find(".textFeedNo").text();
+			
+			swal({
+				title: "게시물 삭제",
+				text: "게시물을 삭제하시겠습니까?",
+				icon: "warning",
+				buttons: {
+					cancel: {
+						text: "취소",
+						value: false,
+						visible: true,
+						className: "btn-secondary",
+						closeModal: true
+					},
+					confirm: {
+						text: "삭제",
+						value: true,
+						visible: true,
+						className: "btn-point",
+						closeModal: true
+					}
+				}
+			}).then(function(isConfirm) {
+				if (isConfirm) {
+					$.ajax({
+						url: "/text/deleteTextFeed",
+						type: "post",
+						data: { textFeedNo: textFeedNo },
+						dataType: "json",
+						success: function(result) {
+							if (result === 1) {
+								swal({
+									title: "삭제 성공",
+									text: "피드 삭제 성공",
+									icon: "success"
+								});
+								textFeedElement.fadeOut("slow", function() {
+									$(this).remove();
+								});
+							} else {
+								swal({
+									title: "삭제 실패",
+									text: "피드 삭제 실패",
+									icon: "warning"
+								});
+							}
+						},
+						error: function() {
+							swal({
+								title: "삭제 실패",
+								text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+								icon: "warning"
+							});
+						}
+					});
+				} else {
+					swal({
+						title: "취소됨",
+						text: "피드 삭제가 취소되었습니다.",
+						icon: "info"
+					});
+				}
+			});
+		});
+	
+		$(document).on("click", ".feed-edit-btn", function() {
+		    const textFeedElement = $(this).closest(".feed");
+		    const textFeedContent = textFeedElement.find(".text-feed-content").text();
+		    
+		    $("#modal-text-feed-content").val(textFeedContent);
+		    $("#name-text-feed-content-count").text(`${textFeedContent.replace(/\s/g, '').length}/100`);
+		    
+		    const textFeedNo = textFeedElement.find(".textFeedNo").text();
+		    $(".modal-write-btn").data("textFeedNo", textFeedNo);
+		    $("#feed-edit-modal").modal("show");
+		});
 
-                if (contentLength > maxLength) {
-                    content = content.substring(0, maxLength + (content.length - content.replace(/\s/g, '').length));
-                    $(this).val(content);
-                    contentLength = maxLength;
-                }
-                $(counterId).text(`${contentLength}/${maxLength}`);
-            });
-        }
+		$(document).on("click", ".modal-write-btn", function() {
+		    const textFeedNo = $(this).data("textFeedNo");
+		    const textFeedEditContent = $("#modal-text-feed-content").val();
 
-        limitTextWithoutSpaces('#text-feed-content', 100, '#text-feed-content-count');
-        limitTextWithoutSpaces('#text-feed-comment', 50, '#text-feed-comment-count');
-        limitTextWithoutSpaces('#modal-text-feed-content', 100, '#name-text-feed-content-count');
-    	
-        let feeds = $('#text-feed-feeds .feed');
-        let numPerPage = 4;
-        let currentPage = 1;
+		    if (textFeedEditContent.trim().replace(/\s/g, '').length === 0) {
+		        swal({
+		            title: "수정 실패",
+		            text: "공백만으로는 글을 수정할 수 없습니다.",
+		            icon: "warning"
+		        });
+		        return;
+		    }
 
-        function showPage(page) {
-            let start = (page - 1) * numPerPage;
-            let end = page * numPerPage;
-            feeds.slice(start, end).fadeIn();
-        }
-
-        // 초기 로드 시 첫 번째 페이지를 표시
-        showPage(currentPage);
-
-        $('#load-more').click(function() {
-            currentPage++;
-            showPage(currentPage);
-        });
-
-        // 모든 포스트를 숨기고 처음 numPerPage개의 포스트만 표시
-        feeds.hide();
-        showPage(currentPage);
-
-        function adjustfeedOptionsDimensions() {
-            $('.feed-options').each(function() {
-                const visibleButtons = $(this).find('button:visible').length;
-                const buttonHeight = 30; // 각 버튼의 높이 (px 단위로 지정)
-                const buttonWidth = 30; // 버튼의 너비 (px 단위로 지정)
-                const newHeight = visibleButtons * buttonHeight;
-                $(this).css('height', newHeight + 'px');
-                $(this).css('width', buttonWidth + 'px');
-            });
-        }
-
-        $(document).on("click", ".fa-ellipsis-h", function() {
-            const feedOptions = $(this).siblings(".feed-options");
-            feedOptions.toggle();
-            adjustfeedOptionsDimensions();
-        });
-
-        $(document).on("click", ".feed-delete-btn", function() {
-            const textFeedElement = $(this).closest(".feed");
-            const textFeedNo = textFeedElement.find(".textFeedNo").text();
-            
-            swal({
-                title: "게시물 삭제",
-                text: "게시물을 삭제하시겠습니까?",
-                icon: "warning",
-                buttons: {
-                    cancel: {
-                        text: "취소",
-                        value: false,
-                        visible: true,
-                        className: "btn-secondary",
-                        closeModal: true
-                    },
-                    confirm: {
-                        text: "삭제",
-                        value: true,
-                        visible: true,
-                        className: "btn-point",
-                        closeModal: true
-                    }
-                }
-            }).then(function(isConfirm) {
-                if (isConfirm) {
-                    $.ajax({
-                        url: "/text/deleteTextFeed",
-                        type: "post",
-                        data: { textFeedNo: textFeedNo },
-                        dataType: "json",
-                        success: function(result) {
-                            if (result === 1) {
-                                swal({
-                                    title: "삭제 성공",
-                                    text: "피드 삭제 성공",
-                                    icon: "success"
-                                });
-                                textFeedElement.fadeOut("slow", function() {
-                                    $(this).remove();
-                                });
-                            } else {
-                                swal({
-                                    title: "삭제 실패",
-                                    text: "피드 삭제 실패",
-                                    icon: "warning"
-                                });
-                            }
-                        },
-                        error: function() {
-                            swal({
-                                title: "삭제 실패",
-                                text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
-                                icon: "warning"
-                            });
-                        }
-                    });
-                } else {
-                    swal({
-                        title: "취소됨",
-                        text: "피드 삭제가 취소되었습니다.",
-                        icon: "info"
-                    });
-                }
-            });
-        }); // 피드 삭제
-
-        $(document).on("click", ".feed-edit-btn", function() {
-            const textFeedElement = $(this).closest(".feed");
-            const textFeedContent = textFeedElement.find(".text-feed-content").text();
-            
-            $("#modal-text-feed-content").val(textFeedContent);
-            $("#name-text-feed-content-count").text(`${textFeedContent.replace(/\s/g, '').length}/100`);
-            
-            const textFeedNo = textFeedElement.find(".textFeedNo").text();
-            $(".modal-write-btn").data("textFeedNo", textFeedNo);
-            $("#feed-edit-modal").modal("show");
-        });
-
-        $(".write-btn").on("click", function() {
-            const textFeedContent = $("#text-feed-content").val();
-            
-            $.ajax({
-                url: "/text/textFeedWrite",
-                type: "post",
-                data: { textFeedContent: textFeedContent },
-                dataType: "json",
-                success: function(data) {
-                    const newfeed = data.textFeed;
-                    const userImg = newfeed.textFeedWriterImg ? `/user/${newfeed.textFeedWriterImg}` : "/user/minit_logo.png";
-                    const feedHtml = `
-                        <div class="feed" style="display:none;">
-                            <span class="textFeedNo" style="display:none;">${newfeed.textFeedNo}</span>
-                            <div class="feed-profile-pic">
-                                <img src="${userImg}" alt="Profile Picture">
-                            </div>
-                            <div class="feed-content">
-                                <p class="text-feed-writer">${newfeed.textFeedWriter}</p>
-                                <p class="text-feed-content">${newfeed.textFeedContent}</p>
-                                <div class="feed-actions">
-                                    <i id="feed-not-like" class="fa fa-regular fa-heart" onclick="likePush(this, ${newfeed.textFeedNo})"></i>
-                                    <span class="likeCount">${newfeed.likeCount}</span>
-                                    <i class="fa fa-comment"></i>
-                                    <i class="fa fa-ellipsis-h"></i>
-                                    <div class="feed-options">
-                                        <button class="feed-edit-btn"><span class="material-icons">edit</span></button>
-                                        <button class="feed-report-btn"><span class="material-icons">report_problem</span></button>
-                                        <button class="feed-bookmark-btn"><span class="material-icons">bookmark_border</span></button>
-                                        <button class="feed-delete-btn"><span class="material-icons">delete_forever</span></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="comment-section" style="display: none;">
-                                <textarea id="text-feed-comment" placeholder="댓글을 작성해보세요 !"></textarea>
-                                <button class="submit-comment">댓글 달기</button>
-                                <div class="comments-container"></div>
-                            </div>
-                        </div>
-                    `;
-
-                    const newfeedElement = $(feedHtml);
-                    $("#text-feed-feeds").prepend(newfeedElement);
-                    newfeedElement.slideDown("slow");
-                    $(".feed-char-count").text("0/100");
-                    $("#text-feed-content").val("");
-                },
-                error: function() {
-                    alert("글 작성 실패");
-                }
-            });
-        });//글 작성하기
-        
-        const isLoggedIn = $('#currentUser').val() === 'true';
-
-        if (isLoggedIn) {
-            $(document).on("click", ".fa-comment", function() {
-                $(this).closest(".feed").find(".comment-section").slideToggle();
-            });
-        } else {
-            $(document).on("click", ".fa-comment", function(){
-                swal({
-                    title : "",
-                    text : "댓글은 로그인 후 볼 수 있어요!",
-                    icon : "warning"
-                });
-            });
-        }
-
-        $(document).on("click", ".submit-comment", function() {
-            const textFeedCommentContent = $(this).siblings("textarea").val();
-            const textFeedElement = $(this).closest(".feed");
-            const textFeedNo = textFeedElement.find(".textFeedNo").text();
-
-            $.ajax({
-                url: "/text/textFeedCommentWrite",
-                type: "post",
-                data: {
-                    textFeedCommentContent: textFeedCommentContent,
-                    textFeedNo: textFeedNo
-                },
-                dataType: "json",
-                success: function(data) {
-                    const comment = data.textFeedComment;
-                    const userImg = comment.textFeedCommentWriterImg ? `/user/${comment.textFeedCommentWriterImg}` : "/user/minit_logo.png";
-
-                    const commentHtml = `
-                        <div class="comment" style="display:none;">
-                            <span class="textFeedCommentNo" style="display:none;">${comment.textFeedCommentNo}</span>
-                            <div class="comment-profile-pic">
-                                <img src="${userImg}" alt="">
-                            </div>
-                            <div class="comment-content">
-                                <p class="comment-author">${comment.textFeedCommentWriter}</p>
-                                <p class="comment-text">${comment.textFeedCommentContent}</p>
-                                <textarea class="comment-edit-textarea" style="display:none;">${comment.textFeedCommentContent}</textarea>
-                                <div class="comment-actions">
-                                    <i id="comment-not-like" class="fa fa-regular fa-heart" onclick="commentLikePush(this, ${comment.textFeedCommentNo})"></i>
-                                    <span class="likeCount">0</span>
-                                </div>
-                            </div>
-                            <div class="comment-options">
-                                <button class="comment-edit-btn"><span class="material-icons">edit</span></button>
-                                <button class="comment-delete-btn"><span class="material-icons">delete_forever</span></button>
-                                <button class="comment-save-btn" style="display:none;"><span class="material-icons">done</span></button>
-                            </div>
-                        </div>
-                    `;
-
-                    const newComment = $(commentHtml);
-                    textFeedElement.find(".comments-container").prepend(newComment);
-                    newComment.slideDown("slow");
-                    textFeedElement.find("textarea").val(""); 
-                },
-                error: function() {
-                	swal({
-                        title: "데이터 전송 실패",
-                        text: "데이터 전송 실패, 다시 시도해주세요",
-                        icon: "warning"
-                    });
-                }
-            });
-        });
-        
-        $(document).on("click", ".comment-delete-btn", function() {
-            const textFeedCommentElement = $(this).closest(".comment");
-            const textFeedCommentNo = textFeedCommentElement.find(".textFeedCommentNo").text();
-            
-            swal({
-                title: "댓글 삭제",
-                text: "댓글을 삭제하시겠습니까?",
-                icon: "warning",
-                buttons: {
-                    cancel: {
-                        text: "취소",
-                        value: false,
-                        visible: true,
-                        className: "btn-secondary",
-                        closeModal: true
-                    },
-                    confirm: {
-                        text: "삭제",
-                        value: true,
-                        visible: true,
-                        className: "btn-point",
-                        closeModal: true
-                    }
-                }
-            }).then(function(isConfirm) {
-                if (isConfirm) {
-                    $.ajax({
-                        url: "/text/deleteTextFeedComment",
-                        type: "post",
-                        data: {
-                            textFeedCommentNo: textFeedCommentNo
-                        },
-                        dataType: "json",
-                        success: function(result) {
-                            if (result === 1) {
-                                swal({
-                                    title: "삭제 성공",
-                                    text: "댓글 삭제 성공",
-                                    icon: "success"
-                                });
-                                textFeedCommentElement.fadeOut("slow", function() {
-                                    $(this).remove();
-                                });
-                            } else {
-                                swal({
-                                    title: "삭제 실패",
-                                    text: "댓글 삭제 실패",
-                                    icon: "warning"
-                                });
-                            }
-                        },
-                        error: function() {
-                            swal({
-                                title: "삭제 실패",
-                                text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
-                                icon: "warning"
-                            });
-                        }
-                    });
-                } else {
-                    swal({
-                        title: "취소됨",
-                        text: "댓글 삭제가 취소되었습니다.",
-                        icon: "info"
-                    });
-                }
-            });
-        });//댓글 삭제
-        
-        $(document).on("click",".comment-edit-btn",function(){
-            const textFeedCommentElement = $(this).closest(".comment");
-            const textFeedCommentContent = textFeedCommentElement.find(".comment-text").text();
-            
-            textFeedCommentElement.find(".comment-edit-textarea").val(textFeedCommentContent).show();
-            limitTextWithoutSpaces(textFeedCommentElement.find(".comment-edit-textarea"), 50, '#text-feed-comment-count');
-            textFeedCommentElement.find(".comment-text").hide();
-            textFeedCommentElement.find("#text-feed-comment-count").show();
-            textFeedCommentElement.find(".comment-save-btn").show();
-            
-            $(this).hide();
-            
-            const textFeedCommentNo = textFeedCommentElement.find(".textFeedCommentNo").text();
-            textFeedCommentElement.find(".comment-save-btn").data("textFeedCommentNo", textFeedCommentNo);
-        });
-
-        $(document).on("click", ".comment-save-btn",function(){
-            const textFeedCommentElement = $(this).closest(".comment");
-            const textFeedCommentEditContent = textFeedCommentElement.find(".comment-edit-textarea").val();
-            const textFeedCommentEditNo = $(this).data("textFeedCommentNo");
-
-            $.ajax({
-                url : "/text/editTextFeedComment",
-                type : "post",
-                data : {
-                    textFeedCommentEditContent : textFeedCommentEditContent,
-                    textFeedCommentEditNo : textFeedCommentEditNo
-                },
-                success : function(result){
-                    if(result === 1){
-                        swal({
-                            title: "수정 성공",
-                            text: "댓글 수정 성공",
-                            icon: "success"
-                        });
-                        textFeedCommentElement.find(".comment-text").text(textFeedCommentEditContent).show();
-                        
-                        textFeedCommentElement.find(".comment-edit-textarea").hide();
-                        textFeedCommentElement.find(".comment-save-btn").hide();
-                        textFeedCommentElement.find(".comment-edit-btn").show();
-                    } else {
-                        swal({
-                            title: "수정 실패",
-                            text: "댓글 수정 실패",
-                            icon: "warning"
-                        });
-                    }
-                },
-                error : function(){
-                    swal({
-                        title: "수정 실패",
-                        text: "댓글 수정 실패",
-                        icon: "warning"
-                    });
-                }
-            });
-        });
-        
-        $(document).on("click",".feed-report-btn", function(){
-        	const textFeedElement = $(this).closest(".feed");
-        	const textFeedNo = textFeedElement.find(".textFeedNo").text();
-        	const isReport = textFeedElement.find(".feed-is-report").text();
-        	swal({
-        		title : "게시물 신고",
-        		text : "이 게시물을 신고 하시겠습니까?",
-        		icon : "warning",
-        		buttons: {
-                    cancel: {
-                        text: "취소",
-                        value: false,
-                        visible: true,
-                        className: "btn-secondary",
-                        closeModal: true
-                    },
-                    confirm: {
-                        text: "신고",
-                        value: true,
-                        visible: true,
-                        className: "btn-point",
-                        closeModal: true
-                    }
-                }
-        	}).then(function(isConfirm){
-        		if(isConfirm){
-        			$.ajax({
-                		url : "/text/reportTextFeed",
-                		type : "post",
-                		data : {
-                			textFeedNo : textFeedNo,
-                			isReport : isReport
-                		},
-                		success : function(data){
-                			if(data == -10){
-                				swal({
-                                    title: "로그인 필요",
-                                    text: "로그인 후 이용해 주세요",
-                                    icon: "info"
-                                });                				
-                			}else if(data == -100){
-                				swal({
-                                    title: "",
-                                    text: "이미 신고한 게시물 입니다 !",
-                                    icon: "info"
-                                });  
-                			}else if(data == -1000){
-                				swal({
-                                    title: "",
-                                    text: "지속적인 신고로 게시물이 삭제되었습니다 !",
-                                    icon: "info"
-                                });
-                				textFeedElement.fadeOut("slow", function() {
-                                    $(this).remove();
-                                });
-                			}else if(data == 1){
-                				swal({
-                                    title: "신고 성공",
-                                    text: "피드 신고가 접수되었습니다.",
-                                    icon: "success"
-                                });
-                			}else{
-                				swal({
-                                    title: "신고 실패",
-                                    text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
-                                    icon: "warning"
-                                });
-                			}
-                		},
-                		error : function(){
-                			swal({
-                                title: "서버 연결 실패",
-                                text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
-                                icon: "warning"
-                            });
-                		}
-                	});
-        		}else{
-        			swal({
-                        title: "취소됨",
-                        text: "피드 신고가 취소되었습니다.",
-                        icon: "info"
-                    });
-        		}
-        	})
-        	
-        	
-        });//신고
-        
-        $(document).ready(function() {
-            var $upBtn = $('.up-btn');
-            var $bottomNavBar = $('.bottom-navBar');
-            var fixedBottomPosition = 20; // up-btn의 기본 bottom 위치
-
-            $(window).scroll(function() {
-                var scrollTop = $(this).scrollTop();
-                var windowHeight = $(window).height();
-                var bottomNavBarTop = $bottomNavBar.offset().top;
-                var upBtnBottomPosition = $upBtn.offset().top + $upBtn.outerHeight();
-
-                if (upBtnBottomPosition > bottomNavBarTop) {
-                    // bottom-navBar에 닿으면 고정 위치로 전환
-                    $upBtn.css({
-                        position: 'absolute',
-                        bottom: $(document).height() - bottomNavBarTop + fixedBottomPosition + 'px',
-                        right: '20px'
-                    });
-                } else {
-                    // 여전히 화면에 보이면 fixed로 유지
-                    $upBtn.css({
-                        position: 'fixed',
-                        bottom: fixedBottomPosition + 'px',
-                        right: '20px'
-                    });
-                }
-            });
-
-            // "맨 위로" 버튼 클릭 시 페이지 맨 위로 스크롤
-            $upBtn.click(function() {
-                $('html, body').animate({scrollTop: 0}, 500); // 500ms 동안 스크롤
-                return false;
-            });
-        });
-    });//ready
-</script>
+		    $.ajax({
+		        url: "/text/editTextFeed", // 서버의 수정 처리 URL
+		        type: "post",
+		        data: {
+		            textFeedNo: textFeedNo,
+		            textFeedEditContent: textFeedEditContent
+		        },
+		        success: function(result) {
+		            if (result === 1) {
+		                swal({
+		                    title: "수정 성공",
+		                    text: "글 수정 성공",
+		                    icon: "success"
+		                }).then(function() {
+		                    location.reload();
+		                });
+		            } else {
+		                swal({
+		                    title: "수정 실패",
+		                    text: "글 수정 실패",
+		                    icon: "warning"
+		                });
+		            }
+		        },
+		        error: function() {
+		            swal({
+		                title: "수정 실패",
+		                text: "서버와 연결할 수 없습니다. 다시 시도해주세요.",
+		                icon: "warning"
+		            });
+		        }
+		    });
+		});
+	
+		$(".write-btn").on("click", function() {
+			const textFeedContent = $("#text-feed-content").val();
+			
+			if (textFeedContent.trim().replace(/\s/g, '').length === 0) {
+				swal({
+					title: "글 작성 실패",
+					text: "공백만으로는 글을 작성할 수 없습니다.",
+					icon: "warning"
+				});
+				return;
+			}
+			
+			$.ajax({
+				url: "/text/textFeedWrite",
+				type: "post",
+				data: { textFeedContent: textFeedContent },
+				dataType: "json",
+				success: function(data) {
+					const newfeed = data.textFeed;
+					const userImg = newfeed.textFeedWriterImg ? `/user/${newfeed.textFeedWriterImg}` : "/user/minit_logo.png";
+					const feedHtml = `
+						<div class="feed" style="display:none;">
+							<span class="textFeedNo" style="display:none;">${newfeed.textFeedNo}</span>
+							<div class="feed-profile-pic">
+								<img src="${userImg}" alt="Profile Picture">
+							</div>
+							<div class="feed-content">
+								<p class="text-feed-writer">${newfeed.textFeedWriter}</p>
+								<p class="text-feed-content">${newfeed.textFeedContent}</p>
+								<div class="feed-actions">
+									<i id="feed-not-like" class="fa fa-regular fa-heart" onclick="likePush(this, ${newfeed.textFeedNo})"></i>
+									<span class="likeCount">${newfeed.likeCount}</span>
+									<i class="fa fa-comment"></i>
+									<i class="fa fa-ellipsis-h"></i>
+									<div class="feed-options">
+										<button class="feed-edit-btn"><span class="material-icons">edit</span></button>
+										<button class="feed-report-btn"><span class="material-icons">report_problem</span></button>
+										<button class="feed-bookmark-btn"><span class="material-icons">bookmark_border</span></button>
+										<button class="feed-delete-btn"><span class="material-icons">delete_forever</span></button>
+									</div>
+								</div>
+							</div>
+							<div class="comment-section" style="display: none;">
+								<textarea id="text-feed-comment" placeholder="댓글을 작성해보세요 !"></textarea>
+								<button class="submit-comment">댓글 달기</button>
+								<div class="comments-container"></div>
+							</div>
+						</div>
+					`;
+	
+					const newfeedElement = $(feedHtml);
+					$("#text-feed-feeds").prepend(newfeedElement);
+					newfeedElement.slideDown("slow");
+					$(".feed-char-count").text("0/100");
+					$("#text-feed-content").val("");
+				},
+				error: function() {
+					alert("글 작성 실패");
+				}
+			});
+		});
+	
+		const isLoggedIn = $('#currentUser').val() === 'true';
+	
+		if (isLoggedIn) {
+			$(document).on("click", ".fa-comment", function() {
+				$(this).closest(".feed").find(".comment-section").slideToggle();
+			});
+		} else {
+			$(document).on("click", ".fa-comment", function(){
+				swal({
+					title : "",
+					text : "댓글은 로그인 후 볼 수 있어요!",
+					icon : "warning"
+				});
+			});
+		}
+	
+		$(document).on("click", ".submit-comment", function() {
+			const textFeedCommentContent = $(this).siblings("textarea").val();
+			
+			if (textFeedCommentContent.trim().replace(/\s/g, '').length === 0) {
+				swal({
+					title: "댓글 작성 실패",
+					text: "공백만으로는 댓글을 작성할 수 없습니다.",
+					icon: "warning"
+				});
+				return;
+			}
+	
+			const textFeedElement = $(this).closest(".feed");
+			const textFeedNo = textFeedElement.find(".textFeedNo").text();
+	
+			$.ajax({
+				url: "/text/textFeedCommentWrite",
+				type: "post",
+				data: {
+					textFeedCommentContent: textFeedCommentContent,
+					textFeedNo: textFeedNo
+				},
+				dataType: "json",
+				success: function(data) {
+					const comment = data.textFeedComment;
+					const userImg = comment.textFeedCommentWriterImg ? `/user/${comment.textFeedCommentWriterImg}` : "/user/minit_logo.png";
+	
+					const commentHtml = `
+						<div class="comment" style="display:none;">
+							<span class="textFeedCommentNo" style="display:none;">${comment.textFeedCommentNo}</span>
+							<div class="comment-profile-pic">
+								<img src="${userImg}" alt="">
+							</div>
+							<div class="comment-content">
+								<p class="comment-author">${comment.textFeedCommentWriter}</p>
+								<p class="comment-text">${comment.textFeedCommentContent}</p>
+								<textarea class="comment-edit-textarea" style="display:none;">${comment.textFeedCommentContent}</textarea>
+								<div class="comment-actions">
+									<i id="comment-not-like" class="fa fa-regular fa-heart" onclick="commentLikePush(this, ${comment.textFeedCommentNo})"></i>
+									<span class="likeCount">0</span>
+								</div>
+							</div>
+							<div class="comment-options">
+								<button class="comment-edit-btn"><span class="material-icons">edit</span></button>
+								<button class="comment-delete-btn"><span class="material-icons">delete_forever</span></button>
+								<button class="comment-save-btn" style="display:none;"><span class="material-icons">done</span></button>
+							</div>
+						</div>
+					`;
+	
+					const newComment = $(commentHtml);
+					textFeedElement.find(".comments-container").prepend(newComment);
+					newComment.slideDown("slow");
+					textFeedElement.find("textarea").val(""); 
+				},
+				error: function() {
+					swal({
+						title: "데이터 전송 실패",
+						text: "데이터 전송 실패, 다시 시도해주세요",
+						icon: "warning"
+					});
+				}
+			});
+		});
+	
+		$(document).on("click", ".comment-delete-btn", function() {
+			const textFeedCommentElement = $(this).closest(".comment");
+			const textFeedCommentNo = textFeedCommentElement.find(".textFeedCommentNo").text();
+			
+			swal({
+				title: "댓글 삭제",
+				text: "댓글을 삭제하시겠습니까?",
+				icon: "warning",
+				buttons: {
+					cancel: {
+						text: "취소",
+						value: false,
+						visible: true,
+						className: "btn-secondary",
+						closeModal: true
+					},
+					confirm: {
+						text: "삭제",
+						value: true,
+						visible: true,
+						className: "btn-point",
+						closeModal: true
+					}
+				}
+			}).then(function(isConfirm) {
+				if (isConfirm) {
+					$.ajax({
+						url: "/text/deleteTextFeedComment",
+						type: "post",
+						data: {
+							textFeedCommentNo: textFeedCommentNo
+						},
+						dataType: "json",
+						success: function(result) {
+							if (result === 1) {
+								swal({
+									title: "삭제 성공",
+									text: "댓글 삭제 성공",
+									icon: "success"
+								});
+								textFeedCommentElement.fadeOut("slow", function() {
+									$(this).remove();
+								});
+							} else {
+								swal({
+									title: "삭제 실패",
+									text: "댓글 삭제 실패",
+									icon: "warning"
+								});
+							}
+						},
+						error: function() {
+							swal({
+								title: "삭제 실패",
+								text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+								icon: "warning"
+							});
+						}
+					});
+				} else {
+					swal({
+						title: "취소됨",
+						text: "댓글 삭제가 취소되었습니다.",
+						icon: "info"
+					});
+				}
+			});
+		});
+		
+		
+		
+		$(document).on("click",".comment-edit-btn",function(){
+			const textFeedCommentElement = $(this).closest(".comment");
+			const textFeedCommentContent = textFeedCommentElement.find(".comment-text").text();
+			
+			textFeedCommentElement.find(".comment-edit-textarea").val(textFeedCommentContent).show();
+			limitTextWithoutSpaces(textFeedCommentElement.find(".comment-edit-textarea"), 50, '#text-feed-comment-count');
+			textFeedCommentElement.find(".comment-text").hide();
+			textFeedCommentElement.find("#text-feed-comment-count").show();
+			textFeedCommentElement.find(".comment-save-btn").show();
+			
+			$(this).hide();
+			
+			const textFeedCommentNo = textFeedCommentElement.find(".textFeedCommentNo").text();
+			textFeedCommentElement.find(".comment-save-btn").data("textFeedCommentNo", textFeedCommentNo);
+		});
+	
+		$(document).on("click", ".comment-save-btn",function(){
+			const textFeedCommentElement = $(this).closest(".comment");
+			const textFeedCommentEditContent = textFeedCommentElement.find(".comment-edit-textarea").val();
+			const textFeedCommentEditNo = $(this).data("textFeedCommentNo");
+	
+			if (textFeedCommentEditContent.trim().replace(/\s/g, '').length === 0) {
+				swal({
+					title: "댓글 수정 실패",
+					text: "공백만으로는 댓글을 수정할 수 없습니다.",
+					icon: "warning"
+				});
+				return;
+			}
+	
+			$.ajax({
+				url : "/text/editTextFeedComment",
+				type : "post",
+				data : {
+					textFeedCommentEditContent : textFeedCommentEditContent,
+					textFeedCommentEditNo : textFeedCommentEditNo
+				},
+				success : function(result){
+					if(result === 1){
+						swal({
+							title: "수정 성공",
+							text: "댓글 수정 성공",
+							icon: "success"
+						});
+						textFeedCommentElement.find(".comment-text").text(textFeedCommentEditContent).show();
+						
+						textFeedCommentElement.find(".comment-edit-textarea").hide();
+						textFeedCommentElement.find(".comment-save-btn").hide();
+						textFeedCommentElement.find(".comment-edit-btn").show();
+					} else {
+						swal({
+							title: "수정 실패",
+							text: "댓글 수정 실패",
+							icon: "warning"
+						});
+					}
+				},
+				error : function(){
+					swal({
+						title: "수정 실패",
+						text: "댓글 수정 실패",
+						icon: "warning"
+					});
+				}
+			});
+		});
+		
+		$(document).on("click",".feed-report-btn", function(){
+			const textFeedElement = $(this).closest(".feed");
+			const textFeedNo = textFeedElement.find(".textFeedNo").text();
+			const isReport = textFeedElement.find(".feed-is-report").text();
+			swal({
+				title : "게시물 신고",
+				text : "이 게시물을 신고 하시겠습니까?",
+				icon : "warning",
+				buttons: {
+					cancel: {
+						text: "취소",
+						value: false,
+						visible: true,
+						className: "btn-secondary",
+						closeModal: true
+					},
+					confirm: {
+						text: "신고",
+						value: true,
+						visible: true,
+						className: "btn-point",
+						closeModal: true
+					}
+				}
+			}).then(function(isConfirm){
+				if(isConfirm){
+					$.ajax({
+						url : "/text/reportTextFeed",
+						type : "post",
+						data : {
+							textFeedNo : textFeedNo,
+							isReport : isReport
+						},
+						success : function(data){
+							if(data == -10){
+								swal({
+									title: "로그인 필요",
+									text: "로그인 후 이용해 주세요",
+									icon: "info"
+								});                				
+							}else if(data == -100){
+								swal({
+									title: "",
+									text: "이미 신고한 게시물 입니다 !",
+									icon: "info"
+								});  
+							}else if(data == -1000){
+								swal({
+									title: "",
+									text: "지속적인 신고로 게시물이 삭제되었습니다 !",
+									icon: "info"
+								});
+								textFeedElement.fadeOut("slow", function() {
+									$(this).remove();
+								});
+							}else if(data == 1){
+								swal({
+									title: "신고 성공",
+									text: "피드 신고가 접수되었습니다.",
+									icon: "success"
+								});
+							}else{
+								swal({
+									title: "신고 실패",
+									text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+									icon: "warning"
+								});
+							}
+						},
+						error : function(){
+							swal({
+								title: "서버 연결 실패",
+								text: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+								icon: "warning"
+							});
+						}
+					});
+				}else{
+					swal({
+						title: "취소됨",
+						text: "피드 신고가 취소되었습니다.",
+						icon: "info"
+					});
+				}
+			})
+			
+			
+		});//신고
+		
+		$(document).ready(function() {
+			var $upBtn = $('.up-btn');
+			var $bottomNavBar = $('.bottom-navBar');
+			var fixedBottomPosition = 20;
+	
+			$(window).scroll(function() {
+				var scrollTop = $(this).scrollTop();
+				var windowHeight = $(window).height();
+				var bottomNavBarTop = $bottomNavBar.offset().top;
+				var upBtnBottomPosition = $upBtn.offset().top + $upBtn.outerHeight();
+	
+				if (upBtnBottomPosition > bottomNavBarTop) {
+					$upBtn.css({
+						position: 'absolute',
+						bottom: $(document).height() - bottomNavBarTop + fixedBottomPosition + 'px',
+						right: '20px'
+					});
+				} else {
+					$upBtn.css({
+						position: 'fixed',
+						bottom: fixedBottomPosition + 'px',
+						right: '20px'
+					});
+				}
+			});
+	
+			$upBtn.click(function() {
+				$('html, body').animate({scrollTop: 0}, 500);
+				return false;
+			});
+		});
+	});//ready
+	</script>
 <th:block th:include="/common/footer"></th:block>
 </body>
 </html>
