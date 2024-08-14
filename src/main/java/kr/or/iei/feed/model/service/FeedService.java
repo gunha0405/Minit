@@ -445,12 +445,18 @@ public class FeedService {
 	@Transactional
 	public int feedLike(int userFeedNo, String userId) {
 		int result = feedDao.feedLike(userFeedNo, userId);
+		if(result > 0 ) {
+			result = feedDao.updateFeedLike(userFeedNo);
+		}
 		return result;
 	}
 
 	@Transactional
 	public int feedLikeCancel(int userFeedNo, String userId) {
 		int result = feedDao.feedLikeCancel(userFeedNo, userId);
+		if(result > 0) {
+			result = feedDao.updateFeeddisLike(userFeedNo);
+		}
 		return result;
 	}
 	@Transactional
@@ -491,12 +497,12 @@ public class FeedService {
 
 
 
-
+	@Transactional
 	public int updateFeedFilepath(int file1, String filepath) {
 		int result = feedDao.updateFeedFilepath(file1, filepath);
 		return result;
 	}
-
+	@Transactional
 	public int updateFeedFilepathNull(int file) {
 		int result = feedDao.updateFileNull(file);
 		return result;

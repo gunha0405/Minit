@@ -501,5 +501,17 @@ public class FeedDao {
 		return userImg;
 	}
 
+	public int updateFeedLike(int userFeedNo) {
+		String query ="update user_feed_tbl set feed_like_count=+1 where user_feed_no=?";
+		Object[] params = {userFeedNo};
+		return jdbc.update(query, params);
+	}
+
+	public int updateFeeddisLike(int userFeedNo) {
+		String query ="update user_feed_tbl set feed_like_count=-1 where user_feed_no=?";
+		Object[] params = {userFeedNo};
+		return jdbc.update(query, params);
+	}
+
 
 }
