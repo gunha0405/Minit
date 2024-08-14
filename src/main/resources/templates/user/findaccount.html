@@ -250,6 +250,7 @@
 			$("#updateUserPw").removeClass("required");
 			$(".update-pw-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
 			const userPw = $("#updateUserPw").val();
+			console.log(userPw);
 			const pwReg = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/;
 			if(!pwReg.test(userPw)){
 				$(".update-pw-check-msg").text("영문자+숫자+특수문자 조합으로 8~16글자 이내 작성해주세요.");
@@ -266,6 +267,8 @@
 			$(".update-repw-check-msg").removeClass("none").removeClass("valid").removeClass("invalid");
 			const pwValue = $("#updateUserPw").val();
 			const pwReValue = $("#updateUserRePw").val();
+			console.log(pwValue);
+			console.log(pwReValue);
 			if(pwValue === pwReValue){
 				$(".update-repw-check-msg").text("비밀번호가 일치합니다.");
 				$(".update-repw-check-msg").addClass("valid");
@@ -279,6 +282,7 @@
 		//제대로 입력했는지 확인
     	$(".updatePw").on("click",function(){
     		const required = $(".required").length;
+    		console.log(required);
     		if(required != 2){
     			alert("입력값을 제대로 작성해주세요"); 			
     			event.preventDefault(); //이벤트 방지 submit 안 넘어가고
@@ -291,6 +295,8 @@
 			//document.getElementById('findPwForm').submit();
 			const findUserId = $("#findUserId").val();
 			const findUserEmail = $("#findUserEmail").val();
+			console.log(userId);
+			console.log(userEmail);
 			$.ajax({
 				url : "/user/ajaxFindUser",
 				type : "get",
@@ -299,6 +305,7 @@
 						},
 				success : function(data){
 					if(data == 1){
+						console.log(1);
 						$("[name=userId]").val(findUserId); //input으로 넘겨주기
 						const rePw = $("#rePwAtag");
 						
@@ -309,6 +316,7 @@
 							closeOnClickOutside : false
 						})
 						.then(function(result){
+							console.log(result);
 							//창 꺼질 때 실행할 함수
 							if(result == true){
 								rePw.click();
@@ -323,6 +331,7 @@
 					}
 				},
 				error : function(){
+					console.log("에러 발생");
 				}
 			});
 		});
