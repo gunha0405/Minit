@@ -169,7 +169,11 @@ public class FeedService {
 	public Feed selectUserOneFeed(int userFeedNo, int userNo) {
 		//게시물정보 입력받기
 		Feed feed = feedDao.searchFeedUser(userFeedNo);
-		
+		//유저 이미지
+		String userImg = feedDao.totlaImg(userFeedNo);
+		//System.out.println("userImg="+userImg);
+		feed.setUserFeedFilepath("/user/"+userImg);
+		System.out.println(feed.getUserFeedFilepath());
 		//사진 게시물 저장 
 		// 게시물당 사진 게시물 몇개인지
 		int totalImgNo = feedDao.totalImg(userFeedNo);
@@ -441,12 +445,18 @@ public class FeedService {
 	@Transactional
 	public int feedLike(int userFeedNo, String userId) {
 		int result = feedDao.feedLike(userFeedNo, userId);
+		if(result > 0 ) {
+			result = feedDao.updateFeedLike(userFeedNo);
+		}
 		return result;
 	}
 
 	@Transactional
 	public int feedLikeCancel(int userFeedNo, String userId) {
 		int result = feedDao.feedLikeCancel(userFeedNo, userId);
+		if(result > 0) {
+			result = feedDao.updateFeeddisLike(userFeedNo);
+		}
 		return result;
 	}
 	@Transactional
@@ -487,12 +497,12 @@ public class FeedService {
 
 
 
-
+	@Transactional
 	public int updateFeedFilepath(int file1, String filepath) {
 		int result = feedDao.updateFeedFilepath(file1, filepath);
 		return result;
 	}
-
+	@Transactional
 	public int updateFeedFilepathNull(int file) {
 		int result = feedDao.updateFileNull(file);
 		return result;

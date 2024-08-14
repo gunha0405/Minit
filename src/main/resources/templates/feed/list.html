@@ -52,6 +52,54 @@
 .list-navi{
 	margin-bottom: 50px;
 }
+.posting-item {
+    list-style: none; /* 리스트 스타일 제거 */
+    margin: 20px 0; /* 항목 간격 조정 */
+}
+
+.posting-author {
+    font-weight: bold; /* 작성자 정보 강조 */
+    margin-bottom: 10px; /* 이미지와의 간격 */
+    text-align: center;
+    font-size: 28px;
+    
+}
+
+.posting-img {
+    text-align: center; /* 이미지 중앙 정렬 */
+    margin-bottom: 10px; /* 내용과의 간격 */
+}
+
+.posting-img img {
+    max-width: 100%; /* 이미지의 최대 너비를 부모 요소에 맞춤 */
+    height: auto; /* 비율 유지 */
+    width: 80%; /* 이미지 크기 조절 (필요에 따라 조정) */
+    display: block; /* 이미지 블록으로 설정 */
+    margin: 0 auto; /* 이미지 중앙 정렬 */
+}
+
+.posting-info {
+    font-size: 30px; /* 내용의 폰트 사이즈 조정 */
+    margin-bottom: 20px;
+}
+
+.posting-sub-info {
+    margin-top: 20pxpx; /* 내용 간격 조정 */
+}
+
+.posting-sub-info span {
+    display: block; /* 내용 블록으로 설정 */
+}
+
+.user-profile-photo >div >a>img{
+
+    height: auto; /* 비율 유지 */
+    width: 200px; /* 이미지 크기 조절 (필요에 따라 조정) */
+	border-radius: 100px;
+}
+.posting-item{
+	margin-bottom: 100px;
+}
 </style>
 
 <title>Insert title here</title>
@@ -60,11 +108,6 @@
 	<th:block th:include="common/header"></th:block>
 
 
-<!-- 
-페이지에서 받아야 하는 정보 
-페이지 주인의 넘버, 유저의 아이디, 유저의 닉네임, 유저의 자기소개, 팔로워, 팔로잉, 게시물 갯수
-페이지 넘겨줄때 페이지 주인의 아이디 / 1페이지 
- -->
 
 	<main class="content">
 		<section class="section feed-list">
@@ -74,7 +117,9 @@
 
 					<li class="user-profile-photo">
 						<div>
-							<img src="/user/${user.userImg}" class="profile-image">
+							<a th:href="@{/feed/myPage(userFeedWriter=${user.userId})}">
+							<img th:src="@{'/user/' + ${user.userImg}}" class="profile-image">
+							</a>
 						</div>
 					</li>
 					<li>
@@ -206,7 +251,7 @@
                 </ul>
             </div>
 			<div class="list-navi" th:utext="${pageNavi}"></div>
-			<button class="button-style hidden" id="more" onclick="loadStoredPhotos([[${user.userId}]])">더보기</button>
+
 			<input type="hidden" class="totalCount"></
 
 		</section>
@@ -224,87 +269,62 @@
             data: { userId: userId },
             dataType : "json",
             success: function(data) {
-                console.log("성공성공");
+                //console.log("성공성공");
                 // 기존 버튼을 히든으로 변경
                 $(element).hide(); // 기존 버튼을 히든으로 설정
 
                 // 새로운 버튼을 추가
                 $(element).after('<a href="/feed/myPage?userFeedWriter=' + userId + '"><button class="button-style">개인피드이동</button></a>');
                 // 기존 사진과 내비게이션을 제거
-                $('.feed-list-wrap').children().remove();
+                $('.feed-list-wrap').remove();
                 $('.list-navi').remove();
 				$('#more').removeClass('hidden');
                 // 보관함에서 저장된 사진을 불러옴
-     			for(let i = 0; i < data.length; i++){
-     				const p = data[i];
-     				const li = $("<li>");
-					li.addClass("posting-item");
-					//<li class="posting-item"></li>
-					
-					const imgDiv = $("<div>");
-					imgDiv.addClass("posting-img");
-					//<div class="posting-img"></div>
-					
-					const img = $("<img>");
-					img.attr("src","/feed/"+p.userFeedFilepath);
-					//<img src="db로 조회한 이미지경로">
-					
-					 imgDiv.append(img);
-					 /*
-					 <div class="posting-img">
-					 	<img src="db로 조회한 이미지경로">
-					 </div>
-					 */
-					 
-					 const infoDiv = $("<div>");
-					 infoDiv.addClass("posting-info");
-					 //<div class="posting-info"></div>
-					 
-					 const titleDiv =$("<div>");
-					 titleDiv.addClass("posting-title");
-					 titleDiv.text(p.userFeedContent);
-					 //<div class="posting-title"><db로 조회한 제목</div>
-					 
-					 const subInfoDiv = $("<div>");
-					 subInfoDiv.addClass("posting-sub-info");
-					 //<div class="posting-sub-info"></div>
-					 
-    				 const writerSpan = $("<span>");
-					 writerSpan.text(p.userFeedWriter);
-					 //<span>db로 조회한 작성자</span>
-					 
-					 subInfoDiv.append(writerSpan);
-					 /*
-					 <div class="posting-sub-info">
-					 		<span>db로 조회한 작성자</span>
-					 </div>
-					 */
-					 infoDiv.append(titleDiv).append(subInfoDiv);
-					 /*
-					 <div class="posting-info">
-					 		<div class="posting-title"><db로 조회한 제목</div>
-					 		<div class="posting-sub-info">
-						 		<span>db로 조회한 작성자</span>
-							</div>
-					 </div>
-					 */
-					 li.append(imgDiv).append(infoDiv);
-					 /*
-					 <li class="posting-item">
-					 	 <div class="posting-img">
-					 		 <img src="db로 조회한 이미지경로">
-						 </div>
-						 <div class="posting-info">
-					 		 <div class="posting-title"><db로 조회한 제목</div>
-					 		 <div class="posting-sub-info">
-						 	     <span>db로 조회한 작성자</span>
-							 </div>
-						 </div>
-					 </li>
-					 */
-					 $(".more-feed").append(li);
-			
-     			}
+     	for (let i = 0; i < data.length; i++) {
+		    const p = data[i];
+		    const li = $("<li>");
+		    li.addClass("posting-item");
+		
+		    // 작성자 div 생성
+		    const authorDiv = $("<div>");
+		    authorDiv.addClass("posting-author");
+		    authorDiv.text(p.userFeedWriter); // 작성자
+		
+		    // 이미지 div 생성
+		    const imgDiv = $("<div>");
+		    imgDiv.addClass("posting-img");
+		
+		    // a 태그 생성
+		    const aTag = $("<a>");
+		    aTag.attr("href", "/feed/view?userFeedNo=" + p.userFeedNo); // 링크 설정
+		    aTag.attr("target", "_blank"); // 새 탭에서 열기
+		
+		    // 이미지 태그 생성
+		    const img = $("<img>");
+		    img.attr("src", "/feed/" + p.userFeedFilepath); // 이미지 경로
+		
+		    aTag.append(img); // 이미지 태그를 a 태그에 추가
+		    imgDiv.append(aTag); // a 태그를 이미지 div에 추가
+		
+		    // 내용 div 생성
+		    const infoDiv = $("<div>");
+		    infoDiv.addClass("posting-info");
+		
+		    const subInfoDiv = $("<div>");
+		    subInfoDiv.addClass("posting-sub-info");
+		
+		    const contentSpan = $("<span>");
+		    contentSpan.html(p.userFeedContent); // 컨텐츠 내용
+		
+		    subInfoDiv.append(contentSpan);
+		
+		    infoDiv.append(subInfoDiv);
+		
+		    // li 요소에 작성자 div, 이미지 div, 내용 div를 순서대로 추가
+		    li.append(authorDiv).append(imgDiv).append(infoDiv);
+		
+		    $(".more-feed").append(li);
+		}
                 //loadStoredPhotos(userId);
             },
             error: function() {
