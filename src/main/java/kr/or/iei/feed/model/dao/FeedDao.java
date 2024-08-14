@@ -13,6 +13,7 @@ import kr.or.iei.feed.model.dto.FeedCommentRowMapper;
 import kr.or.iei.feed.model.dto.FeedFile;
 import kr.or.iei.feed.model.dto.FeedFileRowMapper;
 import kr.or.iei.feed.model.dto.FeedRepoRowMapper;
+import kr.or.iei.feed.model.dto.FeedReportRowMapper;
 import kr.or.iei.feed.model.dto.FeedRowMapper;
 import kr.or.iei.feed.model.dto.FollowUserRowMapper;
 import kr.or.iei.feed.model.dto.UserFeedNaviList;
@@ -37,6 +38,8 @@ public class FeedDao {
 	FeedCommentRowMapper feedCommentRowMapper = new FeedCommentRowMapper();
 	@Autowired
 	FeedRepoRowMapper feedRepoRowMapper = new FeedRepoRowMapper();
+	@Autowired
+	FeedReportRowMapper feedReportRowMapper = new FeedReportRowMapper();
 	
 	public UserFeedNaviList userList(String userId) {
 		String query = "select user_id, user_info, USER_FEED_WRITER, USER_FEED_CONTENT,USER_FEED_DATE\r\n" + 
@@ -80,7 +83,7 @@ public class FeedDao {
 	}
 
 	public int insertFeed(Feed f) {
-		String query = "insert into user_feed_tbl values(user_feed_tbl_seq.nextval,?,?,to_char(sysdate,'YYYY-MM-DD'),0)";
+		String query = "insert into user_feed_tbl values(user_feed_tbl_seq.nextval,?,?,to_char(sysdate,'YYYY-MM-DD'),0,0)";
 		Object[] params = {f.getUserFeedWriter(), f.getUserFeedContent()};
 		int result = jdbc.update(query, params);
 		return result;
@@ -475,8 +478,11 @@ public class FeedDao {
 	}
 
 	public List<Feed> selectReportFeed() {
-		String query = "select * from user_feed_tbl where user_feed_count > 0";
-		List<Feed> feedlist = jdbc.query(query, feedRowMapper);
+		String query = "select user_no, user_feed_writer, user_feed_no, user_feed_content, user_feed_date, user_feed_count from user_feed_tbl \r\n" + 
+				"join user_tbl on (user_feed_writer = user_id)\r\n" + 
+				"where user_feed_count > 0";
+		List<Feed> feedlist = jdbc.query(query, feedReportRowMapper);
+		System.out.println(feedlist);
 		return feedlist;
 	}
 
