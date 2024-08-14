@@ -25,6 +25,34 @@
   />
 
 <style>
+.user-introduce-content {
+    /* 기본 폰트 사이즈 설정 */
+    font-size: 16px;
+    /* 콘텐츠의 최대 너비를 설정하여 콘텐츠가 넘치지 않도록 함 */
+    max-width: 100%;
+    /* 콘텐츠가 넘칠 경우 줄 바꿈 */
+    white-space: normal;
+    /* 넘치는 콘텐츠에 대한 처리 방법 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-introduce {
+    /* 내용을 포함할 수 있는 최대 너비를 설정하여 레이아웃이 깨지지 않도록 함 */
+    max-width: 300px; /* 필요에 따라 조정 */
+    overflow: hidden; /* 넘치는 콘텐츠 숨기기 */
+    text-align: left; /* 텍스트 정렬 */
+    word-wrap: break-word; /* 긴 단어 줄 바꿈 */
+}
+
+.user-introduce-id,
+.user-introduce-nick {
+    /* ID와 닉네임의 최대 너비를 설정하여 레이아웃 조정 */
+    max-width: 200px; /* 필요에 따라 조정 */
+    overflow: hidden; /* 넘치는 콘텐츠 숨기기 */
+    text-overflow: ellipsis; /* 넘치는 콘텐츠를 '...'로 대체 */
+    white-space: nowrap; /* 줄 바꿈 방지 */
+}
 .feed-list {
 	margin-top: 100px;
 }

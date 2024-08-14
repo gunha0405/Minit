@@ -241,6 +241,7 @@
 	                $('#postContainer').empty(); // 기존 콘텐츠를 비움
 
 	                list.forEach(b => {
+	                	console.log(b);
 	                    const writerLink = `/feed/myPage?userFeedWriter=${encodeURIComponent(b.userFeedWriter)}`;
 	                    const imageLink = "/photo/list";
 
@@ -253,7 +254,7 @@
 	                        </div>
 	                        <div class="post-image-container">
 	                            <a href="${imageLink}" class="post-image-link">
-	                                <img src="/photo/${b.photoFeedImg}" alt="이미지" class="post-image">
+	                                <img src="/feed/${b.photoFeedImg}" alt="이미지" class="post-image">
 	                            </a>
 	                            <span class="post-content">${b.userFeedContent}</span>
 	                        </div>
