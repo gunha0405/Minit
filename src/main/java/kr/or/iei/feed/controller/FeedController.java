@@ -396,5 +396,11 @@ public class FeedController {
 //		List<Feed> feedList = 
 //		return;
 //	}
-
+    @GetMapping(value="/selectReportFeed")
+    public String selectReportFeed(Model model) {
+    	List<Feed> reportList = feedService.selectReportFeed();
+    	
+    	model.addAttribute("reportList", reportList);
+    	return "/admin/warningFeed";
+    }
 }
