@@ -41,17 +41,17 @@
 		    <form action="/feed/feedUpdate" method="post" enctype="multipart/form-data">
   				<div class="image-container">
         			<div class="image-box">
-            			<input type="hidden" name="originFilePath1" th:value="${list[0].userFeedFilepath}">
-            			<input class="input-image-box" type="file" id="mainImageInput" name="upfile1"> 
-            			<input type="hidden" name="file1" th:value=${list[0].userFeedFileNo}>
+            			<input type="hidden" name="originFilePath1" th:value="${list[0].userFeedFilepath}"> 
+            			<input class="input-image-box" type="file" id="mainImageInput" name="upfile1" accept=".jpg,.png,.jpeg"> 
+            			<input type="hidden" name="file1" th:value=${list[0].userFeedFileNo} >
 					    <label for="mainImageInput" class="image-label">이미지 선택</label> 
 					    <img id="mainImage" th:if="${list[0].userFeedFilepath == null}" src="" alt="" /> 
 					    <img id="mainImage" th:if="${list[0].userFeedFilepath != null}" th:src="${list[0].userFeedFilepath}" alt="">
 					    <button type="button" class="delete-image" data-target="#mainImage">삭제</button>
 					</div>
 				    <div class="image-box" id="topRightBox">
-					    <input type="hidden" name="originFilePath2" th:value="${list[1].userFeedFilepath}">
-					    <input class="input-image-box" type="file" id="topRightImageInput" name="upfile2"> 
+					    <input type="hidden" name="originFilePath2" th:value="${list[1].userFeedFilepath}" >
+					    <input class="input-image-box" type="file" id="topRightImageInput" name="upfile2" accept=".jpg,.png,.jpeg"> 
 					    <input type="hidden" name="file2" th:value=${list[1].userFeedFileNo}>
 					    <label for="topRightImageInput" class="image-label">이미지 선택</label> 
 					    <img id="topRightImage"  th:if="${list[1].userFeedFilepath == null}" src="" alt="" /> 
@@ -60,7 +60,7 @@
 					</div>
 				    <div class="image-box" id="bottomRightBox">
 				        <input type="hidden" name="originFilePath3" th:value="${list[2].userFeedFilepath}">
-				        <input class="input-image-box" type="file" id="bottomRightImageInput" name="upfile3" >
+				        <input class="input-image-box" type="file" id="bottomRightImageInput" name="upfile3" accept=".jpg,.png,.jpeg">
 					    <input type="hidden" name="file3" th:value=${list[2].userFeedFileNo}>
 				        <label for="bottomRightImageInput" class="image-label">이미지 선택</label> 
 				        <img id="bottomRightImage"  th:if="${list[2].userFeedFilepath == null}" src="" alt="" /> 
@@ -135,7 +135,7 @@
 		        $(target).attr('src', ''); // 이미지 삭제
 		        $(this).parent().children().eq(0).val('filepathNull');
 		        
-		        console.log( $(this).parent().children().eq(0).val());
+		        //console.log( $(this).parent().children().eq(0).val());
 		 });
 
 		 function displayImage(event, imageSelector) {

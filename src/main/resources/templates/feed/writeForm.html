@@ -52,20 +52,20 @@
 			<form action="/feed/feedWrite" method="post" enctype="multipart/form-data">
 				 <div class="image-container">
 			        <div class="image-box">
-			            <input class="input-image-box" type="file" id="mainImageInput" name="upfile1"> 
+			            <input class="input-image-box" type="file" id="mainImageInput" accept=".jpg,.png,.jpeg" name="upfile1"> 
 			            <label for="mainImageInput" class="image-label"></label> 
 			            <img id="mainImage" src="/feed/image.png" alt="">
 			            <button type="button" class="delete-image" data-target="#mainImage">삭제</button>
 			            <!-- 파일번호  -->
 			        </div>
 			        <div class="image-box" id="topRightBox">
-			            <input class="input-image-box" type="file" id="topRightImageInput" name="upfile2"> 
+			            <input class="input-image-box" type="file" id="topRightImageInput" accept=".jpg,.png,.jpeg" name="upfile2"> 
 			            <label for="topRightImageInput" class="image-label"></label> 
 			            <img id="topRightImage" src="/feed/image.png" alt="">
 			            <button type="button" class="delete-image" data-target="#topRightImage">삭제</button>
 			        </div>
 			        <div class="image-box" id="bottomRightBox">
-			            <input class="input-image-box" type="file" id="bottomRightImageInput" name="upfile3"> 
+			            <input class="input-image-box" type="file" id="bottomRightImageInput" accept=".jpg,.png,.jpeg" name="upfile3"> 
 			            <label for="bottomRightImageInput" class="image-label"></label> 
 			            <img id="bottomRightImage" src="/feed/image.png" alt="">
 			            <button type="button" class="delete-image" data-target="#bottomRightImage">삭제</button>

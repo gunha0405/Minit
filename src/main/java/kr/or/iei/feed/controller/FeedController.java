@@ -50,11 +50,7 @@ public class FeedController {
 		int userNo = user.getUserNo();
 
 		Feed feed = feedService.selectUserOneFeed(userFeedNo, userNo); 
-		System.out.println("filelength="+feed.getFeedList().size());
-//		for(FeedFile file : feed.getFeedList()) {
-//			System.out.println("file="+file.getUserFeedFilepath());
-//		}
-		
+
 		//피드글 신고, 좋아요 보관함 여부 
 		int reportCount = -1;
 		int likeCount =-1;
@@ -145,10 +141,9 @@ public class FeedController {
 					FeedFile feedFile = new FeedFile();
 					feedFile.setUserFeedFilepath(filepath);
 					fileList.add(feedFile);
-					//System.out.println(filepath);
+	
 				}
 			}//for()
-			//System.out.println(f); 
 			
 			//결과값 0 or feedNo  
 			int result = feedService.insertfile(f, fileList);
@@ -231,53 +226,6 @@ public class FeedController {
 		}
 		
 		result = feedService.updateFeedContent(f);
-//		if(!upfile1.isEmpty()||!upfile2.isEmpty()||!upfile3.isEmpty()) {
-//			MultipartFile[] newFiles = {upfile1, upfile2, upfile3};
-//			//String savepath = root + "/feed/";
-//			List<FeedFile> newFileList = new ArrayList<FeedFile>();
-//			for (MultipartFile file : newFiles) {
-//				if (!file.isEmpty()) {
-//					// 파일경로 복사, 중복된 이름 검사 
-//					String filepath = fileUtils.upload(savepath, file); // ice5_2.png
-//					FeedFile feedFile = new FeedFile();
-//					feedFile.setUserFeedFilepath(filepath);
-//					newFileList.add(feedFile);//새로운 파일 경로 작업
-//				}
-//			}//for()
-//			for(FeedFile file : newFileList) {
-//				System.out.println("path="+file.getUserFeedFilepath());
-//			}
-//			List<FeedFile> files = new ArrayList<FeedFile>();
-//			
-//		
-//			result = feedService.updateNewFile(f, newFileList);
-//				
-//			
-//		
-//			//result = feedService.updatefile(f, newFileList, files);
-//		}else {
-//			
-//		}
-		
-		
-		
-
-//		if(f.getFile1()!=null) {
-//			FeedFile file = new FeedFile();
-//			file.setUserFeedFilepath(f.getFile1());
-//			files.add(file);
-//		}
-//		if(f.getFile2()!=null) {
-//			FeedFile file = new FeedFile();
-//			file.setUserFeedFilepath(f.getFile2());
-//			files.add(file);
-//		}
-//		if(f.getFile3()!=null) {
-//			FeedFile file = new FeedFile();
-//			file.setUserFeedFilepath(f.getFile3());
-//			files.add(file);
-//		}
-
 
 		if (result > 0) {
 			model.addAttribute("title", "수정 성공!");
@@ -317,10 +265,7 @@ public class FeedController {
 	@GetMapping(value = "/updateFrm")
 	public String updateFrm(String userFeedWriter, int userFeedNo, Model model) {
 		Feed feed = feedService.selectUserOneFeed(userFeedNo);
-		//for(FeedFile ff : feed.getFeedList()) {
-			//System.out.println(ff);
-			
-		//}
+
 		model.addAttribute("feed", feed);
 		model.addAttribute("list", feed.getFeedList());
 		return "/feed/updateFrm";
@@ -339,7 +284,7 @@ public class FeedController {
 	@PostMapping(value="/userFollowCancel")
 	public int userFollowCancel(String loginUser, String writerUser) {
 		int num = feedService.userFollowCancel(loginUser, writerUser);
-		//System.out.println("userFollowCancel");
+
 		if(num > 0) {
 			num = feedService.followerNo(writerUser);
 		}
@@ -350,14 +295,13 @@ public class FeedController {
 	@PostMapping(value="/userFollow")
 	public int userFollow(String loginUser, String writerUser) {
 		int num = feedService.userFollow(loginUser, writerUser);
-		//System.out.println("userFollow="+num);
+
 		return num;
 	}
 	
 	@ResponseBody
 	@PostMapping(value="/feedCommentDelete")
 	public int feedCommentDelete(int feedCommentNo) {
-		//System.out.println(feedCommentNo);
 		int result = feedService.feedCommentDelete(feedCommentNo);
 		return result;
 	}
@@ -371,7 +315,6 @@ public class FeedController {
 	@ResponseBody
 	@PostMapping(value="/reportFeed")
 	public int reportFeed(int userFeedNo, @SessionAttribute(required =false) User user) {
-		//System.out.println("userFeedNo"+userFeedNo);
 		 if (user == null) {
 		     return -10; // 로그인하지 않은 경우
 		}else {
