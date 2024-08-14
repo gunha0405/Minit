@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <link rel="stylesheet" href="/css/footer.css">
-
+<style>
+.mypage{
+ 	cursor: pointer;
+}
+</style>
 
   <!-- 밑에 네비게이션 바 -->
   <div class="bottom-navBar">
@@ -10,7 +14,7 @@
       </li>
       <li class="nav-item">
         <a class="item" th:if="${session.user != null}" th:href="@{/feed/myPage(userFeedWriter=${session.user.userId})}"><i class="fa-solid fa-user"></i></a>
-     	<a class="item" th:if="${session.user == null}" href="/"><i class="fa-solid fa-user"></i></a>
+     	<a class="item mypage" th:if="${session.user == null}" onclick="noneLogin()"><i class="fa-solid fa-user"></i></a>
       </li>
       <li class="nav-item">
         <a class="item" href="/text/textFeedList"><i class="fa-solid fa-newspaper"></i></a>
@@ -35,3 +39,12 @@
         <p>EMAIL : admin@icemall.com</p>
       </div>
     </footer>
+    <script>
+function noneLogin(){
+	 swal({
+         title: "로그인을 해주세요",
+         text: "로그인을 해야 서비스 이용이 가능합니다.",
+         icon: "warning"
+     });
+}
+</script>
