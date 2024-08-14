@@ -11,6 +11,7 @@
  	flex-direction: column;
  	align-items: center;
  	justify-content: center;
+}
 
 footer {
   background-color: white;
@@ -27,6 +28,42 @@ footer div {
   margin-left: 30px;
   margin-block-end: 30px;
 }
+
+.bottom-navBar {
+  display: flex;
+  justify-content: center;
+  position: sticky;
+  bottom: 20px;
+  width: 100%;
+  z-index: 1000;
+}
+
+.bottom-navBar .nav {
+  padding: 10px;
+  border-radius: 30px;
+  border: 0px solid darkgreen;
+  display: flex;
+  justify-content: space-around;
+  width: 55%;
+  height: 50px;
+  align-items: center;
+  background-color: #2cd37a;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.item {
+  color: #f0f0f0;
+  font-size: 19px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.item:hover {
+  color: lightseagreen;
+  font-size: 19px;
+  border-radius: 30px;
+}
+
 
 /* 오션 CSS*/
 
@@ -71,7 +108,18 @@ footer div {
     transform: translate3d(0, 5px, 0);
   }
 }
- }
+.contents{
+	width:500px;
+	height:500px;
+	display:flex;
+	flex-direction: center;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto;
+}
+.errorText{
+
+}
 </style>
 <body>
 	<!-- 컴포넌트처럼 헤더를 가지고 올수 있다. -->
@@ -85,5 +133,11 @@ footer div {
 			<p>세상에 독창적인 아이디어를 마음껏 펼칠 수 있습니다.</p>
 		</section>
 	</main>
+			<footer>
+			<div class="ocean">
+        <div class="wave"></div>
+        <div class="wave"></div>
+      </div>
+	</footer>
 </body>
 </html>
