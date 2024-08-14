@@ -51,8 +51,6 @@ public class BoardDao {
 
 	public List<Board> BestBoards() {
 		String query = "select p.*,(select count(*) from photo_feed_like where photo_feed_like_no=p.photo_feed_no) as total_likes from (select * from photo_feed)p order by total_likes desc"; 
-		
-
 		return jdbc.query(query, bestBoardRowMapper);
 	}
 	public int BestBoards2(int photoFeedNo) {
@@ -64,7 +62,7 @@ public class BoardDao {
 	}
 
 	
-
+	//검색기능
 	public List searchList(User user) {
 		
 		String query = "select * from (select rownum as rnum, p.* from (select * from photo_feed p2 where photo_feed_writer = (select user_id from user_tbl where user_id = ?) order by reg_date desc)p)";
@@ -72,7 +70,7 @@ public class BoardDao {
 		List list = jdbc.query(query, searchIdRowMapper,params);
 		return list;
 	}
-	
+	//검색기능2
 	public List searchList2(User user) {
 		
 		String query = "select * from user_feed_tbl u1\r\n" + 
@@ -123,7 +121,7 @@ public class BoardDao {
 	}
 
 	public Feed getfeed(int i) {
-		System.out.println(i);
+		
 		String query = "select user_feed_filepath, user_feed_writer, USER_FEED_CONTENT, user_feed_date\r\n" + 
 				"from \r\n" + 
 				"(select rownum , n.*from\r\n" + 

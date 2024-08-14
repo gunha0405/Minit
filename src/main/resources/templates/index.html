@@ -5,47 +5,6 @@
 <title>Minit 프로젝트</title>
 <link rel="stylesheet" href="/css/style.css">
 <style>
-.post {
-    width: 400px; 
-    margin: 20px auto; 
-    border: 1px solid #ddd; 
-    border-radius: 8px; 
-   	overflow : hidden; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    background-color: #fff; 
-}
-.post-image-container {
-    width: 100%;
-    height: auto;
-    max-height: 300px;
-    overflow: hidden;
-    position: relative;
-}
-
-.post-image {
-    width: 80%;
-    height: auto;
-    max-height: 300px;
-    object-fit: none;
-    display: block;
-}
-.post-meta-link {
-	text-decoration: none;
-	color : black;
-}
-.contents-box{
-	display:inline flex;
-	justify-content: space-around;
-	margin : 20px;
-}
-.main-contents{
-	margin : 30px;
-}
-.btn btn-primary{
-	text-align: center;
-	
-}
-
 
 </style>
 </head>
@@ -114,52 +73,44 @@
         <a href="javascript:void(0)" id="best">인기게시판</a>
         <a href="javascript:void(0)" id="following">친구게시판</a>
       </div>
-     
-    
-    <section>
-    
-    
-        <div class="contents">
-          <div class="main-contents">
-            <p class="board-write">전체게시판</p>           
+      <section>
+    <div class="contents">
+        <div class="main-contents">
+            <p class="board-write">전체게시판</p>
             <div class="main-contents-box" id="postContainer">
-              <article class="post">
-                <div class="post-header">     
-                  <p class="post-meta"></p>
-                </div>
-                <img src="" alt="게시글 이미지" class="post-image">
-                <p class="post-content"></p>
-                <div class="post-footer">
-                  <span class="post-comment"></span>
-                  <span class="post-stat"></span>
-                </div>
-              </article>
-              </div>
-             </div>
-      			<div id="postContainer"></div>
-					<button id="loadMoreButton">더보기</button>
+                <article class="post">
+                    <div class="post-header">
+                        <p class="post-meta"></p>
+                    </div>
+                    <img src="" alt="게시글 이미지" class="post-image">
+                    <p class="post-content"></p>
+                    <div class="post-footer">
+                        <span class="post-comment"></span>
+                        <span class="post-stat"></span>
+                    </div>
+                </article>
             </div>
-      </section>
-     
-     
-        
+        </div>
+    </div>
+</section>
+		    
+
       <div class="sub2-contents">
         <a href="#">이자리는 광고가 들어올예정입니다.</a>
       </div>
       <div class="photoUpload">
         <ul class="nav">
           <li class="nav-item">
-            <a class="uploadItem" aria-current="page" href="#">+</a>
+            <a class="uploadItem" aria-current="page" href="#"></a>
           </li>
         </ul>
       </div>
     </div>
       </div>
+      
    
     <!--밑에 네비게이션 바-->
-    
-	
-	
+ 
 	<th:block th:include="common/footer"></th:block>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -167,54 +118,25 @@
 
  <script th:inline="javascript">
  $(document).ready(function() {
-	    let offset = 0;
-	    const limit = 5;
-	    let allPostsLoaded = false;
-	    let isLoggedIn = false;
-
-	    function checkLoginStatus(callback) {
-	        $.ajax({
-	            url: "/home/user/checkLoginStatus",
-	            type: "GET",
-	            success: function(isLoggedInResponse) {
-	                isLoggedIn = isLoggedInResponse;
-	                if (isLoggedIn) {
-	                    callback();
-	                } else {
-	                    $('#loginModal').modal('show');
-	                }
-	            },
-	            error: function(xhr, status, error) {
-	                console.log("로그인 상태 확인 오류: " + error);
-	                Swal.fire({
-	                    title: "오류",
-	                    text: "로그인 상태를 확인하는 중 오류가 발생했습니다.",
-	                    icon: "error"
-	                });
-	            }
-	        });
-	    }
-
-	    function loadPosts() {
-	        if (allPostsLoaded) return;
-
-	        console.log('Loading posts with offset:', offset); // 데이터 로드 확인
-
+	    $('#board').click(function() {
 	        $.ajax({
 	            url: '/index',
 	            method: 'GET',
 	            dataType: 'json',
-	            data: { offset: offset, limit: limit },
 	            success: function(data) {
-	                console.log('Data loaded:', data); // 데이터 확인
-
+	                // 사진 목록과 피드 목록을 결합합니다.
 	                const combinedList = [...data.photolist, ...data.feedlist];
-	                const limitedList = combinedList.slice(0, limit);
+	                
+	                // 목록을 랜덤하게 섞습니다.
+	                const shuffledList = combinedList.sort(() => 0.5 - Math.random());
 
-	                if (limitedList.length < limit) {
-	                    allPostsLoaded = true;
-	                }
+	                const limit = 6; // 예를 들어 10개로 제한
+	                const limitedList = shuffledList.slice(0, limit);
 
+	                // 게시물을 새로 표시하기 위해 기존 게시물을 제거합니다.
+	                $('#postContainer').empty();
+
+	                // 제한된 목록을 순회하며 HTML을 생성합니다.
 	                limitedList.forEach(b => {
 	                    const userFeedWriter = b.userFeedWriter || b.photoFeedWriter;
 	                    const writerLink = `/feed/myPage?userFeedWriter=${encodeURIComponent(userFeedWriter)}`;
@@ -224,7 +146,7 @@
 	                    <article class="post">
 	                        <div class="post-header">
 	                            <a href="${writerLink}" class="post-meta-link">
-	                                ${b.photoFeedWriter || b.userFeedWriter} ${b.regDate || b.createDate}
+	                                ${b.photoFeedWriter || b.userFeedWriter} ${b.regDate || b.userFeedDate}
 	                            </a>
 	                        </div>
 	                        <div class="post-image-container">
@@ -237,78 +159,15 @@
 	                    $('#postContainer').append(postHtml);
 	                });
 
-	                offset += limit;
 	                $(".board-write").text("전체게시판");
-
-	                console.log('Posts loaded and offset updated:', offset); // Offset 확인
 	            },
 	            error: function(xhr, status, error) {
 	                console.error('AJAX 요청 오류:', status, error);
 	            }
 	        });
-	    }
-
-	    $('#loginButton').click(function() {
-	        const email = $('#email').val();
-	        const password = $('#password').val();
-
-	        $.ajax({
-	            url: '/login',
-	            method: 'POST',
-	            data: {
-	                email: email,
-	                password: password
-	            },
-	            success: function(response) {
-	                if (response.success) {
-	                    $('#loginModal').modal('hide');
-	                    isLoggedIn = true;
-	                    loadPosts(); 
-	                } else {
-	                    Swal.fire({
-	                        title: "로그인 실패",
-	                        text: response.message || "로그인에 실패했습니다.",
-	                        icon: "error"
-	                    });
-	                }
-	            },
-	            error: function(xhr, status, error) {
-	                console.error('로그인 요청 오류:', status, error);
-	            }
-	        });
 	    });
-
-	    // ‘더보기’ 버튼 클릭 시 추가 데이터 로드
-	    $('#loadMoreButton').click(function() {
-	        console.log('Load more button clicked'); // 버튼 클릭 확인
-	        if (!allPostsLoaded) {
-	            loadPosts();
-	        }
-	    });
-
-	    // 전체 게시판 버튼 클릭 시 초기화 및 데이터 로드
-	    $('#board').click(function() {
-	        checkLoginStatus(function() {
-	            offset = 0;
-	            allPostsLoaded = false;
-	            $('#postContainer').empty(); // 게시물 초기화
-	            loadPosts();
-	        });
-	    });
-
-	    // 로그인 모달 열기 버튼 클릭 시 초기화 및 데이터 로드
-	    $('#showLoginModal').click(function() {
-	        checkLoginStatus(function() {
-	            offset = 0;
-	            allPostsLoaded = false;
-	            $('#postContainer').empty(); // 게시물 초기화
-	            loadPosts();
-	        });
-	    });
-	
-
-	
-
+	    $("#board").click();
+	});
 
 	    // 인기게시판 클릭 시 게시물 로드
 	    $('#best').click(function() {
@@ -348,6 +207,7 @@
 	            error: function() {
 	                console.log("서버 실패");
 	            }
+	            
 	        });
 	    });
 
@@ -408,7 +268,7 @@
 	                const combinedList = [...list.photolist, ...list.feedlist];
 
 	                if (combinedList.length === 0) {
-	                    $('#postContainer').html('<h1>검색결과x</h1>');
+	                    $('#postContainer').html('<h1>검색결과가 존재하지 않습니다.</h1>');
 	                } else {
 	                    combinedList.forEach(b => {
 	                        const writerLink = `/feed/myPage?userFeedWriter=${encodeURIComponent(b.photoFeedWriter || b.userFeedWriter)}`;
@@ -418,7 +278,7 @@
 	                        <article class="post">
 	                            <div class="post-header">
 	                                <a href="${writerLink}" class="post-meta-link">
-	                                    ${b.photoFeedWriter || b.userFeedWriter} ${b.regDate || b.createDate}
+	                                    ${b.photoFeedWriter || b.userFeedWriter} ${b.regDate || b.userFeedDate}
 	                                </a>
 	                            </div>
 	                            <div class="post-image-container">
@@ -436,45 +296,17 @@
 	            },
 	            error: function(xhr, status, error) {
 	                console.error('AJAX 요청 오류:', status, error);
-	                $('#postContainer').html('<h1>똑바로 검색 하쇼</h1>');
+	                
 	                $(".board-write").text("검색결과");
 	            }
 	        });
 	    });
 
-	    // 초기 게시물 로딩
-	    loadPosts();
-	});
+
  
  
  
- /*
- function checkLoginStatus(callback) {
-     $.ajax({
-       url: "/home/user/checkLoginStatus",
-       type: "GET",
-       success: function(isLoggedIn) {
-         if (isLoggedIn) {
-           callback();
-         } else {
-           Swal.fire({
-             title: "로그인 필요",
-             text: "로그인 후 이용해 주세요",
-             icon: "info"
-           });
-         }
-       },
-       error: function(xhr, status, error) {
-         console.log("로그인 상태 확인 오류: " + error);
-         Swal.fire({
-           title: "오류",
-           text: "로그인 상태를 확인하는 중 오류가 발생했습니다.",
-           icon: "error"
-         });
-       }
-     });
-   }
-*/
+
 
 
 

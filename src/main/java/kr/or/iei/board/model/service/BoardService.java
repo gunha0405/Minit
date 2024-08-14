@@ -18,35 +18,23 @@ public class BoardService {
 
     @Autowired
     private BoardDao boardDao;
-    /*
-	public List<Board> getAllBoards() {
-		return boardDao.getAllBoards();
-	}
-	public List<Board> AllBoards(){
-		return boardDao.AllBoards();
-	}
-	*/
+  
 
 	public List<Board> BestBoards() {
 		
 		return boardDao.BestBoards();
 	}
-	/*
-	public List<Board> followingBoards() {
-		
-		return boardDao.followingBoards();
-	}
-	*/
+	
 	public List searchList(User user) {
         List<Board> list = boardDao.searchList(user);
        
-        System.out.println(list);
+        
         return list;
     }
 	public List searchList2(User user) {
         List<Board> list = boardDao.searchList2(user);
         
-        System.out.println(list);
+       
         return list;
     }
 
@@ -56,7 +44,7 @@ public class BoardService {
 		for(Board b : list) {
 			followingid.add(b.getFollowingId());
 		}
-		System.out.println(followingid);
+		
 		return followingid;
 	}
 

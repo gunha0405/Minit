@@ -29,27 +29,10 @@ body {
   height: auto;
   min-height: 100vh;
   padding-top: 60px;
-  display: flex;
   align-items: center;
 }
 
 
-.wrapper1 {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
-
-.wrapper section {
-  position: relative;
-  width: 1000px;
-  max-width: 1000px;
-  overflow: auto;
-  margin-top: 5px;
-  height: 100%;
-  flex-grow: 1;
-}
 
 .main-content {
   display: flex;
@@ -59,11 +42,39 @@ body {
 }
 
 .post {
-  background-color: #fff;
-  padding: 15px;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 400px; 
+    margin: 20px auto; 
+    border: 1px solid #ddd; 
+    border-radius: 8px; 
+   	overflow : hidden; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    background-color: #fff; 
+}
+.post-image-container {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    overflow: hidden;
+    position: relative;
+}
+.post-image {
+    width: 50%;
+    height: auto;
+    max-height: 300px;
+    object-fit: none;
+    display: block;
+}
+.post-meta-link {
+	text-decoration: none;
+	color : black;
+}
+.contents-box{
+	display:inline flex;
+	justify-content: space-around;
+	margin : 0 auto;
+}
+.main-contents{
+	margin : 30px;
 }
 
 .post-header {
@@ -133,8 +144,7 @@ body {
 }
 
 .sub1-contents {
-    position: absolute;
-    top: 200px; /* 원하는 위치로 상단에서부터의 거리를 설정하세요 */
+    top: 300px; /* 원하는 위치로 상단에서부터의 거리를 설정하세요 */
     width: 190px;
     height: 200px;
     display: flex;
@@ -148,7 +158,6 @@ body {
 }
 
 .sub1-contents a {
-
   color: whitesmoke;
   text-decoration: none;
   font-size: 20px;
@@ -183,6 +192,7 @@ body {
   border-radius: 5px;
 }
 
+/* 여기까지 민규꺼 */
 
 .randomPage {
   display: flex;

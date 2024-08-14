@@ -200,6 +200,10 @@
                         	<span class="material-icons">info_outline</span>  
                         	<span>올바른 이메일 형식으로 작성해주세요.</span>                      	
                         </div>
+                        <div class="input-msg email-check-msg-valid none">
+                        	<span class="material-icons">check_circle_outline</span>  
+                        	<span>이메일 인증을 진행합니다. 메일함을 확인해주세요!</span>                      	
+                        </div>
                         <div class="input-msg email-check-msg-same none">
                         	<span class="material-icons">info_outline</span>
                         	<span>이미 가입되어있거나 탈퇴한지 30일이 지나지 않은 회원의 이메일입니다.</span>                      	
@@ -344,7 +348,7 @@
     	});
 
 
-    
+ 
     	/*이메일인증*/
 	    let mailCode = null;
 		$("#sendBtn").on("click",function(){
@@ -352,6 +356,10 @@
 			const receiver = $("#userEmail").val();
 			const emailReg = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
 			if(emailReg.test(receiver)){
+				$(".email-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+				$(".email-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
+				$(".email-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
+				$(".email-check-msg-valid").removeClass("none").addClass("valid");	
 				$.ajax({
 				url : "/user/sendCode",
 				data : {receiver : receiver},
@@ -362,9 +370,10 @@
 						mailCode = data;
 						$("#auth").show();
 						authTime(); //시간 가는 함수
-						$(".email-check-msg").hide();
+						$(".email-check-msg-valid").hide();
 					}else{
 						$(".email-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+						$(".email-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
 						$(".email-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
 						$(".email-check-msg-same").removeClass("none").addClass("invalid");
 					}
@@ -382,6 +391,7 @@
 			}else{
 
 				$(".email-check-msg-invalid").addClass("none").removeClass("valid").removeClass("invalid");
+				$(".email-check-msg-valid").addClass("none").removeClass("valid").removeClass("invalid");
 				$(".email-check-msg-same").addClass("none").removeClass("valid").removeClass("invalid");
 				$(".email-check-msg-invalid").removeClass("none").addClass("invalid");
 			}

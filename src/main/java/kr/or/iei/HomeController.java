@@ -51,9 +51,6 @@ public class HomeController {
         List<Feed> feedlist  = boardService.boardList();
     	b.setPhotolist(photolist);
     	b.setFeedlist(feedlist);
-    	System.out.println(photolist);
-    	System.out.println(feedlist);
-    	System.out.println(b);
         return b; // 단순히 게시판 리스트를 반환할거에여
     }
     
@@ -68,7 +65,7 @@ public class HomeController {
     @ResponseBody
     public List<Board> followingBoards(@SessionAttribute(required = false)User user){
     	String userId = user.getUserId();
-    	System.out.println(userId);
+    	
     	ArrayList<String> followingid = boardService.searchFollowingId(userId);
  
     	List<Board> list = boardService.followingBoards(followingid);
@@ -85,22 +82,7 @@ public class HomeController {
 	   b.setFeedlist(list2);
 	   return b;
    }
-   
-   @RestController // controller에 responesbody가 섞인것
-   @RequestMapping("/home/user")
-   public class UserController {
-       @GetMapping("/checkLoginStatus")
-       public boolean checkLoginStatus(HttpSession session) {
-           // 로그인 상태를 확인하는 로직을 여기에 구현
-           User user = (User) session.getAttribute("user");
-           return user != null;
-       }
-   }
-   
 
-   
-   
-		   
 
    @GetMapping("/etc/about")
    public String showAboutPage() {
