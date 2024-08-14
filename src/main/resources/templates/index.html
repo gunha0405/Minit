@@ -5,17 +5,14 @@
 <title>Minit 프로젝트</title>
 <link rel="stylesheet" href="/css/style.css">
 <style>
-#postContainer h2 {
-    text-align: center; 
-    margin:0 auto;
-        
+
+.searchText{
+	display: flex;
+	flex-direction:column;
+	justify-content: center;
+	align-items: center;
 }
 
-.contents{
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
 </style>
 </head>
 <body>
@@ -84,11 +81,13 @@
         <a href="javascript:void(0)" id="following">친구게시판</a>
       </div>
       <section>
+      
     <div class="contents">
         <div class="main-contents">
             <p class="board-write">전체게시판</p>
-            
+            <div class="searchText"></div>
             <div class="main-contents-box" id="postContainer">
+            
                 <article class="post">
                     <div class="post-header">
                         <p class="post-meta"></p>
@@ -103,6 +102,7 @@
             </div>
         </div>
     </div>
+    
 </section>
 
       <div class="sub2-contents">
@@ -146,7 +146,7 @@
 
 	                // 게시물을 새로 표시하기 위해 기존 게시물을 제거합니다.
 	                $('#postContainer').empty();
-
+	                
 	                // 제한된 목록을 순회하며 HTML을 생성합니다.
 	                limitedList.forEach(b => {
 	                    const userFeedWriter = b.userFeedWriter || b.photoFeedWriter;
@@ -154,6 +154,7 @@
 	                    const imageLink = "/photo/list";
 
 	                    const postHtml = `
+	                    
 	                    <article class="post">
 	                        <div class="post-header">
 	                            <a href="${writerLink}" class="post-meta-link">
@@ -168,9 +169,9 @@
 	                    </article>`;
 
 	                    $('#postContainer').append(postHtml);
+		                $(".board-write").text("전체게시판");
 	                });
 
-	                $(".board-write").text("전체게시판");
 	            },
 	            error: function(xhr, status, error) {
 	                console.error('AJAX 요청 오류:', status, error);
@@ -182,45 +183,41 @@
 
 	    // 인기게시판 클릭 시 게시물 로드
 	    $('#best').click(function() {
-	        $.ajax({
-	            url: '/best',
-	            method: 'GET',
-	            dataType: 'json',
-	            success: function(list) {
-	                $('#postContainer').empty(); // 기존 콘텐츠를 비움
-
-	                list.forEach(b => {
-	                    const writerLink = `/feed/myPage?userFeedWriter=${encodeURIComponent(b.photoFeedWriter)}`;
-	                    const imageLink = "/photo/list";
-
-	                    let postHtml = `
-	                    <article class="post">
-	                        <div class="post-header">
-	                            <a href="${writerLink}" class="post-meta-link">
-	                                ${b.photoFeedWriter} ${b.regDate}
-	                            </a>
-	                        </div>
-	                        <div class="post-image-container">
-	                            <a href="${imageLink}" class="post-image-link">
-	                                <img src="/photo/${b.photoFeedImg}" alt="이미지" class="post-image">
-	                            </a>
-	                        </div>
-	                        <div class="post-footer">
-	                            <span class="post-comment">좋아요 ${b.totalLikes}</span>
-	                        </div>
-	                    </article>`;
-
-	                    $('#postContainer').append(postHtml);
-	                });
-
-	                $(".board-write").text("인기게시판");
-	            },
-	            error: function() {
-	                console.log("서버 실패");
-	            }
-	            
-	        });
-	    });
+    $.ajax({
+        url: '/best',
+        method: 'GET',
+        dataType: 'json',
+        success: function(list) {
+            $('#postContainer').empty(); // 기존 콘텐츠를 비움
+            // 리스트의 첫 6개 항목만 처리
+            list.slice(0, 6).forEach(b => {
+                const writerLink = `/feed/myPage?userFeedWriter=${encodeURIComponent(b.photoFeedWriter)}`;
+                const imageLink = "/photo/list";
+                let postHtml = `
+                <article class="post">
+                    <div class="post-header">
+                        <a href="${writerLink}" class="post-meta-link">
+                            ${b.photoFeedWriter} ${b.regDate}
+                        </a>
+                    </div>
+                    <div class="post-image-container">
+                        <a href="${imageLink}" class="post-image-link">
+                            <img src="/photo/${b.photoFeedImg}" alt="이미지" class="post-image">
+                        </a>
+                    </div>
+                    <div class="post-footer">
+                        <span class="post-comment">좋아요 ${b.totalLikes}</span>
+                    </div>
+                </article>`;
+                $('#postContainer').append(postHtml);
+            });
+            $(".board-write").text("인기게시판");
+        },
+        error: function() {
+            console.log("서버 실패");
+        }
+    });
+});
 
 	    // 친구게시판 클릭 시 게시물 로드
 	    $('#following').click(function() {
@@ -283,7 +280,7 @@
 	                const combinedList = [...list.photolist, ...list.feedlist];
 					
 	                if (combinedList.length === 0) {
-	                    $('.contents').html('<h2>검색결과가 존재하지 않습니다.</h2>');
+	                    $('.searchText').html('<h2>검색결과가 존재하지 않습니다.</h2>');
 	                } else {
 	                    combinedList.forEach(b => {
 	                        const writerLink = `/feed/myPage?userFeedWriter=${encodeURIComponent(b.photoFeedWriter || b.userFeedWriter)}`;
@@ -317,15 +314,6 @@
 	        });
 	    });
 
-
- 
- 
- 
-
-
-
-
- 
     </script>
  
   
