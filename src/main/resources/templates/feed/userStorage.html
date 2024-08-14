@@ -199,8 +199,8 @@
 	                $(button).val(0);
 	            },
 	            error: function(xhr, status, error) {
-	                console.error('팔로우 취소 요청 실패:', error);
-	            	console.log("안나옴");
+	                //console.error('팔로우 취소 요청 실패:', error);
+	            	//console.log("안나옴");
 	            }
 	        });
 	    } else if ($(button).val() == 0) {
@@ -213,7 +213,7 @@
 	            	writerUser: writerUser
 	            },
 	            success: function(response) {
-		            console.log(response);
+		            //console.log(response);
 
 	                // 성공 시 버튼 텍스트를 '팔로우 취소'로 변경
 	                $(button).text('팔로우 취소');
@@ -222,7 +222,7 @@
 	                $(button).val(1);
 	            },
 	            error: function(xhr, status, error) {
-	                console.error('팔로우 요청 실패:', error);
+	                //console.error('팔로우 요청 실패:', error);
 	            }
 	        });
 	    }
