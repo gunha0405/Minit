@@ -76,14 +76,11 @@
           		//클릭한 버튼 기준으로 해당 행의 회원 번호를 가지고 오는 작업
         		const userNo = $(this).parent().parent().children().eq(1).text();
           		const userLevel = $(this).parent().prev().children().children().val();
-          		console.log(userNo);
-          		console.log(userLevel);
           		location.href="/admin/changeLevel?userNo="+userNo+"&userLevel="+userLevel;
           		
           	});
           	$(".checked-changeLevel-btn").on("click",function(){
           		const check = $(".chk:checked");
-          		//console.log(check.length);
           		if(check.length == 0){
           			return;//선택된 회원 없으면 종료
           		}
@@ -95,8 +92,6 @@
           			const userLevel = $(item).parent().parent().find("select").val();
           			level.push(userLevel);
           		});
-          		console.log(no);
-          		console.log(level);
           		
           		location.href="/admin/checkedChangeLevel?no="+no.join("/")+"&level="+level.join("/");
           	});

@@ -178,15 +178,6 @@ public class FeedDao {
 	}
 
 
-	public int updateFilePathSame(String string, int fileNo) {
-		String query = "update user_feed_file set user_feed_filepath=? where user_feed_file_no=?";
-		Object[] params = {string, fileNo};
-		int result = jdbc.update(query, params);
-		return result;
-		
-	}
-
-
 	public int updateFeedInsert(String userFeedFilepath, int userFeedNo) {
 		String query = "insert into user_feed_file values(user_feed_file_seq.nextval,?,?)";
 		Object[] params = {userFeedNo, userFeedFilepath};
@@ -208,12 +199,6 @@ public class FeedDao {
 		return result;
 	}
 
-	public int getFileNo(int userFeedNo, int i) {
-		String query="select user_feed_file_no  from (select rownum as rnum , n. * from ((select user_feed_file_no, user_feed_filepath from  user_feed_file where user_feed_no=?)n)) where rnum=?";
-		Object[] params = {userFeedNo, i+1};
-		int fileNo = jdbc.queryForObject(query, Integer.class, params);
-		return fileNo;
-	}
 
 	public int insertFeedComment(String userId, String feedCommentContent, int feedRef) {
 		String query ="insert into USER_FEED_COMMENT  values(USER_FEED_COMMENT_SEQ.nextval,?,to_char(sysdate,'YYYY-MM-DD'),?,?)";		

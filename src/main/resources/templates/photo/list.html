@@ -503,7 +503,7 @@
             }
           },
           error: function(xhr, status, error) {
-            console.log("신고 오류: " + error);
+            //console.log("신고 오류: " + error);
             Swal.fire({
               title: "서버 전송 실패",
               text: "서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.",
@@ -536,7 +536,7 @@
             }
           },
           error: function(xhr, status, error) {
-            console.log("Error: " + error);
+            //console.log("Error: " + error);
             Swal.fire({
               title: "서버 전송 실패",
               text: "서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.",
@@ -576,7 +576,7 @@
               }
             },
             error: function(xhr, status, error) {
-              console.log("Error: " + error);
+              //console.log("Error: " + error);
               Swal.fire({
                 title: "서버 전송 실패",
                 text: "서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.",
@@ -645,7 +645,7 @@
     	                                    }
     	                                },
     	                                error: function(xhr, status, error) {
-    	                                    console.log("댓글 수정 오류: " + error);
+    	                                    //console.log("댓글 수정 오류: " + error);
     	                                    Swal.fire({
     	                                        title: "서버 전송 실패",
     	                                        text: "서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.",
@@ -692,7 +692,7 @@
     	                                        }
     	                                    },
     	                                    error: function(xhr, status, error) {
-    	                                        console.log("댓글 삭제 오류: " + error);
+    	                                        //console.log("댓글 삭제 오류: " + error);
     	                                        Swal.fire({
     	                                            title: "서버 전송 실패",
     	                                            text: "서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.",
@@ -709,7 +709,7 @@
     	            }
     	        },
     	        error: function(xhr, status, error) {
-    	            console.log("Error loading comments: " + error);
+    	            //console.log("Error loading comments: " + error);
     	            Swal.fire({
     	                title: "댓글 로드 실패",
     	                text: "댓글을 로드하는 중 오류가 발생했습니다.",
@@ -735,7 +735,7 @@
             }
           },
           error: function(xhr, status, error) {
-            console.log("로그인 상태 확인 오류: " + error);
+            //console.log("로그인 상태 확인 오류: " + error);
             Swal.fire({
               title: "오류",
               text: "로그인 상태를 확인하는 중 오류가 발생했습니다.",

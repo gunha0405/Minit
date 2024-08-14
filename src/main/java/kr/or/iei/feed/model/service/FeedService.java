@@ -64,7 +64,7 @@ public class FeedService {
 
 	//페이징 작업
 	public feedListData selectUserAllFeed(int reqPage, User u) {
-		// System.out.println(u);
+
 
 		// reqPage : 사용자가 요청한 페이지 번호
 		// 한 페이지당 보여줄 게시물의 수(지정) -> 8개
@@ -171,9 +171,9 @@ public class FeedService {
 		Feed feed = feedDao.searchFeedUser(userFeedNo);
 		//유저 이미지
 		String userImg = feedDao.totlaImg(userFeedNo);
-		//System.out.println("userImg="+userImg);
+
 		feed.setUserFeedFilepath("/user/"+userImg);
-		System.out.println(feed.getUserFeedFilepath());
+
 		//사진 게시물 저장 
 		// 게시물당 사진 게시물 몇개인지
 		int totalImgNo = feedDao.totalImg(userFeedNo);
@@ -185,7 +185,7 @@ public class FeedService {
 			filepathList.add(f);
 		}
 		feed.setFeedList(filepathList);
-		// System.out.println(totalImgNo);
+
 		// 게시물 갯수만큼 배열만큼 사진저장
 		//List<FeedFile> feedList = new ArrayList<FeedFile>();
 		//for (int i = 0; i < totalImgNo; i++) {
@@ -293,56 +293,11 @@ public class FeedService {
 		} // if()
 		return result;
 	}
-	@Transactional
-	public int updateNewFile(Feed f, List<FeedFile> newFileList) {
-		int result = 0;
-		//System.out.println("0="+result);
-		result = feedDao.updateFeed(f);
-		int filesize = 3;
-		int newFileSize = newFileList.size();
-		int[] fileNo = new int[3];
-		for(int i = 0; i < 3; i++) {
-			fileNo[i] = feedDao.getFileNo(f.getUserFeedNo(), i);
-		}
-
-
-		if(result > 0) {
-			int sum = newFileSize - filesize;
-			//3 3 = 0  수가 같을떄
-			//2 3 = -1 
-			//1 3 = -2
-			//-2            1            3          1
-			//System.out.println("숫자 왜이래.."+result);
-			if(sum == 0) { //   
-				//System.out.println(1);
-				//System.out.println(result);
-				for(int i = 0; i < 3; i++) {
-					result += feedDao.updateFilePathSame(newFileList.get(i).getUserFeedFilepath(), fileNo[i]);
-					//System.out.println("path"+newFileList.get(i).getUserFeedFilepath());
-					//System.out.println("fileNo="+fileNo[i]);
-					//System.out.println(result);
-				}   //1             3
-				//System.out.println("2="+result);
-				return result;
-			}else {
-				//System.out.println(2);
-				int num = filesize - newFileSize;  //2 
-				//System.out.println("num="+num);
-				for(int i = 0; i <newFileSize; i++) { //1                                               0
-					result += feedDao.updateFilePathSame(newFileList.get(i).getUserFeedFilepath(), fileNo[i]);
-				}
-				for(int i = 0; i < num; i++) { //2 3         1  2
-				     result += feedDao.updateFileNull(fileNo[num - 1 + i]);   
-				    // System.out.println("Index out of bounds: " + (num - 1 + i));
-
-				}
-				//System.out.println("3="+result);
-				return result;
-			}
-		}
-		//System.out.println("4="+result);
-		return result;
-	}
+	
+	
+	
+	
+	
 	@Transactional
 	public int updateFeedContent(Feed f) {
 		int result = feedDao.updateFeed(f);
@@ -371,9 +326,7 @@ public class FeedService {
 		f.setUserFeedCount(following);
 		List<User> userList = new ArrayList<User>();
 		for(int i = 0; i < following; i++) {
-			User user = feedDao.searchFollowingUser(userFeedWriter, i+1);
-			//System.out.println("userfff="+user);
-			
+			User user = feedDao.searchFollowingUser(userFeedWriter, i+1);	
 			userList.add(user);
 		}
 		f.setUserList(userList);
@@ -386,9 +339,7 @@ public class FeedService {
 		f.setUserFeedCount(follower);
 		List<User> userList = new ArrayList<User>();
 		for(int i = 0; i < follower; i++) {
-			User user = feedDao.searchFollowerUser(userFeedWriter, i+1);
-			//System.out.println("user="+user);
-			
+			User user = feedDao.searchFollowerUser(userFeedWriter, i+1);	
 			userList.add(user);
 		}
 		f.setUserList(userList);

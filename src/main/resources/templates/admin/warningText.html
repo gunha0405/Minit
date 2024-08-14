@@ -109,11 +109,8 @@
 			$(".warn-btn").on("click",function(){
 				//클릭한 버튼 기준으로 해당 행의 회원 번호를 가지고 오는 작업
 				const userNo = $(this).closest("tr").find("td:nth-child(1)").text();
-				console.log(userNo);
 				const textFeedNo = $(this).closest("tr").find(".view-content").text();
-				console.log(textFeedNo);
 				const warningCount = $(this).parent().prev().text();
-				console.log(warningCount);
 				location.href="/admin/textChangeCount?userNo="+userNo+"&warningCount="+warningCount+"&textFeedNo="+textFeedNo;	
 			});
 		</script>
