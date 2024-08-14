@@ -176,7 +176,7 @@
 												<th:block th:each="item : ${followerList}">
 													<p>
 														<a th:href="@{/feed/myPage(userFeedWriter=${item.userId})}">
-															<img src="/user/${item.userImg}">
+															<img th:src="@{'/user/'+${item.userImg}}">
 															<span class="user-id" th:text="${item.userId}"></span>
 														</a>
 													</p>
@@ -194,7 +194,7 @@
 												<th:block th:each="item : ${followingList}">
 													<p>
 														<a th:href="@{/feed/myPage(userFeedWriter=${item.userId})}">
-															<img src="/user/${item.userImg}">
+															<img th:src="@{'/user/'+${item.userImg}}">
 															<span class="user-id" th:text="${item.userId}"></span>
 														</a>	
 													</p>
@@ -328,7 +328,7 @@
                 //loadStoredPhotos(userId);
             },
             error: function() {
-                console.log("에러에러");
+                //console.log("에러에러");
             }
         });
     }
@@ -339,7 +339,7 @@
             type: 'get',
             data: { userId: userId },
             success: function(data) {
-                console.log(data);
+                //console.log(data);
                 if (data.length === 0) {
                     // 사진이 없으면 '더보기' 버튼을 숨김
                     $('#more-btn').hide();
@@ -371,7 +371,7 @@
                 start = currentCount + 1; // 다음 요청의 시작번호 설정
             },
             error: function() {
-                console.log("사진 로딩 실패");
+                //console.log("사진 로딩 실패");
             }
         });
     }
@@ -390,7 +390,7 @@
                     $('.follow-total-no').text(response);
                 },
                 error: function(xhr, status, error) {
-                    console.error('팔로우 취소 요청 실패:', error);
+                    //console.error('팔로우 취소 요청 실패:', error);
                 }
             });
         } else if ($(button).val() == 0) {
@@ -407,7 +407,7 @@
                     $('.follow-total-no').text(response);
                 },
                 error: function(xhr, status, error) {
-                    console.error('팔로우 요청 실패:', error);
+                    //console.error('팔로우 요청 실패:', error);
                 }
             });
         }

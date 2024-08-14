@@ -134,8 +134,19 @@
 	            method: 'GET',
 	            dataType: 'json',
 	            success: function(data) {
+	            	const photoList = data.photolist;
+	            	
+	            	photoList.forEach(function(item){
+	            		item.type = "photo";
+	            	});
+	            	const feedList = data.feedlist;
+	            	feedList.forEach(function(item){
+	            		item.type = "feed";
+	            	});
+	            	
+	            	
 	                // 사진 목록과 피드 목록을 결합합니다.
-	                const combinedList = [...data.photolist, ...data.feedlist];
+	                const combinedList = [...photoList, ...feedList];
 	                
 	                // 목록을 랜덤하게 섞습니다.
 	                const shuffledList = combinedList.sort(() => 0.5 - Math.random());
@@ -162,7 +173,7 @@
 	                        </div>
 	                        <div class="post-image-container">
 	                            <a href="${imageLink}" class="post-image-link">
-	                                <img src="/photo/${b.photoFeedImg || b.userFeedFilepath}" alt="이미지" class="post-image">
+	                                <img src="/${b.type}/${b.photoFeedImg || b.userFeedFilepath}" alt="이미지" class="post-image">
 	                            </a>
 	                        </div>
 	                    </article>`;
