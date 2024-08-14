@@ -91,7 +91,15 @@
     display: block; /* 내용 블록으로 설정 */
 }
 
+.user-profile-photo >div >a>img{
 
+    height: auto; /* 비율 유지 */
+    width: 200px; /* 이미지 크기 조절 (필요에 따라 조정) */
+	border-radius: 100px;
+}
+.posting-item{
+	margin-bottom: 100px;
+}
 </style>
 
 <title>Insert title here</title>
@@ -100,11 +108,6 @@
 	<th:block th:include="common/header"></th:block>
 
 
-<!-- 
-페이지에서 받아야 하는 정보 
-페이지 주인의 넘버, 유저의 아이디, 유저의 닉네임, 유저의 자기소개, 팔로워, 팔로잉, 게시물 갯수
-페이지 넘겨줄때 페이지 주인의 아이디 / 1페이지 
- -->
 
 	<main class="content">
 		<section class="section feed-list">
@@ -114,7 +117,9 @@
 
 					<li class="user-profile-photo">
 						<div>
+							<a th:href="@{/feed/myPage(userFeedWriter=${user.userId})}">
 							<img th:src="@{'/user/' + ${user.userImg}}" class="profile-image">
+							</a>
 						</div>
 					</li>
 					<li>
@@ -275,44 +280,51 @@
                 $('.list-navi').remove();
 				$('#more').removeClass('hidden');
                 // 보관함에서 저장된 사진을 불러옴
-     		for (let i = 0; i < data.length; i++) {
-			    const p = data[i];
-			    const li = $("<li>");
-			    li.addClass("posting-item");
-			
-			    // 작성자 div 생성
-			    const authorDiv = $("<div>");
-			    authorDiv.addClass("posting-author");
-			    authorDiv.text(p.userFeedWriter); // 작성자
-			
-			    // 이미지 div 생성
-			    const imgDiv = $("<div>");
-			    imgDiv.addClass("posting-img");
-			
-			    const img = $("<img>");
-			    img.attr("src", "/feed/" + p.userFeedFilepath); // 이미지 경로
-			
-			    imgDiv.append(img);
-			
-			    // 내용 div 생성
-			    const infoDiv = $("<div>");
-			    infoDiv.addClass("posting-info");
-			
-			    const subInfoDiv = $("<div>");
-			    subInfoDiv.addClass("posting-sub-info");
-			
-			    const contentSpan = $("<span>");
-			    contentSpan.html(p.userFeedContent); // 컨텐츠 내용
-			
-			    subInfoDiv.append(contentSpan);
-			
-			    infoDiv.append(subInfoDiv);
-			    
-			    // li 요소에 작성자 div, 이미지 div, 내용 div를 순서대로 추가
-			    li.append(authorDiv).append(imgDiv).append(infoDiv);
-			
-			    $(".more-feed").append(li);
-			}
+     	for (let i = 0; i < data.length; i++) {
+		    const p = data[i];
+		    const li = $("<li>");
+		    li.addClass("posting-item");
+		
+		    // 작성자 div 생성
+		    const authorDiv = $("<div>");
+		    authorDiv.addClass("posting-author");
+		    authorDiv.text(p.userFeedWriter); // 작성자
+		
+		    // 이미지 div 생성
+		    const imgDiv = $("<div>");
+		    imgDiv.addClass("posting-img");
+		
+		    // a 태그 생성
+		    const aTag = $("<a>");
+		    aTag.attr("href", "/feed/view?userFeedNo=" + p.userFeedNo); // 링크 설정
+		    aTag.attr("target", "_blank"); // 새 탭에서 열기
+		
+		    // 이미지 태그 생성
+		    const img = $("<img>");
+		    img.attr("src", "/feed/" + p.userFeedFilepath); // 이미지 경로
+		
+		    aTag.append(img); // 이미지 태그를 a 태그에 추가
+		    imgDiv.append(aTag); // a 태그를 이미지 div에 추가
+		
+		    // 내용 div 생성
+		    const infoDiv = $("<div>");
+		    infoDiv.addClass("posting-info");
+		
+		    const subInfoDiv = $("<div>");
+		    subInfoDiv.addClass("posting-sub-info");
+		
+		    const contentSpan = $("<span>");
+		    contentSpan.html(p.userFeedContent); // 컨텐츠 내용
+		
+		    subInfoDiv.append(contentSpan);
+		
+		    infoDiv.append(subInfoDiv);
+		
+		    // li 요소에 작성자 div, 이미지 div, 내용 div를 순서대로 추가
+		    li.append(authorDiv).append(imgDiv).append(infoDiv);
+		
+		    $(".more-feed").append(li);
+		}
                 //loadStoredPhotos(userId);
             },
             error: function() {

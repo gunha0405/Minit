@@ -76,7 +76,11 @@
 		<div class="content-info">
 			<table class="content-info-table">
 				<tr class="user-image icon-size">
-					<td><img th:src="${feed.userFeedFilepath}" alt="Profile Photo"></td>
+					<td>
+					<a th:href="@{/feed/myPage(userFeedWriter=${feed.userFeedWriter})}">
+					<img th:src="${feed.userFeedFilepath}" alt="Profile Photo">
+					</a>
+					</td>
 					<td class="user-nick" th:text="${feed.userFeedWriter}"></td>
 					<td class="date" th:text="${feed.userFeedDate}"></td>
 				</tr>

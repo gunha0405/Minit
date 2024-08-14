@@ -357,7 +357,7 @@ public class FeedController {
 	@ResponseBody
 	@PostMapping(value="/feedCommentDelete")
 	public int feedCommentDelete(int feedCommentNo) {
-		System.out.println(feedCommentNo);
+		//System.out.println(feedCommentNo);
 		int result = feedService.feedCommentDelete(feedCommentNo);
 		return result;
 	}
