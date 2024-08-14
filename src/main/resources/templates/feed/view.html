@@ -206,7 +206,7 @@
 	<script>
 	function feedRepo(element,userFeedNo){
 		const isrepo = $(element).data('is-like');
-		console.log(isrepo);
+		//console.log(isrepo);
 		if(isrepo == 0){
 			swal({
 	            title: "보관함",
@@ -351,7 +351,7 @@
 	}
 	function feedLike(element,userFeedNo){
 		const isLike = $(element).data('is-like');
-		console.log(isLike);
+		//console.log(isLike);
 	    if (isLike == -1) {
 	        swal({
 	        	 title: "로그인 필요",
@@ -540,8 +540,8 @@
 	      const feedRef = $(".userFeedNo").val();
 
 	      // 콘솔 로그로 값 확인
-	      console.log("feedCommentContent: " + feedCommentContent);
-	      console.log("feedRef: " + feedRef);
+	      //console.log("feedCommentContent: " + feedCommentContent);
+	      //console.log("feedRef: " + feedRef);
 	      
 		  if(feedCommentContent.trim() === ""){
 		      alert("글을 입력해주세요"); // 오타 수정
@@ -557,7 +557,7 @@
 		      },
 		      dataType: "json",
 		      success: function(data) {
-		    	  console.log(data);
+		    	  //console.log(data);
 		          // 성공적으로 댓글이 저장된 후 댓글 목록을 갱신하거나, 댓글을 추가
 		          $(".comment-wrap").prepend(`
 		        		  <table>
@@ -620,8 +620,8 @@
             }
         }).then(function(isConfirm){
             if(isConfirm){
-            	console.log(userFeedNo);
-            	console.log(userFeedWriter);
+            	//console.log(userFeedNo);
+            	//console.log(userFeedWriter);
                 location.href="/feed/updateFrm?userFeedWriter="+userFeedWriter+"&userFeedNo="+userFeedNo;
             }   
         });
