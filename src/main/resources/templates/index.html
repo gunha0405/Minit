@@ -93,7 +93,6 @@
         </div>
     </div>
 </section>
-		    
 
       <div class="sub2-contents">
         <a href="#">이자리는 광고가 들어올예정입니다.</a>
@@ -107,8 +106,7 @@
       </div>
     </div>
       </div>
-      
-   
+
     <!--밑에 네비게이션 바-->
  
 	<th:block th:include="common/footer"></th:block>
@@ -247,7 +245,11 @@
 	                $(".board-write").text("친구게시판");
 	            },
 	            error: function() {
-	                console.log("서버 실패");
+	            	swal({
+                        title: "로그인필요",
+                        text: "로그인을해야 이용 가능합니다.",
+                        icon: "info"
+                    });
 	            }
 	        });
 	    });
