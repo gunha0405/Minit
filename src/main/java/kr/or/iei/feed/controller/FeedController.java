@@ -23,6 +23,8 @@ import kr.or.iei.feed.model.dto.FeedFile;
 import kr.or.iei.feed.model.dto.UserFeedNaviList;
 import kr.or.iei.feed.model.dto.feedListData;
 import kr.or.iei.feed.model.service.FeedService;
+import kr.or.iei.photo.model.dto.Photo;
+import kr.or.iei.text.model.dto.TextFeed;
 import kr.or.iei.user.model.dto.User;
 import kr.or.iei.user.model.dto.UserRowMapper;
 import kr.or.iei.util.FileUtils;
@@ -393,12 +395,7 @@ public class FeedController {
 		    return result;
 		}
 	}
-//	@ResponseBody
-//	@PostMapping(value="/userStorageFeed")
-//	public List<Feed> userStorageFeed(String userId){
-//		List<Feed> feedList = 
-//		return;
-//	}
+
     @GetMapping(value="/selectReportFeed")
     public String selectReportFeed(Model model) {
     	List<Feed> reportList = feedService.selectReportFeed();
@@ -406,4 +403,29 @@ public class FeedController {
     	model.addAttribute("reportList", reportList);
     	return "/admin/warningFeed";
     }
+
+	@ResponseBody
+	@PostMapping(value="/userStorageAll")
+	public Feed userStorageFeed(String userId){
+		Feed feedList = feedService.storageAll(userId); 
+		return feedList;
+	}
+	@ResponseBody
+	@PostMapping(value="/feedAll")
+	public List<Feed> feedAll(String userId){
+		List<Feed> feedList = feedService.feedAll(userId); 
+		return feedList;
+	}
+	@ResponseBody
+	@PostMapping(value="/photoAll")
+	public List<Photo> photoAll(String userId){
+		List<Photo> photoList = feedService.photoAll(userId); 
+		return photoList;
+	}
+	@ResponseBody
+	@PostMapping(value="/textAll")
+	public List<TextFeed> textAll(String userId){
+		List<TextFeed> textList = feedService.textAll(userId); 
+		return textList;
+	}
 }
