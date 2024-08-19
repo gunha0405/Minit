@@ -9,7 +9,6 @@
 <link rel="stylesheet" href="/css/feed/list.css">
 <link rel="stylesheet" href="/css/feed/followModal.css">
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link
    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
    rel="stylesheet"
@@ -23,7 +22,6 @@
     crossorigin="anonymous"
     referrerpolicy="no-referrer"
   />
-
 <style>
 .user-introduce-content {
     /* 기본 폰트 사이즈 설정 */
@@ -95,7 +93,7 @@
 
 .posting-img {
     text-align: center; /* 이미지 중앙 정렬 */
-    margin-bottom: 10px; /* 내용과의 간격 */
+    margin-bottom: 10px; /* 내용과의 간격 */	
 }
 
 .posting-img img {
@@ -127,6 +125,90 @@
 }
 .posting-item{
 	margin-bottom: 100px;
+}
+/* 슬라이드 컨테이너 설정 */
+.slide-container {
+    position: relative;
+    max-width: 100%;
+    margin: auto;
+    overflow: hidden;
+}
+
+/* 슬라이드가 나란히 배치되도록 설정 */
+.slides {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+/* 각 슬라이드의 너비를 3분의 1로 설정하여 화면에 3개 표시 */
+.slide {
+    min-width: 33.33%; /* 화면의 3분의 1 */
+    box-sizing: border-box;
+}
+
+/* 각 슬라이드 이미지 설정 */
+.slide img {
+    width: 100%;
+    display: block;
+}
+
+/* 내비게이션 버튼 */
+ .prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 16px;
+    margin-top: -22px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+    z-index: 10; /* 버튼이 이미지 위에 있도록 설정 */
+}
+
+/* 왼쪽 버튼 */
+.prev {
+    left: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+/* 오른쪽 버튼 */
+.next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+.all-text .slide-container {
+    position: relative;
+    max-width: 100%;
+    margin: auto;
+    overflow: hidden;
+}
+
+
+.all-text .slide {
+ 	display: flex;
+    transition: transform 0.5s ease;
+     min-width: 100%;
+    box-sizing: border-box;
+}
+
+.all-storage-wrap div{
+	margin: 30px auto;
+}
+
+
+/* 슬라이드 텍스트 내용 */
+.all-text .slide div {
+    text-align: center; /* 텍스트 중앙 정렬 */
+    max-width: 80%; /* 텍스트 블록의 최대 너비 조정 */
+    margin: auto; /* 블록 중앙 정렬 */
+    font-size: 20px;
+}
+.hide{
+	display:none;
 }
 </style>
 
@@ -272,138 +354,417 @@
 			</th:block>
 			</div>
 			
-			
+			<div class="list-navi" th:utext="${pageNavi}"></div>
             
             <div class="more-button-container" id="more-button-container">
-                <ul class="more-feed">
-                </ul>
-            </div>
-			<div class="list-navi" th:utext="${pageNavi}"></div>
+            <button type="button" class="button-style hide" id="all-storage" th:onclick="allstorage([[${user.userId}]])">전체보기</button>
+            <button type="button" class="button-style hide" id="feed-storage" th:onclick="feedStorage(this,[[${user.userId}]])">피드</button>
+            <button type="button" class="button-style hide" id="text-storage" th:onclick="textStorage(this,[[${user.userId}]])">텍스트기록장</button>
+            <button type="button" class="button-style hide" id="photo-storage" th:onclick="photoStorage(this,[[${user.userId}]])">포토</button>
+			<section class="all-storage-wrap">
+				<div class="all-feed">
+	            </div>
+				<div class="all-text">
+				</div>
 
-			<input type="hidden" class="totalCount"></
-
+				<div class="all-photo">
+					
+				</div>
+			</section>
+ 
 		</section>
 	
 	</main>
-	<script src="/js/feed/followModal.js"></script>
-
+	
 <script th:inline="javascript">
+function textStorage(element, userId) {
+    $('.all-feed').children().remove();
+    $('.all-text').children().remove();
+    $('.all-photo').children().remove();
+
+    $.ajax({
+        url: '/feed/textAll',
+        type: 'post',
+        data: { userId: userId },
+        dataType: "json",
+        success: function(data) {
+            for (let i = 0; i < data.length; i++) {
+                const text = data[i];
+                const div = $('<div>');
+                const table = $('<table>');
+                const tr = $('<tr>');
+                const th = $('<td>').text(text.textFeedWriter);
+                const td = $('<td>').text(text.textFeedContent);
+
+                // 스타일 설정
+                th.css({
+                    'padding': '10px',
+                    'font-size': '16px',
+                    'text-align': 'left',
+                    'border': '1px solid #ddd'
+                });
+
+                td.css({
+                    'padding': '10px',
+                    'font-size': '14px',
+                    'border': '1px solid #ddd'
+                });
+
+                tr.append(th).append(td);
+                table.append(tr);
+                div.append(table);
+                $('.all-text').append(div);
+            }
+        },
+        error: function() {
+            console.log("에러 발생");
+        }
+    });
+}
 
 
+
+function photoStorage(element, userId) {
+    $('.all-feed').children().remove();
+    $('.all-text').children().remove();
+    $('.all-photo').children().remove();
+    
+    $.ajax({
+        url: '/feed/photoAll',
+        type: 'post',
+        data: { userId: userId },
+        dataType: "json",
+        success: function(data) {
+            for (let i = 0; i < data.length; i++) {
+                const photo = data[i];
+                const div = $('<div>');  // div를 생성할 때는 $('<div>')으로 변경
+                const img = $('<img>').attr("src", "/photo/" + photo.photoFeedImg);
+                img.css('width', '100%');  // 이미지 너비를 100%로 설정
+                div.append(img);
+                $('.all-photo').append(div);
+            }
+        },
+        error: function() {
+            console.log("에러 발생");
+        }
+    });
+}
+
+function feedStorage(element, userId) {
+    $('.all-feed').children().remove();
+    $('.all-text').children().remove();
+    $('.all-photo').children().remove();
+
+    $.ajax({
+        url: '/feed/feedAll',
+        type: 'post',
+        data: { userId: userId },
+        dataType: "json",
+        success: function(data) {
+           // console.log(data);
+            for (let i = 0; i < data.length; i++) {
+                const feed = data[i];
+                const table = $('<table>');
+                const tr = $('<tr>');
+                const td = $('<td>');
+                const sliderDiv = $('<div>').addClass('slide-container');
+                const slidesDiv = $('<div>').addClass('slides');
+                
+                // 슬라이드와 슬라이드 컨테이너 스타일 설정
+                sliderDiv.css({
+                    'position': 'relative',
+                    'overflow': 'hidden',
+                    'width': '100%',
+                    'height': 'auto'
+                });
+                slidesDiv.css({
+                    'display': 'flex',
+                    'width': '100%',
+                    'transition': 'transform 0.5s ease'
+                });
+                $('.slide').css({
+                    'flex': '0 0 100%',
+                    'width': '100%'
+                });
+
+                for (let j = 0; j < feed.feedList.length; j++) {
+                    const feedList = feed.feedList[j];
+                    const img = $('<img>').attr("src", "/feed/" + feedList.userFeedFilepath);
+                    img.css('width', '100%');  // 이미지 너비를 100%로 설정
+                    const slide = $('<div>').addClass('slide');
+                    slide.append(img);
+                    slidesDiv.append(slide);
+                }
+                
+                sliderDiv.append(slidesDiv);
+                sliderDiv.append('<a class="prev">&#10094;</a>');
+                sliderDiv.append('<a class="next">&#10095;</a>');
+                
+                td.append(sliderDiv);
+                tr.append(td);
+                
+                const contentTr = $('<tr>');
+                const contentTd = $('<td>');
+                const span = $('<span>').html(feed.userFeedContent);
+                contentTd.append(span);
+                contentTr.append(contentTd);
+                
+                table.append(tr).append(contentTr);
+                $('.all-feed').append(table);
+            }
+            
+            // 슬라이드 초기화 함수 호출
+            initializeSlides('.slide-container');
+        },
+        error: function() {
+            console.log("에러 발생");
+        }
+    });
+}
+
+
+function initializeSlides(containerSelector) {
+    $(containerSelector).each(function() {
+        const container = $(this);
+        const slides = container.find('.slides');
+        const slideCount = slides.children().length;
+        let index = 0;
+
+        container.find('.next').on('click', function() {
+            index = (index + 1) % slideCount;
+            slides.css('transform', `translateX(-${index * 100}%)`);
+        });
+
+        container.find('.prev').on('click', function() {
+            index = (index - 1 + slideCount) % slideCount;
+            slides.css('transform', `translateX(-${index * 100}%)`);
+        });
+    });
+}
+
+
+function allstorage(userId) { // userId를 파라미터로 받도록 수정
+	$('.all-feed').children().remove();
+	$('.all-text').children().remove();
+	$('.all-photo').children().remove();
+    $.ajax({
+        url: '/feed/userStorageAll',
+        type: 'post',
+        data: { userId: userId },
+        dataType: "json",
+        success: function(data) {
+
+            // 슬라이드 컨테이너 업데이트
+            $('.all-feed').html(`
+                <div class="slide-container">
+                    <div class="slides"></div>
+                    <a class="prev">&#10094;</a>
+                    <a class="next">&#10095;</a>
+                </div>
+            `);
+            $('.all-text').html(`
+                <div class="slide-container">
+                    <div class="slides"></div>
+                    <a class="prev">&#10094;</a>
+                    <a class="next">&#10095;</a>
+                </div>
+            `);
+            $('.all-photo').html(`
+                <div class="slide-container">
+                    <div class="slides"></div>
+                    <a class="prev">&#10094;</a>
+                    <a class="next">&#10095;</a>
+                </div>
+            `);
+
+            // 피드 처리
+            const allFeed = $(".all-feed .slides");
+            if (data.userFeedList && data.userFeedList.length) {
+                data.userFeedList.forEach(feed => {
+                    const slide = $("<div class='slide'></div>");
+                    const img = $("<img>").attr("src", "/feed/" + feed.userFeedFilepath);
+                    slide.append(img);
+                    allFeed.append(slide);
+                });
+            } else {
+                allFeed.append("<div class='slide'><span>저장된 게시물이 없습니다.</span></div>");
+            }
+
+            // 텍스트 처리
+            const allText = $(".all-text .slides");
+            if (data.textList && data.textList.length) {
+                data.textList.forEach(text => {
+                    const slide = $("<div class='slide'></div>");
+                    const div = $("<div></div>");
+                    div.append($("<p></p>").text(text.textFeedContent));
+                    slide.append(div);
+                    allText.append(slide);
+                });
+            } else {
+                allText.append("<div class='slide'><span>저장된 텍스트가 없습니다.</span></div>");
+            }
+
+            // 사진 처리
+            const allPhoto = $(".all-photo .slides");
+            if (data.photoList && data.photoList.length) {
+                data.photoList.forEach(photo => {
+                    const slide = $("<div class='slide'></div>");
+                    const img = $("<img>").attr("src", "/photo/" + photo.photoFeedImg);
+                    slide.append(img);
+                    allPhoto.append(slide);
+                });
+            } else {
+                allPhoto.append("<div class='slide'><span>저장된 사진이 없습니다.</span></div>");
+            }
+
+            // 슬라이드 초기화
+            initializeSlides('.all-feed');
+            initializeSlides('.all-text');
+            initializeSlides('.all-photo');
+        },
+        error: function() {
+            //console.log("에러 발생");
+        }
+    });
+}
+
+
+var slideIndex = 0;
+
+
+//보관함에 가게 되면 피드, 텍스트, 포토 다 나오게 함 
+  $(document).ready(function() {
+    var slideIndex = 0;
+
+    // 슬라이드 표시
+    function showSlides(n, container) {
+        var slides = $(container + " .slides");
+        var slideCount = $(container + " .slide").length;
+        var slideWidth = $(container).width() / 3; // 화면 너비의 3분의 1
+
+        // 슬라이드 인덱스 조정
+        if (n >= slideCount) { slideIndex = 0; }
+        if (n < 0) { slideIndex = slideCount - 1; }
+
+        // 슬라이드 이동
+        slides.css('transform', 'translateX(' + (-slideWidth * slideIndex) + 'px)');
+    }
+
+    // 슬라이드 변경
+    function plusSlides(n, container) {
+        slideIndex += n;
+        showSlides(slideIndex, container);
+    }
+
+    // 슬라이드 초기화
+    function initializeSlides(container) {
+        showSlides(slideIndex, container);
+        $(container + ' .prev').on('click', function() {
+            plusSlides(-1, container);
+        });
+        $(container + ' .next').on('click', function() {
+            plusSlides(1, container);
+        });
+    }
+
+    // 보관함 클릭 시 데이터 로드 및 슬라이드 초기화
     function storage(element, userId) {
+    	$(element).hide();
+    	$('#all-storage').removeClass('hide');
+    	$('#feed-storage').removeClass('hide');
+    	$('#photo-storage').removeClass('hide');
+    	$('#text-storage').removeClass('hide');
         $.ajax({
-            url: '/feed/userStorage',
+            url: '/feed/userStorageAll',
             type: 'post',
             data: { userId: userId },
-            dataType : "json",
+            dataType: "json",
             success: function(data) {
-                //console.log("성공성공");
-                // 기존 버튼을 히든으로 변경
-                $(element).hide(); // 기존 버튼을 히든으로 설정
-
-                // 새로운 버튼을 추가
                 $(element).after('<a href="/feed/myPage?userFeedWriter=' + userId + '"><button class="button-style">개인피드이동</button></a>');
-                // 기존 사진과 내비게이션을 제거
                 $('.feed-list-wrap').remove();
                 $('.list-navi').remove();
-				$('#more').removeClass('hidden');
-                // 보관함에서 저장된 사진을 불러옴
-     	for (let i = 0; i < data.length; i++) {
-		    const p = data[i];
-		    const li = $("<li>");
-		    li.addClass("posting-item");
-		
-		    // 작성자 div 생성
-		    const authorDiv = $("<div>");
-		    authorDiv.addClass("posting-author");
-		    authorDiv.text(p.userFeedWriter); // 작성자
-		
-		    // 이미지 div 생성
-		    const imgDiv = $("<div>");
-		    imgDiv.addClass("posting-img");
-		
-		    // a 태그 생성
-		    const aTag = $("<a>");
-		    aTag.attr("href", "/feed/view?userFeedNo=" + p.userFeedNo); // 링크 설정
-		    aTag.attr("target", "_blank"); // 새 탭에서 열기
-		
-		    // 이미지 태그 생성
-		    const img = $("<img>");
-		    img.attr("src", "/feed/" + p.userFeedFilepath); // 이미지 경로
-		
-		    aTag.append(img); // 이미지 태그를 a 태그에 추가
-		    imgDiv.append(aTag); // a 태그를 이미지 div에 추가
-		
-		    // 내용 div 생성
-		    const infoDiv = $("<div>");
-		    infoDiv.addClass("posting-info");
-		
-		    const subInfoDiv = $("<div>");
-		    subInfoDiv.addClass("posting-sub-info");
-		
-		    const contentSpan = $("<span>");
-		    contentSpan.html(p.userFeedContent); // 컨텐츠 내용
-		
-		    subInfoDiv.append(contentSpan);
-		
-		    infoDiv.append(subInfoDiv);
-		
-		    // li 요소에 작성자 div, 이미지 div, 내용 div를 순서대로 추가
-		    li.append(authorDiv).append(imgDiv).append(infoDiv);
-		
-		    $(".more-feed").append(li);
-		}
-                //loadStoredPhotos(userId);
+
+                // 슬라이드 컨테이너 업데이트
+                $('.all-feed').html(`
+                    <div class="slide-container">
+                        <div class="slides"></div>
+                        <a class="prev">&#10094;</a>
+                        <a class="next">&#10095;</a>
+                    </div>
+                `);
+                $('.all-text').html(`
+                    <div class="slide-container">
+                        <div class="slides"></div>
+                        <a class="prev">&#10094;</a>
+                        <a class="next">&#10095;</a>
+                    </div>
+                `);
+                $('.all-photo').html(`
+                    <div class="slide-container">
+                        <div class="slides"></div>
+                        <a class="prev">&#10094;</a>
+                        <a class="next">&#10095;</a>
+                    </div>
+                `);
+
+                // 피드 처리
+                const allFeed = $(".all-feed .slides");
+                if (data.userFeedList && data.userFeedList.length) {
+                    data.userFeedList.forEach(feed => {
+                        const slide = $("<div class='slide'></div>");
+                        const img = $("<img>").attr("src", "/feed/" + feed.userFeedFilepath);
+                        slide.append(img);
+                        allFeed.append(slide);
+                    });
+                } else {
+                    allFeed.append("<div class='slide'><span>저장된 게시물이 없습니다.</span></div>");
+                }
+
+                // 텍스트 처리
+               const allText = $(".all-text .slides");
+				if (data.textList && data.textList.length) {
+				    data.textList.forEach(text => {
+				        const slide = $("<div class='slide'></div>");
+				        const div = $("<div></div>");
+				        div.append($("<p></p>").text(text.textFeedContent));
+				        slide.append(div);
+				        allText.append(slide);
+				    });
+				} else {
+				    allText.append("<div class='slide'><span>저장된 텍스트가 없습니다.</span></div>");
+				}
+
+
+                // 사진 처리
+                const allPhoto = $(".all-photo .slides");
+                if (data.photoList && data.photoList.length) {
+                    data.photoList.forEach(photo => {
+                        const slide = $("<div class='slide'></div>");
+                        const img = $("<img>").attr("src", "/photo/" + photo.photoFeedImg);
+                        slide.append(img);
+                        allPhoto.append(slide);
+                    });
+                } else {
+                    allPhoto.append("<div class='slide'><span>저장된 사진이 없습니다.</span></div>");
+                }
+
+                // 슬라이드 초기화
+                initializeSlides('.all-feed');
+                initializeSlides('.all-text');
+                initializeSlides('.all-photo');
             },
             error: function() {
-                //console.log("에러에러");
+                console.log("에러 발생");
             }
         });
     }
 
-    function loadStoredPhotos (userId, totalCount) {
-        $.ajax({
-            url: '/feed/userStorageFeed', 
-            type: 'get',
-            data: { userId: userId },
-            success: function(data) {
-                //console.log(data);
-                if (data.length === 0) {
-                    // 사진이 없으면 '더보기' 버튼을 숨김
-                    $('#more-btn').hide();
-                }
-
-                const photoWrapper = $('.feed-list-wrap');
-                for (let i = 0; i < data.length; i++) {
-                    const p = data[i];
-                    const li = $('<li>').addClass('posting-item');
-                    
-                    const imgDiv = $('<div>').addClass('posting-img');
-                    const img = $('<img>').attr('src', '/photo/' + p.photoImg);
-                    imgDiv.append(img);
-
-                    const infoDiv = $('<div>').addClass('posting-info');
-                    const titleDiv = $('<div>').addClass('posting-title').text(p.photoTitle);
-                    const subInfoDiv = $('<div>').addClass('posting-sub-info');
-                    const writerSpan = $('<span>').text(p.photoWriter);
-                    subInfoDiv.append(writerSpan);
-                    infoDiv.append(titleDiv).append(subInfoDiv);
-
-                    li.append(imgDiv).append(infoDiv);
-                    photoWrapper.append(li);
-                }
-
-                // '더보기' 버튼의 동작 설정
-                $('#more-btn').show(); // '더보기' 버튼을 다시 보이게 함
-                currentCount = data.length;
-                start = currentCount + 1; // 다음 요청의 시작번호 설정
-            },
-            error: function() {
-                //console.log("사진 로딩 실패");
-            }
-        });
-    }
-
+    // 'storage' 버튼 클릭 이벤트
+    $(document).on('click', '#storage', function() {
+        storage(this, [[${user.userId}]]);
+    });
+});
+    
     function userFollow(button, loginUser, writerUser) {
         if ($(button).val() == 1) {
             // 팔로우 취소 요청
@@ -459,11 +820,7 @@
 		window.location.href = '/feed/writeForm'
 	})
 </script>
-	  <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"
-    ></script>
+
 	<th:block th:include="common/footer"></th:block>
 	<script src="/js/feed/followModal.js"></script>
 	

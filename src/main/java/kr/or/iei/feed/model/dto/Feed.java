@@ -2,6 +2,8 @@ package kr.or.iei.feed.model.dto;
 
 import java.util.List;
 
+import kr.or.iei.photo.model.dto.Photo;
+import kr.or.iei.text.model.dto.TextFeed;
 import kr.or.iei.user.model.dto.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,4 +31,7 @@ public class Feed {
 	private int isRepository;
 	private int feedLikeCount;
 	private int userNo;
+	private List<Photo> photoList;
+	private List<TextFeed> textList;
+	private List<Feed> userFeedList;
 }

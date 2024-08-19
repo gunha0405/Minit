@@ -14,6 +14,8 @@ import kr.or.iei.feed.model.dto.FeedComment;
 import kr.or.iei.feed.model.dto.FeedFile;
 import kr.or.iei.feed.model.dto.UserFeedNaviList;
 import kr.or.iei.feed.model.dto.feedListData;
+import kr.or.iei.photo.model.dto.Photo;
+import kr.or.iei.text.model.dto.TextFeed;
 import kr.or.iei.user.model.dto.User;
 import kr.or.iei.user.model.dto.UserRowMapper;
 
@@ -469,6 +471,77 @@ public class FeedService {
 		return followerNo;
 	}
 
+	public Feed storageAll(String userId) {
+		//보관함에 넣은 텍스트 가져오기 
+		List<TextFeed> textFeedList = new ArrayList<TextFeed>();
+		int allTextNum = feedDao.allTextNum(userId);
+		for(int i = 0; i < allTextNum; i++) {
+			TextFeed textFeed = feedDao.repositoryText(userId, i+1);
+			textFeedList.add(textFeed);
+		}
+		//보관함에 넣은 유저피드 게시물
+		List<Feed> feedList = new ArrayList<Feed>();
+		int allFeedNum = feedDao.allFeedNum(userId);
+		for(int i = 0; i < allFeedNum; i++) {
+			Feed feed = feedDao.repositoryFeed(userId, i+1);
+			feedList.add(feed);
+		}
+		
+		//보관함에 넣은 사진 게시물 
+		List<Photo> photoList = new ArrayList<Photo>();
+		int allPhotoNum = feedDao.allPhotoNum(userId);
+		for(int i = 0; i < allPhotoNum; i ++) {
+			Photo photo = feedDao.repositoryPhoto(userId, i+1);
+			photoList.add(photo);
+		}
+		Feed feed = new Feed();
+		feed.setPhotoList(photoList);
+		feed.setTextList(textFeedList);
+		feed.setUserFeedList(feedList);
+		return feed;
+	}
+
+	public List<Feed> feedAll(String userId) {
+		List<Feed> feedList = new ArrayList<Feed>();
+		int allFeedNum = feedDao.allFeedNum(userId);
+		for(int i = 0; i < allFeedNum; i++) {
+			Feed feed = feedDao.repositoryFeed(userId, i+1);
+			
+			int totalImgNo = feedDao.totalImg(feed.getUserFeedNo());
+			List<FeedFile> filepathList = new ArrayList<FeedFile>();
+			for(int j = 0; j < totalImgNo; j ++) {
+				FeedFile f = new FeedFile();
+				String filepath = feedDao.getFilePath(feed.getUserFeedNo(), j+1);
+				f.setUserFeedFilepath(filepath);
+				filepathList.add(f);
+			}
+			feed.setFeedList(filepathList);
+//			List<FeedFile> filepath= feedDao.repofeedFilepath(feed.getUserFeedNo());
+//			feed.setFeedList(filepath);
+			feedList.add(feed);
+		}
+		return feedList;
+	}
+
+	public List<Photo> photoAll(String userId) {
+		List<Photo> photoList = new ArrayList<Photo>();
+		int allPhotoNum = feedDao.allPhotoNum(userId);
+		for(int i = 0; i < allPhotoNum; i ++) {
+			Photo photo = feedDao.repositoryPhoto(userId, i+1);
+			photoList.add(photo);
+		}
+		return photoList;
+	}
+
+	public List<TextFeed> textAll(String userId) {
+		List<TextFeed> textFeedList = new ArrayList<TextFeed>();
+		int allTextNum = feedDao.allTextNum(userId);
+		for(int i = 0; i < allTextNum; i++) {
+			TextFeed textFeed = feedDao.repositoryText(userId, i+1);
+			textFeedList.add(textFeed);
+		}
+		return textFeedList;
+	}
 
 	
 }

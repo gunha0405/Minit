@@ -12,11 +12,17 @@ import kr.or.iei.feed.model.dto.FeedComment;
 import kr.or.iei.feed.model.dto.FeedCommentRowMapper;
 import kr.or.iei.feed.model.dto.FeedFile;
 import kr.or.iei.feed.model.dto.FeedFileRowMapper;
+import kr.or.iei.feed.model.dto.FeedRepoFilepath;
 import kr.or.iei.feed.model.dto.FeedRepoRowMapper;
 import kr.or.iei.feed.model.dto.FeedReportRowMapper;
 import kr.or.iei.feed.model.dto.FeedRowMapper;
 import kr.or.iei.feed.model.dto.FollowUserRowMapper;
 import kr.or.iei.feed.model.dto.UserFeedNaviList;
+import kr.or.iei.photo.model.dto.Photo;
+import kr.or.iei.photo.model.dto.PhotoFeedReportRowMapper;
+import kr.or.iei.photo.model.dto.PhotoRowMapper;
+import kr.or.iei.text.model.dto.TextFeed;
+import kr.or.iei.text.model.dto.TextFeedRowMapper;
 import kr.or.iei.user.model.dto.User;
 import kr.or.iei.user.model.dto.UserRowMapper;
 
@@ -40,6 +46,12 @@ public class FeedDao {
 	FeedRepoRowMapper feedRepoRowMapper = new FeedRepoRowMapper();
 	@Autowired
 	FeedReportRowMapper feedReportRowMapper = new FeedReportRowMapper();
+	@Autowired
+	TextFeedRowMapper textFeedRowMapper = new TextFeedRowMapper();
+	@Autowired
+	PhotoRowMapper photoRowMapper = new PhotoRowMapper();
+	@Autowired
+	FeedRepoFilepath feedRepoFilepath = new FeedRepoFilepath();
 	
 	public UserFeedNaviList userList(String userId) {
 		String query = "select user_id, user_info, USER_FEED_WRITER, USER_FEED_CONTENT,USER_FEED_DATE\r\n" + 
@@ -497,6 +509,85 @@ public class FeedDao {
 		Object[] params = {userFeedNo};
 		return jdbc.update(query, params);
 	}
+
+	public int allTextNum(String userId) {
+		String query = "select count(*) from (select repository_text_feed_no from repository  where repository_user_no\n" + 
+				"= (select user_no from user_tbl where user_id=?) and repository_text_feed_no is not null)";
+		Object[] params = {userId};
+		return jdbc.queryForObject(query, Integer.class,params);
+	}
+
+	public TextFeed repositoryText(String userId, int i) {
+		String query ="select text_feed_no, text_feed_reg_date, text_feed_writer, text_feed_content\n" + 
+				"from text_feed\n" + 
+				"where text_feed_no=\n" + 
+				"(select repository_text_feed_no from\n" + 
+				"(select rownum as rnum, n. * from(\n" + 
+				"select repository_text_feed_no from repository  where repository_user_no\n" + 
+				"= (select user_no from user_tbl where user_id=?) and repository_text_feed_no is not null order by repository_text_feed_no)n) \n" + 
+				"where rnum=?)";
+		Object[] params = {userId, i};
+		List list = jdbc.query(query, textFeedRowMapper, params);
+		return (TextFeed)list.get(0);
+	}
+
+	public int allPhotoNum(String userId) {
+		String query = "select count(*) from (select repository_photo_feed_no from repository  where repository_user_no\n" + 
+				"= (select user_no from user_tbl where user_id=?) and repository_photo_feed_no is not null)";
+		Object[] params = {userId};
+		return jdbc.queryForObject(query, Integer.class,params);
+
+	}
+
+	public Photo repositoryPhoto(String userId, int i) {
+		String query = "select photo_feed_no, photo_feed_img, photo_feed_writer, read_count, reg_date\n" + 
+				"from photo_feed\n" + 
+				"where photo_feed_no=\n" + 
+				"(select repository_photo_feed_no from\n" + 
+				"(select rownum as rnum, n. * from(\n" + 
+				"select repository_photo_feed_no from repository  where repository_user_no\n" + 
+				"= (select user_no from user_tbl where user_id=?) and repository_photo_feed_no is not null order by repository_photo_feed_no)n) \n" + 
+				"where rnum=?)";
+		Object[] params = {userId, i};
+		List list = jdbc.query(query, photoRowMapper, params);
+		return (Photo)list.get(0);
+	}
+
+	public int allFeedNum(String userId) {
+		String query ="select count(*) from (select repository_feed_no from repository  where repository_user_no\n" + 
+				"= (select user_no from user_tbl where user_id=?) and repository_feed_no is not null)";
+		Object[] params = {userId};
+		return jdbc.queryForObject(query, Integer.class,params);
+	}
+
+	public Feed repositoryFeed(String userId, int i) {
+		String query = "select user_feed_no, user_feed_writer, user_feed_content, user_feed_filepath \n" + 
+				"from \n" + 
+				"(select rownum as rnum, n. * from \n" + 
+				"(select * from user_feed_tbl\n" + 
+				"join user_feed_file using(user_Feed_no) where \n" + 
+				"user_feed_filepath is not null\n" + 
+				"and user_feed_no =\n" + 
+				"(\n" + 
+				"select repository_feed_no from repository \n" + 
+				"where repository_feed_no =\n" + 
+				"(select repository_feed_no from\n" + 
+				"(select rownum as rnum, n. * from \n" + 
+				"(select * from (select repository_feed_no from repository  where repository_user_no\n" + 
+				"= (select user_no from user_tbl where user_id=?) and repository_feed_no is not null))n) where rnum =?)\n" + 
+				")\n" + 
+				")n) where rnum = 1\n";
+		Object[] params = {userId, i};
+		List list = jdbc.query(query, feedRepoRowMapper, params);
+		return (Feed)list.get(0);
+	}
+
+//	public List<FeedFile> repofeedFilepath(int userFeedNo) {
+//		String query = "select user_feed_filepath from user_feed_file where user_feed_filepath is not null and user_feed_no=?";
+//		Object[] params = {userFeedNo};
+//		List list = jdbc.query(query, feedRepoFilepath, params);
+//		return (List<FeedFile>)list;
+//	}
 
 
 }
